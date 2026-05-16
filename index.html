@@ -1153,6 +1153,17 @@ function makeQ_1A(item, fullPool) {
   return { type: '1A', item, prompt: italicise(getDef(item)), options: opts, displayOptions: displayOpts, answer: item.item, noCapitalise: true };
 }
 
+/**
+ * Replace sb/sb's/sth placeholders with neutral pronouns for display in sentence context.
+ * Applied to non-answer options in 1B questions so they read naturally in the sentence.
+ */
+function neutralisePlaceholders(text) {
+  return text
+    .replace(/\bsb's\b/gi, 'their')
+    .replace(/\bsb\b/gi, 'them')
+    .replace(/\bsth\b/gi, 'it');
+}
+
 function makeQ_1B(item, fullPool) {
   // Safety guard: if sentence has no {BLANK}, fall back to definition question
   if (!item.sentence || !item.sentence.includes('{BLANK}')) return makeQ_1A(item, fullPool);
@@ -1175,7 +1186,11 @@ function makeQ_1B(item, fullPool) {
   const answer = sentenceStart ? (rawAnswer.charAt(0).toUpperCase() + rawAnswer.slice(1)) : rawAnswer;
   const sentenceDisplay = item.sentence.replace('{BLANK}', '________');
   shuffle(opts);
-  const displayOpts = opts.map(o => italicise(o));
+  // For display: replace sb/sth placeholders in non-answer options with neutral pronouns
+  const displayOpts = opts.map(o => {
+    const isAnswer = o.toLowerCase() === answer.toLowerCase();
+    return italicise(isAnswer ? o : neutralisePlaceholders(o));
+  });
   return { type: '1B', item, prompt: italicise(sentenceDisplay), options: opts, displayOptions: displayOpts, answer, revealDef: italicise(getDef(item)) };
 }
 
