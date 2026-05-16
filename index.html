@@ -184,7 +184,8 @@
   .q-card .match-col-label { text-align: center; }
   .q-card .match-grid { text-align: left; }
   .match-item { text-align: center; justify-content: center; }
-  .match-item em { display: inline; vertical-align: baseline; font-style: italic; }
+  .match-label { display: block; width: 100%; text-align: center; }
+  .match-label em { font-style: italic; }
   .badge-mcq { background: rgba(91,76,237,0.2); color: var(--primary-light); border: 1px solid rgba(91,76,237,0.3); }
   .badge-fill { background: rgba(6,182,212,0.2); color: var(--secondary); border: 1px solid rgba(6,182,212,0.3); }
   .badge-match { background: rgba(16,185,129,0.2); color: var(--success); border: 1px solid rgba(16,185,129,0.3); }
@@ -1651,7 +1652,7 @@ function renderMatchItems() {
       div.className = 'match-item' + (matchState.selectedWord === item.item ? ' selected' : '');
       div.onclick = () => selectMatchWord(item.item);
     }
-    div.innerHTML = italicise(item.item);
+    div.innerHTML = `<span class="match-label">${italicise(item.item)}</span>`;
     wordsDiv.appendChild(div);
   });
 
@@ -1664,7 +1665,7 @@ function renderMatchItems() {
       div.className = 'match-item' + (matchState.selectedDef === def ? ' selected' : '');
       div.onclick = () => selectMatchDef(def);
     }
-    div.innerHTML = italicise(def);
+    div.innerHTML = `<span class="match-label">${italicise(def)}</span>`;
     defsDiv.appendChild(div);
   });
 }
@@ -1822,7 +1823,7 @@ selectLang('en');
 
 <!-- ========== FOOTER ========== -->
 <footer class="site-footer">
-  <div style="font-size:0.7rem;color:var(--text-muted);opacity:0.5;margin-bottom:4px;">v260516-165220</div>
+  <div style="font-size:0.7rem;color:var(--text-muted);opacity:0.5;margin-bottom:4px;">v260516-165948</div>
   &copy; <span id="copyright-year">2026</span> K S Lo English. All Rights Reserved.
 </footer>
 
