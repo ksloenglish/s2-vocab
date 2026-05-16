@@ -1282,23 +1282,29 @@ function makeQ_1B(item, fullPool) {
   const sentenceStart = isSentenceStart(item.sentence);
   let opts = [rawAnswer, ...distractors];
   opts = [...new Set(opts)];
+  // Build a lookup: item text (lowercase) -> pos, for POS-guarded conjugation
+  const poolPosMap = {};
+  fullPool.forEach(p => { poolPosMap[p.item.toLowerCase()] = p.pos; });
+  // Only verbs (pos 'v') and phrases (pos 'phrase') should be conjugated
+  function shouldConjugate(itemText) {
+    const p = poolPosMap[itemText.toLowerCase()];
+    return p === 'v' || p === 'phrase';
+  }
   while (opts.length < 4) {
     const extra = fullPool.filter(p => !opts.map(o => o.toLowerCase()).includes(p.item.toLowerCase()));
     if (extra.length === 0) break;
-    // Conjugate pool-based distractor to match the tense of the answer
-    opts.push(conjugateFirstVerb(extra[Math.floor(Math.random() * extra.length)].item, targetTense));
+    const picked = extra[Math.floor(Math.random() * extra.length)];
+    // Only conjugate verbs and phrases; use base form for nouns/adj/adv
+    opts.push(shouldConjugate(picked.item) ? conjugateFirstVerb(picked.item, targetTense) : picked.item);
   }
-  // Also conjugate any pool-based distractors already in the list (from getDistractors type 'pool')
-  // Note: misspelling distractors are already in the right form (generated from sentenceForm)
-  // We need to conjugate only the raw pool items added in the while loop above and any that
-  // slipped through from getDistractors when it fell back to pool items.
-  // Re-conjugate all non-answer options that are exact matches to pool items (not misspellings)
+  // Re-conjugate pool-based distractors already in the list (from getDistractors type 'pool')
+  // Misspelling distractors are already in the right form (generated from sentenceForm)
   const poolItemsLower = new Set(fullPool.map(p => p.item.toLowerCase()));
   opts = opts.map(o => {
     if (o.toLowerCase() === rawAnswer.toLowerCase()) return o; // keep answer as-is
-    // If this option exactly matches a pool item (base form), conjugate it
-    if (poolItemsLower.has(o.toLowerCase())) return conjugateFirstVerb(o, targetTense);
-    return o; // misspelling — already in correct tense form
+    // If this option exactly matches a pool item (base form), conjugate only if it's a verb/phrase
+    if (poolItemsLower.has(o.toLowerCase()) && shouldConjugate(o)) return conjugateFirstVerb(o, targetTense);
+    return o; // noun/adj/adv or misspelling — use as-is
   });
   opts = [...new Set(opts.map(o => o.toLowerCase()))].map(low => {
     return opts.find(o => o.toLowerCase() === low) || low;
@@ -1823,7 +1829,7 @@ selectLang('en');
 
 <!-- ========== FOOTER ========== -->
 <footer class="site-footer">
-  <div style="font-size:0.7rem;color:var(--text-muted);opacity:0.5;margin-bottom:4px;">v260516-165948</div>
+  <div style="font-size:0.7rem;color:var(--text-muted);opacity:0.5;margin-bottom:4px;">v260516-171336</div>
   &copy; <span id="copyright-year">2026</span> K S Lo English. All Rights Reserved.
 </footer>
 
