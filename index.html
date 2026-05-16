@@ -757,7 +757,10 @@ function protectedStart(w) {
 function misspellWord(word) {
   const results = new Set();
   const w = word.toLowerCase();
-  const pStart = protectedStart(w); // indices >= pStart must not be touched
+  const pStart = protectedStart(w); // indices >= pStart must not be touched (protected suffix)
+  // Also protect the last letter of the word — it must never be changed by any strategy.
+  // pEnd is the exclusive upper bound for all strategy loops.
+  const pEnd = Math.min(pStart, w.length - 1);
 
   // Each strategy is a function that adds candidates to `results` (up to the given limit).
   // Strategies are shuffled into a random order before execution so that every call to
@@ -783,7 +786,7 @@ function misspellWord(word) {
   function strategy1(maxPerPosition) {
     if (maxPerPosition === undefined) maxPerPosition = 1;
     const usedReplacements = new Set();
-    for (let i = 1; i < pStart && results.size < 3; i++) {
+    for (let i = 1; i < pEnd && results.size < 3; i++) {
       if (isVowel(w[i])) {
         const unused = VOWELS.split('').filter(v => v !== w[i] && !usedReplacements.has(v));
         const used   = VOWELS.split('').filter(v => v !== w[i] &&  usedReplacements.has(v));
@@ -807,7 +810,7 @@ function misspellWord(word) {
   //   - During the fallback phase: Infinity (tries all similar consonants at each position)
   function strategy3(maxPerConsonant) {
     if (maxPerConsonant === undefined) maxPerConsonant = 1;
-    for (let i = 1; i < pStart && results.size < 3; i++) {
+    for (let i = 1; i < pEnd && results.size < 3; i++) {
       const ch = w[i];
       if (!isConsonant(ch)) continue;
       for (const group of SIMILAR_CONSONANTS) {
@@ -840,7 +843,7 @@ function misspellWord(word) {
 
     // Strategy 4: Remove one letter from a double consonant (not in protected suffix).
     function strategy4() {
-      for (let i = 1; i < pStart && results.size < 3; i++) {
+      for (let i = 1; i < pEnd && results.size < 3; i++) {
         if (isConsonant(w[i]) && w[i] === w[i - 1]) {
           const candidate = w.slice(0, i) + w.slice(i + 1);
           if (candidate !== w && !results.has(candidate)) results.add(candidate);
@@ -2128,7 +2131,7 @@ validateData();
 
 <!-- ========== FOOTER ========== -->
 <footer class="site-footer">
-  <div style="font-size:0.7rem;color:var(--text-muted);opacity:0.5;margin-bottom:4px;">v260516-233247</div>
+  <div style="font-size:0.7rem;color:var(--text-muted);opacity:0.5;margin-bottom:4px;">v260516-234233</div>
   &copy; <span id="copyright-year">2026</span> K S Lo English. All Rights Reserved.
 </footer>
 
