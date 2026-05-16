@@ -759,114 +759,131 @@ function misspellWord(word) {
   const w = word.toLowerCase();
   const pStart = protectedStart(w); // indices >= pStart must not be touched
 
-  // Strategy 1: Replace a vowel (not at position 0, not in protected suffix) with a different vowel.
-  // Track which replacement vowels have already been used so each distractor uses a different vowel.
-  // For each position, prefer an unused replacement vowel; only reuse a vowel if no unused one works.
-  {
-    const usedReplacements = new Set();
-    for (let i = 1; i < pStart && results.size < 3; i++) {
-      if (isVowel(w[i])) {
-        // Build candidate list: unused replacements first, then used ones as fallback
-        const unused = VOWELS.split('').filter(v => v !== w[i] && !usedReplacements.has(v));
-        const used   = VOWELS.split('').filter(v => v !== w[i] &&  usedReplacements.has(v));
-        for (const v of [...unused, ...used]) {
-          const candidate = w.slice(0, i) + v + w.slice(i + 1);
-          if (candidate !== w && looksReal(candidate) && !isValidWord(candidate) && !results.has(candidate)) {
-            results.add(candidate);
-            usedReplacements.add(v);
+  // Each strategy is a function that adds candidates to `results` (up to the given limit).
+  // Strategies are shuffled into a random order before execution so that every call to
+  // misspellWord may use a different combination of strategies, giving variety across questions.
+  // Each strategy is applied at most once per call; collection stops when results.size >= 3.
+
+  const strategies = [
+
+    // Strategy 1: Replace a vowel (not at position 0, not in protected suffix) with a different vowel.
+    // Uses usedReplacements to avoid all distractors sharing the same replacement vowel.
+    function strategy1() {
+      const usedReplacements = new Set();
+      for (let i = 1; i < pStart && results.size < 3; i++) {
+        if (isVowel(w[i])) {
+          const unused = VOWELS.split('').filter(v => v !== w[i] && !usedReplacements.has(v));
+          const used   = VOWELS.split('').filter(v => v !== w[i] &&  usedReplacements.has(v));
+          for (const v of [...unused, ...used]) {
+            const candidate = w.slice(0, i) + v + w.slice(i + 1);
+            if (candidate !== w && looksReal(candidate) && !isValidWord(candidate) && !results.has(candidate)) {
+              results.add(candidate);
+              usedReplacements.add(v);
+              break;
+            }
+          }
+        }
+      }
+    },
+
+    // Strategy 3: Replace a consonant with a similar-sounding one (not at position 0, not in protected suffix).
+    function strategy3() {
+      for (let i = 1; i < pStart && results.size < 3; i++) {
+        const ch = w[i];
+        if (!isConsonant(ch)) continue;
+        for (const group of SIMILAR_CONSONANTS) {
+          if (group.includes(ch)) {
+            for (const alt of group) {
+              if (alt !== ch) {
+                const candidate = w.slice(0, i) + alt + w.slice(i + 1);
+                if (candidate !== w && !results.has(candidate) && looksReal(candidate) && !isValidWord(candidate)) {
+                  results.add(candidate);
+                  break;
+                }
+              }
+            }
             break;
           }
         }
       }
-    }
-  }
+    },
 
-  // Strategy 3: Replace a consonant with a similar-sounding one (not at position 0, not in protected suffix)
-  if (results.size < 3) {
-    for (let i = 1; i < pStart && results.size < 3; i++) {
-      const ch = w[i];
-      if (!isConsonant(ch)) continue;
-      for (const group of SIMILAR_CONSONANTS) {
-        if (group.includes(ch)) {
-          for (const alt of group) {
-            if (alt !== ch) {
-              const candidate = w.slice(0, i) + alt + w.slice(i + 1);
-              if (candidate !== w && !results.has(candidate) && looksReal(candidate) && !isValidWord(candidate)) {
-                results.add(candidate);
-                break;
-              }
-            }
-          }
-          break;
+    // Strategy 4: Remove one letter from a double consonant (not in protected suffix).
+    function strategy4() {
+      for (let i = 1; i < pStart && results.size < 3; i++) {
+        if (isConsonant(w[i]) && w[i] === w[i - 1]) {
+          const candidate = w.slice(0, i) + w.slice(i + 1);
+          if (candidate !== w && !results.has(candidate)) results.add(candidate);
+        }
+      }
+    },
+
+    // Strategy 5: Double a plausible letter (not in protected suffix).
+    function strategy5() {
+      for (let i = 1; i < pStart && results.size < 3; i++) {
+        const ch = w[i].toLowerCase();
+        if (DOUBLING_CANDIDATES.has(ch)) {
+          const candidate = w.slice(0, i) + ch + w.slice(i);
+          if (candidate !== w && !results.has(candidate)) results.add(candidate);
+        }
+      }
+    },
+
+    // Strategy 6: Swap a consecutive pair of letters in the middle of the word.
+    // Prioritise vowel pairs (e.g. "ea" → "ae") then consonant pairs (e.g. "lt" → "tl").
+    // BOTH characters must be middle letters: i >= 1 AND i+1 <= w.length-2.
+    function strategy6() {
+      const s6Max = Math.min(pStart - 1, w.length - 2);
+      // First pass: consecutive vowel pairs
+      for (let i = 1; i < s6Max && results.size < 3; i++) {
+        if (isVowel(w[i]) && isVowel(w[i + 1]) && w[i] !== w[i + 1]) {
+          const arr = w.split('');
+          [arr[i], arr[i + 1]] = [arr[i + 1], arr[i]];
+          const candidate = arr.join('');
+          if (candidate !== w && !results.has(candidate) && !isValidWord(candidate)) results.add(candidate);
+        }
+      }
+      // Second pass: consecutive consonant pairs
+      for (let i = 1; i < s6Max && results.size < 3; i++) {
+        if (isConsonant(w[i]) && isConsonant(w[i + 1]) && w[i] !== w[i + 1]) {
+          const arr = w.split('');
+          [arr[i], arr[i + 1]] = [arr[i + 1], arr[i]];
+          const candidate = arr.join('');
+          if (candidate !== w && !results.has(candidate) && looksReal(candidate) && !isValidWord(candidate)) results.add(candidate);
+        }
+      }
+    },
+
+    // Strategy 7: Remove one middle letter (not first or last; min 3 letters remaining; consonants preferred).
+    function strategy7() {
+      const middleConsonants = [];
+      const middleVowels = [];
+      for (let i = 1; i < w.length - 1; i++) {
+        if (isConsonant(w[i])) middleConsonants.push(i);
+        else if (isVowel(w[i])) middleVowels.push(i);
+      }
+      for (const i of [...middleConsonants, ...middleVowels]) {
+        if (results.size >= 3) break;
+        const candidate = w.slice(0, i) + w.slice(i + 1);
+        if (candidate.length >= 3 && candidate !== w && !results.has(candidate) &&
+            looksReal(candidate) && !isValidWord(candidate)) {
+          results.add(candidate);
         }
       }
     }
+
+  ];
+
+  // Fisher-Yates shuffle so strategies fire in a different random order each call
+  for (let i = strategies.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [strategies[i], strategies[j]] = [strategies[j], strategies[i]];
   }
 
-  // Strategy 4: Remove one letter from a double consonant (not in protected suffix)
-  if (results.size < 3) {
-    for (let i = 1; i < pStart && results.size < 3; i++) {
-      if (isConsonant(w[i]) && w[i] === w[i - 1]) {
-        const candidate = w.slice(0, i) + w.slice(i + 1);
-        if (candidate !== w && !results.has(candidate)) results.add(candidate);
-      }
-    }
-  }
-
-  // Strategy 5: Double a plausible letter (not in protected suffix)
-  if (results.size < 3) {
-    for (let i = 1; i < pStart && results.size < 3; i++) {
-      const ch = w[i].toLowerCase();
-      if (DOUBLING_CANDIDATES.has(ch)) {
-        const candidate = w.slice(0, i) + ch + w.slice(i);
-        if (candidate !== w && !results.has(candidate)) results.add(candidate);
-      }
-    }
-  }
-
-  // Strategy 7: Remove one letter from the middle of the word.
-  // Rules: not the first or last letter; at least 3 letters must remain after removal;
-  // prefer consonants over vowels (try all consonant positions first, then vowels).
-  if (results.size < 3) {
-    const middleConsonants = [];
-    const middleVowels = [];
-    for (let i = 1; i < w.length - 1; i++) {
-      if (isConsonant(w[i])) middleConsonants.push(i);
-      else if (isVowel(w[i])) middleVowels.push(i);
-    }
-    for (const i of [...middleConsonants, ...middleVowels]) {
-      if (results.size >= 3) break;
-      const candidate = w.slice(0, i) + w.slice(i + 1);
-      if (candidate.length >= 3 && candidate !== w && !results.has(candidate) &&
-          looksReal(candidate) && !isValidWord(candidate)) {
-        results.add(candidate);
-      }
-    }
-  }
-
-  // Strategy 6: Swap a consecutive pair of letters in the middle of the word.
-  // Prioritise vowel pairs (e.g. "ea" → "ae", "ie" → "ei") then consonant pairs (e.g. "lt" → "tl").
-  // BOTH characters must be middle letters: i >= 1 AND i+1 <= w.length-2 (neither first nor last).
-  if (results.size < 3) {
-    const s6Max = Math.min(pStart - 1, w.length - 2); // i+1 must not be the last letter
-    // First pass: consecutive vowel pairs
-    for (let i = 1; i < s6Max && results.size < 3; i++) {
-      if (isVowel(w[i]) && isVowel(w[i + 1]) && w[i] !== w[i + 1]) {
-        const arr = w.split('');
-        [arr[i], arr[i + 1]] = [arr[i + 1], arr[i]];
-        const candidate = arr.join('');
-        if (candidate !== w && !results.has(candidate) && !isValidWord(candidate)) results.add(candidate);
-      }
-    }
-    // Second pass: consecutive consonant pairs
-    for (let i = 1; i < s6Max && results.size < 3; i++) {
-      if (isConsonant(w[i]) && isConsonant(w[i + 1]) && w[i] !== w[i + 1]) {
-        const arr = w.split('');
-        [arr[i], arr[i + 1]] = [arr[i + 1], arr[i]];
-        const candidate = arr.join('');
-        if (candidate !== w && !results.has(candidate) && looksReal(candidate) && !isValidWord(candidate)) results.add(candidate);
-      }
-    }
+  // Apply each strategy at most once; stop as soon as 3 candidates are collected
+  for (const strategy of strategies) {
+    if (results.size >= 3) break;
+    strategy();
   }
 
   return [...results].slice(0, 3);
@@ -2031,7 +2048,7 @@ validateData();
 
 <!-- ========== FOOTER ========== -->
 <footer class="site-footer">
-  <div style="font-size:0.7rem;color:var(--text-muted);opacity:0.5;margin-bottom:4px;">v260516-211127</div>
+  <div style="font-size:0.7rem;color:var(--text-muted);opacity:0.5;margin-bottom:4px;">v260516-211548</div>
   &copy; <span id="copyright-year">2026</span> K S Lo English. All Rights Reserved.
 </footer>
 
