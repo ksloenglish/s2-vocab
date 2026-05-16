@@ -764,66 +764,76 @@ function misspellWord(word) {
   // misspellWord may use a different combination of strategies, giving variety across questions.
   // Each strategy is applied at most once per call; collection stops when results.size >= 3.
 
-  const strategies = [
+  // ── Strategy definitions ────────────────────────────────────────────────────
+  //
+  // Strategy 1 and Strategy 3 are the two primary fallback strategies.
+  // They are defined as named functions so they can be reused in the fallback
+  // phase after all shuffled strategies are exhausted.
+  //
+  // Strategy 5 (letter doubling) has been removed — inserting a letter is not
+  // a valid misspelling strategy for this exercise.
+  //
+  // Strategy 7 (middle letter removal) only applies to words with ≥7 letters.
 
-    // Strategy 1: Replace a vowel (not at position 0, not in protected suffix) with a different vowel.
-    // Uses usedReplacements to avoid all distractors sharing the same replacement vowel.
-    function strategy1() {
-      const usedReplacements = new Set();
-      for (let i = 1; i < pStart && results.size < 3; i++) {
-        if (isVowel(w[i])) {
-          const unused = VOWELS.split('').filter(v => v !== w[i] && !usedReplacements.has(v));
-          const used   = VOWELS.split('').filter(v => v !== w[i] &&  usedReplacements.has(v));
-          for (const v of [...unused, ...used]) {
-            const candidate = w.slice(0, i) + v + w.slice(i + 1);
-            if (candidate !== w && looksReal(candidate) && !isValidWord(candidate) && !results.has(candidate)) {
-              results.add(candidate);
-              usedReplacements.add(v);
-              break;
-            }
+  // Strategy 1: Replace a vowel (not at position 0, not in protected suffix) with a different vowel.
+  // For each vowel position, tries ALL valid replacement vowels (not just one), so that words
+  // with a single vowel (e.g. "deny": e→a, e→i, e→o) can still yield multiple candidates.
+  // Uses usedReplacements to prefer unused replacement vowels first, ensuring variety across
+  // positions when multiple vowel positions exist.
+  function strategy1() {
+    const usedReplacements = new Set();
+    for (let i = 1; i < pStart && results.size < 3; i++) {
+      if (isVowel(w[i])) {
+        const unused = VOWELS.split('').filter(v => v !== w[i] && !usedReplacements.has(v));
+        const used   = VOWELS.split('').filter(v => v !== w[i] &&  usedReplacements.has(v));
+        for (const v of [...unused, ...used]) {
+          if (results.size >= 3) break;
+          const candidate = w.slice(0, i) + v + w.slice(i + 1);
+          if (candidate !== w && looksReal(candidate) && !isValidWord(candidate) && !results.has(candidate)) {
+            results.add(candidate);
+            usedReplacements.add(v);
           }
         }
       }
-    },
+    }
+  }
 
-    // Strategy 3: Replace a consonant with a similar-sounding one (not at position 0, not in protected suffix).
-    function strategy3() {
-      for (let i = 1; i < pStart && results.size < 3; i++) {
-        const ch = w[i];
-        if (!isConsonant(ch)) continue;
-        for (const group of SIMILAR_CONSONANTS) {
-          if (group.includes(ch)) {
-            for (const alt of group) {
-              if (alt !== ch) {
-                const candidate = w.slice(0, i) + alt + w.slice(i + 1);
-                if (candidate !== w && !results.has(candidate) && looksReal(candidate) && !isValidWord(candidate)) {
-                  results.add(candidate);
-                  break;
-                }
+  // Strategy 3: Replace a consonant with a similar-sounding one (not at position 0, not in protected suffix).
+  function strategy3() {
+    for (let i = 1; i < pStart && results.size < 3; i++) {
+      const ch = w[i];
+      if (!isConsonant(ch)) continue;
+      for (const group of SIMILAR_CONSONANTS) {
+        if (group.includes(ch)) {
+          for (const alt of group) {
+            if (alt !== ch) {
+              const candidate = w.slice(0, i) + alt + w.slice(i + 1);
+              if (candidate !== w && !results.has(candidate) && looksReal(candidate) && !isValidWord(candidate)) {
+                results.add(candidate);
+                break;
               }
             }
-            break;
           }
+          break;
         }
       }
-    },
+    }
+  }
+
+  // Remaining strategies placed in an array for shuffling.
+  // Strategy 1 and Strategy 3 are intentionally excluded from this array —
+  // they are applied separately (shuffled with the rest, then again as fallbacks).
+  const strategies = [
+
+    strategy1,
+
+    strategy3,
 
     // Strategy 4: Remove one letter from a double consonant (not in protected suffix).
     function strategy4() {
       for (let i = 1; i < pStart && results.size < 3; i++) {
         if (isConsonant(w[i]) && w[i] === w[i - 1]) {
           const candidate = w.slice(0, i) + w.slice(i + 1);
-          if (candidate !== w && !results.has(candidate)) results.add(candidate);
-        }
-      }
-    },
-
-    // Strategy 5: Double a plausible letter (not in protected suffix).
-    function strategy5() {
-      for (let i = 1; i < pStart && results.size < 3; i++) {
-        const ch = w[i].toLowerCase();
-        if (DOUBLING_CANDIDATES.has(ch)) {
-          const candidate = w.slice(0, i) + ch + w.slice(i);
           if (candidate !== w && !results.has(candidate)) results.add(candidate);
         }
       }
@@ -854,8 +864,10 @@ function misspellWord(word) {
       }
     },
 
-    // Strategy 7: Remove one middle letter (not first or last; min 3 letters remaining; consonants preferred).
+    // Strategy 7: Remove one middle letter (not first or last; min 3 letters remaining;
+    // consonants preferred). Only applies to words with at least 7 letters.
     function strategy7() {
+      if (w.length < 7) return;
       const middleConsonants = [];
       const middleVowels = [];
       for (let i = 1; i < w.length - 1; i++) {
@@ -885,6 +897,12 @@ function misspellWord(word) {
     if (results.size >= 3) break;
     strategy();
   }
+
+  // Fallback: if all strategies are exhausted and we still have fewer than 3 candidates,
+  // re-run Strategy 1 (vowel replacement) then Strategy 3 (consonant replacement) to fill
+  // remaining slots. These are the most productive strategies and serve as a safety net.
+  if (results.size < 3) strategy1();
+  if (results.size < 3) strategy3();
 
   return [...results].slice(0, 3);
 }
@@ -2048,7 +2066,7 @@ validateData();
 
 <!-- ========== FOOTER ========== -->
 <footer class="site-footer">
-  <div style="font-size:0.7rem;color:var(--text-muted);opacity:0.5;margin-bottom:4px;">v260516-211548</div>
+  <div style="font-size:0.7rem;color:var(--text-muted);opacity:0.5;margin-bottom:4px;">v260516-213612</div>
   &copy; <span id="copyright-year">2026</span> K S Lo English. All Rights Reserved.
 </footer>
 
