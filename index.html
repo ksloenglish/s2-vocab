@@ -229,7 +229,7 @@
 
   /* ===== MATCHING ===== */
   .match-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
-  @media(max-width:500px){ .match-grid { grid-template-columns: 1fr; } }
+  @media(max-width:500px){ .match-grid { gap: 8px; } .match-item { padding: 9px 10px; font-size: 0.8rem; min-height: 44px; } }
   .match-col { display: flex; flex-direction: column; gap: 12px; }
   .match-col-label { font-size: 0.75rem; font-weight: 800; text-transform: uppercase; letter-spacing: 0.08em; color: var(--text-muted); margin-bottom: 4px; }
   .match-item {
@@ -657,7 +657,10 @@ const TERM_UNITS = {
 function italicise(text) {
   if (!text) return text;
   // Replace standalone be, sb, sth, sb's with italic versions
-  return text.replace(/\b(be|sb(?:'s)?|sth)\b/g, '<em>$1</em>');
+  // Add a zero-width space after </em> to ensure the browser renders the word boundary correctly
+  return text.replace(/(\s|^)(be|sb(?:'s)?|sth)(\s|$)/g, (match, pre, word, post) => {
+    return pre + '<em>' + word + '</em>' + post;
+  });
 }
 
 // ============================================================
@@ -1784,7 +1787,7 @@ selectLang('en');
 
 <!-- ========== FOOTER ========== -->
 <footer class="site-footer">
-  <div style="font-size:0.7rem;color:var(--text-muted);opacity:0.5;margin-bottom:4px;">v260516175800</div>
+  <div style="font-size:0.7rem;color:var(--text-muted);opacity:0.5;margin-bottom:4px;">v260516181500</div>
   &copy; <span id="copyright-year">2026</span> K S Lo English. All Rights Reserved.
 </footer>
 
