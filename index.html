@@ -913,24 +913,29 @@ function misspellPhrase(phrase) {
 
   // Get 1 replacement for the FIRST preposition slot.
   // Priority:
+  //   0. CONFUSED_PAIRS: always swap these pairs first (they are easily confused by students)
   //   1. Primary pool (SIMPLE if original is simple, COMPLEX if original is complex)
   //      a. Same initial letter
   //      b. Any other
   //   2. Fallback pool (the other pool)
   //      a. Same initial letter
   //      b. Any other
+  const CONFUSED_PAIRS = { 'of':'for','for':'of','in':'on','on':'in','into':'onto','onto':'into','up':'down','down':'up' };
   const pi0 = prepIndices[0];
   const origPrep0 = words[pi0];
   const origIsSimple = SIMPLE_PREPS.includes(origPrep0);
   const primaryPool = origIsSimple ? SIMPLE_PREPS : COMPLEX_PREPS;
   const fallbackPool = origIsSimple ? COMPLEX_PREPS : SIMPLE_PREPS;
   function eligible(p) { return p !== origPrep0 && !usedPreps.has(p); }
-  const p1a = primaryPool.filter(p => eligible(p) && p[0] === origPrep0[0]);
-  const p1b = primaryPool.filter(p => eligible(p) && p[0] !== origPrep0[0]);
-  const p2a = fallbackPool.filter(p => eligible(p) && p[0] === origPrep0[0]);
-  const p2b = fallbackPool.filter(p => eligible(p) && p[0] !== origPrep0[0]);
+  // Tier 0: confused pair (highest priority)
+  const confusedSwap = CONFUSED_PAIRS[origPrep0];
+  const tier0 = (confusedSwap && eligible(confusedSwap)) ? [confusedSwap] : [];
+  const p1a = primaryPool.filter(p => eligible(p) && p[0] === origPrep0[0] && p !== confusedSwap);
+  const p1b = primaryPool.filter(p => eligible(p) && p[0] !== origPrep0[0] && p !== confusedSwap);
+  const p2a = fallbackPool.filter(p => eligible(p) && p[0] === origPrep0[0] && p !== confusedSwap);
+  const p2b = fallbackPool.filter(p => eligible(p) && p[0] !== origPrep0[0] && p !== confusedSwap);
   shuffle(p1a); shuffle(p1b); shuffle(p2a); shuffle(p2b);
-  const pool0 = [...p1a, ...p1b, ...p2a, ...p2b];
+  const pool0 = [...tier0, ...p1a, ...p1b, ...p2a, ...p2b];
   for (const p of pool0) {
     if (prepResults.length >= 1) break;
     const newWords = [...words];
@@ -1939,7 +1944,7 @@ validateData();
 
 <!-- ========== FOOTER ========== -->
 <footer class="site-footer">
-  <div style="font-size:0.7rem;color:var(--text-muted);opacity:0.5;margin-bottom:4px;">v260516-193457</div>
+  <div style="font-size:0.7rem;color:var(--text-muted);opacity:0.5;margin-bottom:4px;">v260516-193941</div>
   &copy; <span id="copyright-year">2026</span> K S Lo English. All Rights Reserved.
 </footer>
 
