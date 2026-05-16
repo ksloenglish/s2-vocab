@@ -1500,7 +1500,12 @@ function makeQ_Fill(item, fullPool) {
   // Safety guard: if sentence has no {BLANK}, fall back to definition question
   if (!item.sentence || !item.sentence.includes('{BLANK}')) return makeQ_1A(item, fullPool);
   const rawAnswer = item.sentenceForm || item.item;
-  const hint = firstLetterHint(rawAnswer);
+  const sentenceStart = isSentenceStart(item.sentence);
+  // Capitalise the answer for display when the blank starts the sentence
+  const displayAnswer = sentenceStart
+    ? rawAnswer.charAt(0).toUpperCase() + rawAnswer.slice(1)
+    : rawAnswer;
+  const hint = firstLetterHint(displayAnswer);
   const sentenceDisplay = item.sentence.replace('{BLANK}', hint);
   return {
     type: 'fill',
@@ -1508,6 +1513,7 @@ function makeQ_Fill(item, fullPool) {
     prompt: italicise(sentenceDisplay),
     hint,
     answer: rawAnswer.toLowerCase(),
+    displayAnswer,
     revealDef: italicise(getDef(item))
   };
 }
@@ -1700,7 +1706,7 @@ function renderFill(q, card) {
     <div class="q-text">${q.prompt}</div>
     <div class="fill-wrap">
       <input type="text" class="fill-input" id="fill-input" placeholder="Type your answer…" autocomplete="off" autocorrect="off" spellcheck="false" />
-      <button class="btn-submit" id="btn-submit-fill" onclick="handleFill('${escapeForAttr(q.answer)}', '${escapeForAttr(q.revealDef)}')">Submit</button>
+      <button class="btn-submit" id="btn-submit-fill" onclick="handleFill('${escapeForAttr(q.answer)}', '${escapeForAttr(q.revealDef)}', '${escapeForAttr(q.displayAnswer || q.answer)}')">Submit</button>
     </div>
     <div class="fill-feedback" id="fill-feedback"></div>
     <div class="def-reveal" id="def-reveal"></div>
@@ -1724,7 +1730,8 @@ function escapeForAttr(str) {
   return (str || '').replace(/\\/g, '\\\\').replace(/'/g, "\\'").replace(/"/g, '&quot;');
 }
 
-function handleFill(correctAnswer, revealDef) {
+function handleFill(correctAnswer, revealDef, displayAnswer) {
+  if (!displayAnswer) displayAnswer = correctAnswer;
   const input = document.getElementById('fill-input');
   const feedback = document.getElementById('fill-feedback');
   const submitBtn = document.getElementById('btn-submit-fill');
@@ -1750,7 +1757,7 @@ function handleFill(correctAnswer, revealDef) {
     // Replace the hint in the sentence prompt with the highlighted correct answer
     const qText = document.querySelector('.q-text');
     if (qText) {
-      const answerSpan = `<span style="color:#FFD700;font-weight:800;font-size:1.1em;text-decoration:underline;letter-spacing:0.03em">${correctAnswer}</span>`;
+      const answerSpan = `<span style="color:#FFD700;font-weight:800;font-size:1.1em;text-decoration:underline;letter-spacing:0.03em">${displayAnswer}</span>`;
       // q.hint contains the HTML of the hint (first-letter + underscores); replace it with the answer span
       const currentQ = questions[currentQIndex];
       if (currentQ && currentQ.hint) {
@@ -1984,7 +1991,7 @@ validateData();
 
 <!-- ========== FOOTER ========== -->
 <footer class="site-footer">
-  <div style="font-size:0.7rem;color:var(--text-muted);opacity:0.5;margin-bottom:4px;">v260516-201416</div>
+  <div style="font-size:0.7rem;color:var(--text-muted);opacity:0.5;margin-bottom:4px;">v260516-202041</div>
   &copy; <span id="copyright-year">2026</span> K S Lo English. All Rights Reserved.
 </footer>
 
