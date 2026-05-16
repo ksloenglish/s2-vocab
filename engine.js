@@ -1208,6 +1208,15 @@ function fcRender() {
   document.getElementById('fc-item-reminder').textContent = card.item || '';
   document.getElementById('fc-def').textContent = def || '';
 
+  // Sample sentence — replace {BLANK} with the sentenceForm in bold
+  const sentEl = document.getElementById('fc-sentence');
+  if (card.sentence) {
+    const form = card.sentenceForm || card.item || '___';
+    sentEl.innerHTML = card.sentence.replace('{BLANK}', '<strong>' + form + '</strong>');
+  } else {
+    sentEl.textContent = '';
+  }
+
   // Counter
   document.getElementById('fc-counter').textContent = (fcIndex + 1) + ' / ' + fcDeck.length;
 

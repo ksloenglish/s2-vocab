@@ -577,6 +577,22 @@
   font-weight: 500;
   word-break: break-word;
 }
+.fc-sentence {
+  margin-top: 16px;
+  padding-top: 14px;
+  border-top: 1px solid rgba(255,255,255,0.1);
+  font-size: clamp(0.82rem, 3vw, 0.95rem);
+  color: rgba(255,255,255,0.55);
+  text-align: center;
+  line-height: 1.6;
+  font-style: italic;
+  word-break: break-word;
+}
+.fc-sentence strong {
+  font-style: normal;
+  font-weight: 700;
+  color: #fcd34d;
+}
 
 /* Nav buttons below card */
 .fc-nav {
