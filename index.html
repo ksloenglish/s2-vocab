@@ -656,11 +656,10 @@ const TERM_UNITS = {
 // ============================================================
 function italicise(text) {
   if (!text) return text;
-  // Replace standalone be, sb, sth, sb's with italic versions
-  // Add a zero-width space after </em> to ensure the browser renders the word boundary correctly
-  return text.replace(/(\s|^)(be|sb(?:'s)?|sth)(\s|$)/g, (match, pre, word, post) => {
-    return pre + '<em>' + word + '</em>' + post;
-  });
+  // Strip any existing <em> wrappers on our tokens first (prevents double-wrapping)
+  const stripped = text.replace(/<em>(sth|sb(?:'s)?|be)<\/em>/g, '$1');
+  // Wrap every bare instance of be/sb/sth/sb's that is not inside an HTML tag
+  return stripped.replace(/(?<![<\/\w])(sth|sb(?:'s)?|be)(?![\w>])/g, '<em>$1</em>');
 }
 
 // ============================================================
@@ -1787,7 +1786,7 @@ selectLang('en');
 
 <!-- ========== FOOTER ========== -->
 <footer class="site-footer">
-  <div style="font-size:0.7rem;color:var(--text-muted);opacity:0.5;margin-bottom:4px;">v260516-161822</div>
+  <div style="font-size:0.7rem;color:var(--text-muted);opacity:0.5;margin-bottom:4px;">v260516-162021</div>
   &copy; <span id="copyright-year">2026</span> K S Lo English. All Rights Reserved.
 </footer>
 
