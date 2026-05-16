@@ -33,6 +33,7 @@
     display: flex; align-items: center; justify-content: space-between;
     flex-shrink: 0;
     box-shadow: 0 2px 16px rgba(0,0,0,0.4);
+    position: sticky; top: 0; z-index: 100; /* stays visible when keyboard pushes page up */
   }
   .site-topbar .brand { display: flex; align-items: center; gap: 12px; }
   .site-topbar .brand-logo {
@@ -83,6 +84,7 @@
     margin-bottom: 16px;
     box-shadow: var(--shadow);
     position: relative;
+    overflow: hidden; /* clips ::before gradient bar to rounded corners */
   }
   .setting-section::before {
     content: '';
