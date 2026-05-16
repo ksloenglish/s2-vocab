@@ -777,9 +777,9 @@ function misspellWord(word) {
     }
   }
 
-  // Strategy 3: Replace a consonant with a similar-sounding one (not in protected suffix)
+  // Strategy 3: Replace a consonant with a similar-sounding one (not at position 0, not in protected suffix)
   if (results.size < 3) {
-    for (let i = 0; i < pStart && results.size < 3; i++) {
+    for (let i = 1; i < pStart && results.size < 3; i++) {
       const ch = w[i];
       if (!isConsonant(ch)) continue;
       for (const group of SIMILAR_CONSONANTS) {
