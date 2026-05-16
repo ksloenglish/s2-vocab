@@ -121,9 +121,12 @@
   }
   /* 2. Button press micro-interaction */
   .opt-btn:active:not(:disabled) { transform: scale(0.96); }
-  .opt-btn:hover:not(:disabled):not(.selected) { border-color: var(--primary-light); color: var(--text); background: rgba(91,76,237,0.12); }
+  /* Hover and focus-border only on real pointer devices — prevents sticky hover outline on mobile touch */
+  @media (hover: hover) {
+    .opt-btn:hover:not(:disabled):not(.selected) { border-color: var(--primary-light); color: var(--text); background: rgba(91,76,237,0.12); }
+    .opt-btn:focus:not(.selected) { border-color: var(--primary-light); }
+  }
   .opt-btn:focus { outline: none; }
-  .opt-btn:focus:not(.selected) { border-color: var(--primary-light); }
   .opt-btn.selected {
     border-color: var(--primary) !important;
     background: linear-gradient(135deg, var(--primary), #7c3aed) !important;
