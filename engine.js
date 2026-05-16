@@ -933,11 +933,18 @@ function makeQ_1B(item, fullPool) {
   // 'sb' is "in the middle" when it is neither the first nor the last word
   const sbInMiddle = sbSub && sbIdx > 0 && sbIdx < sbWords.length - 1;
 
+  // Detect split-blank phrases: sentenceForm contains ' / ' (e.g. 'maintain / balance')
+  // These have two {BLANK} tokens in the sentence with intervening words between them.
+  const isSplitBlank = rawAnswer.includes(' / ');
+
   // Build sentence display
   let sentenceDisplay;
   if (sbInMiddle) {
     // Double-blank: _____ [sbSubstitute] _____
     sentenceDisplay = item.sentence.replace('{BLANK}', `_____ ${sbSub} _____`);
+  } else if (isSplitBlank) {
+    // Split-blank: replace EACH {BLANK} with _____ (the intervening words stay visible)
+    sentenceDisplay = item.sentence.replace(/\{BLANK\}/g, '_____');
   } else {
     sentenceDisplay = item.sentence.replace('{BLANK}', '_____');
   }
@@ -977,6 +984,11 @@ function makeQ_1B(item, fullPool) {
       // In double-blank mode, apply ellipsis substitution to ALL options including the answer
       return italicise(applyDistractorSbSub(o, sbSub));
     }
+    if (isSplitBlank) {
+      // Split-blank mode: replace ' / ' with ' ... ' in all options for readability
+      // e.g. 'maintain / balance' → 'maintain ... balance'
+      return italicise(o.replace(/ \/ /g, ' ... '));
+    }
     if (isAnswer) return italicise(o);
     if (sbSub) return italicise(applyDistractorSbSub(o, sbSub));
     return italicise(neutralisePlaceholders(o));
@@ -1002,6 +1014,10 @@ function makeQ_1C(item, fullPool) {
 function makeQ_Fill(item, fullPool) {
   // Safety guard: if sentence has no {BLANK}, fall back to definition question
   if (!item.sentence || !item.sentence.includes('{BLANK}')) return makeQ_1A(item, fullPool);
+  // Split-blank phrases (sentenceForm contains ' / ') cannot be typed by the student;
+  // fall back to the multiple-choice sentence question instead.
+  const _rawAns = item.sentenceForm || item.item;
+  if (_rawAns.includes(' / ')) return makeQ_1B(item, fullPool);
   const rawAnswer = item.sentenceForm || item.item;
   const sentenceStart = isSentenceStart(item.sentence);
   // Capitalise the answer for display when the blank starts the sentence
@@ -1009,7 +1025,10 @@ function makeQ_Fill(item, fullPool) {
     ? rawAnswer.charAt(0).toUpperCase() + rawAnswer.slice(1)
     : rawAnswer;
   const hint = firstLetterHint(displayAnswer);
-  const sentenceDisplay = item.sentence.replace('{BLANK}', hint);
+  // For split-blank phrases (sentenceForm contains ' / '), replace the first {BLANK} with
+  // the hint and any remaining {BLANK} tokens with _____ so none appear literally.
+  let sentenceDisplay = item.sentence.replace('{BLANK}', hint);
+  sentenceDisplay = sentenceDisplay.replace(/\{BLANK\}/g, '_____');
   return {
     type: 'fill',
     item,
