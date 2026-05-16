@@ -1486,7 +1486,7 @@ function startTimer() {
 function updateHUD() {
   document.getElementById('hud-progress').textContent = `${currentQIndex + 1} / ${questions.length}`;
   document.getElementById('hud-score').textContent = score;
-  const pct = (currentQIndex / questions.length) * 100;
+  const pct = ((currentQIndex + 1) / questions.length) * 100;
   document.getElementById('progress-fill').style.width = pct + '%';
 }
 
@@ -1845,7 +1845,7 @@ selectLang('en');
 
 <!-- ========== FOOTER ========== -->
 <footer class="site-footer">
-  <div style="font-size:0.7rem;color:var(--text-muted);opacity:0.5;margin-bottom:4px;">v260516-172352</div>
+  <div style="font-size:0.7rem;color:var(--text-muted);opacity:0.5;margin-bottom:4px;">v260516-172753</div>
   &copy; <span id="copyright-year">2026</span> K S Lo English. All Rights Reserved.
 </footer>
 
