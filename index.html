@@ -1305,7 +1305,7 @@ function makeQ_1B(item, fullPool) {
     opts = opts.map(o => typeof o === 'string' ? (o.charAt(0).toUpperCase() + o.slice(1)) : o);
   }
   const answer = sentenceStart ? (rawAnswer.charAt(0).toUpperCase() + rawAnswer.slice(1)) : rawAnswer;
-  const sentenceDisplay = item.sentence.replace('{BLANK}', '________');
+  const sentenceDisplay = item.sentence.replace('{BLANK}', '_____');
   shuffle(opts);
 
   // If the item has an sbSubstitute (a concrete noun replacing 'sb'), apply it to all options
@@ -1811,7 +1811,7 @@ selectLang('en');
 
 <!-- ========== FOOTER ========== -->
 <footer class="site-footer">
-  <div style="font-size:0.7rem;color:var(--text-muted);opacity:0.5;margin-bottom:4px;">v260516-163911</div>
+  <div style="font-size:0.7rem;color:var(--text-muted);opacity:0.5;margin-bottom:4px;">v260516-163942</div>
   &copy; <span id="copyright-year">2026</span> K S Lo English. All Rights Reserved.
 </footer>
 
