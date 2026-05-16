@@ -852,13 +852,17 @@ function looksReal(s) {
 function misspellPhrase(phrase) {
   const words = phrase.toLowerCase().split(' ');
 
-  // Replacement prepositions pool — simple, high-frequency single-word prepositions that students know.
-  // Multi-word prepositions (e.g. 'away from', 'out of') are excluded to avoid awkward constructions.
-  // Same-initial-letter prepositions are preferred (sorted to the front per origPrep below).
-  const PREP_REPLACEMENTS_BASE = ['about','above','across','after','against','along','among',
-    'around','before','behind','below','beside','between','beyond',
-    'by','down','for','from','in','inside','into','near','of','off','on','onto',
-    'outside','over','past','round','since','through','to','under','up','with','without'];
+  // Two-tier preposition pools:
+  //   SIMPLE: high-frequency, short, easy prepositions students know well.
+  //   COMPLEX: longer or less common prepositions.
+  // Swap strategy:
+  //   - If the original preposition is SIMPLE, always pick a replacement from SIMPLE first.
+  //   - If the original preposition is COMPLEX, pick from COMPLEX first (similar register).
+  //   - Within the chosen pool, prefer same-initial-letter, then similar length (±2 chars).
+  const SIMPLE_PREPS = ['at','by','for','from','in','into','near','of','off','on','out','over','to','up','with'];
+  const COMPLEX_PREPS = ['about','above','across','after','against','along','among','around',
+    'before','behind','below','beside','between','beyond','down','inside','onto',
+    'outside','past','round','since','through','under','without'];
 
   // Find prepositions in the phrase
   const prepIndices = words.map((w, i) => PREPOSITIONS.includes(w) ? i : -1).filter(i => i >= 0);
@@ -908,18 +912,25 @@ function misspellPhrase(phrase) {
   const usedPreps = new Set(words); // avoid replacements already in the phrase
 
   // Get 1 replacement for the FIRST preposition slot.
-  // Priority: same-initial-letter prepositions first (e.g. 'about' preferred over 'till' for 'at').
+  // Priority:
+  //   1. Primary pool (SIMPLE if original is simple, COMPLEX if original is complex)
+  //      a. Same initial letter
+  //      b. Any other
+  //   2. Fallback pool (the other pool)
+  //      a. Same initial letter
+  //      b. Any other
   const pi0 = prepIndices[0];
   const origPrep0 = words[pi0];
-  const sameInitial = PREP_REPLACEMENTS_BASE.filter(p =>
-    p !== origPrep0 && !usedPreps.has(p) && p[0] === origPrep0[0]
-  );
-  const otherPreps = PREP_REPLACEMENTS_BASE.filter(p =>
-    p !== origPrep0 && !usedPreps.has(p) && p[0] !== origPrep0[0]
-  );
-  shuffle(sameInitial);
-  shuffle(otherPreps);
-  const pool0 = [...sameInitial, ...otherPreps];
+  const origIsSimple = SIMPLE_PREPS.includes(origPrep0);
+  const primaryPool = origIsSimple ? SIMPLE_PREPS : COMPLEX_PREPS;
+  const fallbackPool = origIsSimple ? COMPLEX_PREPS : SIMPLE_PREPS;
+  function eligible(p) { return p !== origPrep0 && !usedPreps.has(p); }
+  const p1a = primaryPool.filter(p => eligible(p) && p[0] === origPrep0[0]);
+  const p1b = primaryPool.filter(p => eligible(p) && p[0] !== origPrep0[0]);
+  const p2a = fallbackPool.filter(p => eligible(p) && p[0] === origPrep0[0]);
+  const p2b = fallbackPool.filter(p => eligible(p) && p[0] !== origPrep0[0]);
+  shuffle(p1a); shuffle(p1b); shuffle(p2a); shuffle(p2b);
+  const pool0 = [...p1a, ...p1b, ...p2a, ...p2b];
   for (const p of pool0) {
     if (prepResults.length >= 1) break;
     const newWords = [...words];
@@ -1928,7 +1939,7 @@ validateData();
 
 <!-- ========== FOOTER ========== -->
 <footer class="site-footer">
-  <div style="font-size:0.7rem;color:var(--text-muted);opacity:0.5;margin-bottom:4px;">v260516-112930</div>
+  <div style="font-size:0.7rem;color:var(--text-muted);opacity:0.5;margin-bottom:4px;">v260516-193457</div>
   &copy; <span id="copyright-year">2026</span> K S Lo English. All Rights Reserved.
 </footer>
 
