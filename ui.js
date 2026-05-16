@@ -57,10 +57,31 @@ function renderQuestion() {
   else if (q.type === 'match') renderMatch(q, card);
 }
 
+// ---- UNIT BADGE HELPER ----
+function unitBadgeHTML(unitId) {
+  if (!unitId) return '';
+  const label = (UNITS[unitId] && UNITS[unitId].label) ? UNITS[unitId].label.toUpperCase() : unitId.toUpperCase();
+  // derive CSS class from the numeric part of the unitId (e.g. "2nd-5" → "unit-5")
+  const m = unitId.match(/(\d+)$/);
+  const cls = m ? 'unit-' + m[1] : 'unit-mix';
+  return `<span class="q-unit-badge ${cls}">${label}</span>`;
+}
+
+function matchUnitBadgeHTML(items) {
+  // For matching questions: show unit badge only if all items share the same unit
+  const ids = [...new Set(items.map(i => i.unitId).filter(Boolean))];
+  if (ids.length === 1) return unitBadgeHTML(ids[0]);
+  if (ids.length > 1) {
+    return `<span class="q-unit-badge unit-mix">MIXED</span>`;
+  }
+  return '';
+}
+
 // ---- MCQ ----
 function renderMCQ(q, card) {
   const badgeLabel = (q.type === '1A' || q.type === '1B') ? 'Choose the correct word / phrase' : 'Choose the correct definition';
   card.innerHTML = `
+    ${unitBadgeHTML(q.item && q.item.unitId)}
     <span class="q-type-badge badge-mcq">${badgeLabel}</span>
     <div class="q-text">${q.prompt}</div>
     <div class="mcq-options" id="mcq-opts"></div>
@@ -103,6 +124,7 @@ function handleMCQ(btn, chosen, q) {
 // ---- FILL IN THE BLANK ----
 function renderFill(q, card) {
   card.innerHTML = `
+    ${unitBadgeHTML(q.item && q.item.unitId)}
     <span class="q-type-badge badge-fill">Fill in the Blank</span>
     <div class="q-text">${q.prompt}</div>
     <div class="fill-wrap">
@@ -188,6 +210,7 @@ function renderMatch(q, card) {
   };
 
   card.innerHTML = `
+    ${matchUnitBadgeHTML(q.items)}
     <span class="q-type-badge badge-match">Matching</span>
     <div class="q-text" style="font-size:0.9rem;margin-bottom:14px;">Match each word or phrase with its correct definition.</div>
     <div class="match-grid">
@@ -369,7 +392,14 @@ function endExercise() {
     items.forEach(item => {
       const div = document.createElement('div');
       div.className = 'vocab-item';
-      div.innerHTML = `<span class="vi-word">${italicise(item.item)}</span><span class="vi-def">${italicise(getDef(item))}</span>`;
+      // Unit dot: derive CSS class from unitId (e.g. "2nd-6" → "unit-6")
+      let dotHTML = '';
+      if (item.unitId) {
+        const m = item.unitId.match(/(\d+)$/);
+        const cls = m ? 'unit-' + m[1] : '';
+        dotHTML = `<span class="vi-unit-dot ${cls}" title="${(UNITS[item.unitId] && UNITS[item.unitId].label) || item.unitId}"></span>`;
+      }
+      div.innerHTML = `${dotHTML}<span class="vi-word">${italicise(item.item)}</span><span class="vi-def">${italicise(getDef(item))}</span>`;
       container.appendChild(div);
     });
   }
