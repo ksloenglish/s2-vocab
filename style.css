@@ -621,6 +621,35 @@
 }
 .fc-nav-btn:disabled { opacity: 0.25; cursor: default; }
 
+/* ===== RESPONSIVE: TABLET & DESKTOP ===== */
+@media (min-width: 640px) {
+  /* Wider card on tablet/desktop */
+  .fc-area { padding: 36px 32px 28px; }
+  .fc-card,
+  .fc-nav { max-width: 700px; }
+  .fc-card { min-height: 360px; }
+  .fc-card-inner { min-height: 360px; }
+  .fc-face { min-height: 360px; padding: 36px 40px 32px; }
+  .fc-item { font-size: clamp(2rem, 4vw, 2.8rem); }
+  .fc-def  { font-size: clamp(1.5rem, 3.5vw, 2rem); }
+  .fc-sentence { font-size: clamp(0.95rem, 2vw, 1.1rem); }
+  .fc-item-reminder { font-size: 1.1rem; }
+  .fc-topbar { padding: 14px 32px 12px; }
+  .fc-btn-back, .fc-btn-shuffle { font-size: 0.95rem; padding: 10px 20px; }
+  .fc-counter { font-size: 1rem; }
+  .fc-nav-btn { padding: 18px; font-size: 1.1rem; }
+}
+
+@media (min-width: 1024px) {
+  /* Even wider on desktop — cap at a comfortable reading width */
+  .fc-card,
+  .fc-nav { max-width: 860px; }
+  .fc-card { min-height: 420px; }
+  .fc-card-inner { min-height: 420px; }
+  .fc-face { min-height: 420px; padding: 44px 56px 40px; }
+  .fc-area { padding: 44px 48px 36px; }
+}
+
 /* Slide transition for card swipe */
 @keyframes fcSlideInRight {
   from { opacity: 0; transform: translateX(60px); }
