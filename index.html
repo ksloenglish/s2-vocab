@@ -1035,8 +1035,7 @@ function firstLetterHint(phrase) {
   return phrase.split(' ').map(w => {
     if (w === 'sb' || w === 'sth' || w === "sb's") return `<em>${w}</em>`;
     const first = w[0];
-    const rest = '_'.repeat(Math.max(3, w.length - 1));
-    return `<strong>${first}</strong>${rest}`;
+    return `<strong>${first}</strong>${'_'.repeat(5)}`;
   }).join(' ');
 }
 
@@ -1812,7 +1811,7 @@ selectLang('en');
 
 <!-- ========== FOOTER ========== -->
 <footer class="site-footer">
-  <div style="font-size:0.7rem;color:var(--text-muted);opacity:0.5;margin-bottom:4px;">v260516-163413</div>
+  <div style="font-size:0.7rem;color:var(--text-muted);opacity:0.5;margin-bottom:4px;">v260516-163911</div>
   &copy; <span id="copyright-year">2026</span> K S Lo English. All Rights Reserved.
 </footer>
 
