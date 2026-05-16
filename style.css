@@ -118,6 +118,7 @@
     -webkit-appearance: none;
     appearance: none;
     font-family: inherit;
+    -webkit-tap-highlight-color: transparent; /* remove Android Chrome tap highlight ring */
   }
   /* 2. Button press micro-interaction */
   .opt-btn:active:not(:disabled) { transform: scale(0.96); }
