@@ -935,7 +935,12 @@ function looksReal(s) {
  * Strategy 1: Replace a preposition with a wrong one (one distractor per preposition, up to 2).
  * Strategy 2: Misspell the main content word (the longest non-preposition, non-function word).
  */
-function misspellPhrase(phrase) {
+function misspellPhrase(phrase, excludeWords) {
+  // excludeWords: optional Set or Array of lowercase words that must NOT be chosen as the
+  // misspelling target (e.g. sbSubstitute nouns that are not the vocabulary item itself).
+  const excludeSet = excludeWords
+    ? new Set(Array.isArray(excludeWords) ? excludeWords.map(w => w.toLowerCase()) : [...excludeWords].map(w => w.toLowerCase()))
+    : new Set();
   const words = phrase.toLowerCase().split(' ');
 
   // Two-tier preposition pools:
@@ -962,7 +967,7 @@ function misspellPhrase(phrase) {
     'when','where','which','while','who','whom','whose','how','if','though','although',
     'because','since','until','unless','after','before','as','like','times','during']);
   const contentWords = words.map((w, i) => ({ w, i }))
-    .filter(({ w }) => !functionWords.has(w) && w.length > 3)
+    .filter(({ w }) => !functionWords.has(w) && w.length > 3 && !excludeSet.has(w))
     .sort((a, b) => b.w.length - a.w.length);
   let wordMisspelling = null;
   if (contentWords.length > 0) {
@@ -1064,7 +1069,11 @@ function misspellPhrase(phrase) {
  */
 function getDistractors(item, pool) {
   const isPhrase = item.pos === 'phrase';
-  const misspellings = isPhrase ? misspellPhrase(item.item) : misspellWord(item.item);
+  // If the item has an sbSubstitute (e.g. 'students' for 'educate sb about'), exclude it
+  // from being chosen as the misspelling target — the vocabulary word (e.g. 'educate') must
+  // be misspelled, not the concrete noun substituted for 'sb'.
+  const sbSubWords = item.sbSubstitute ? item.sbSubstitute.toLowerCase().split(/\s+/) : [];
+  const misspellings = isPhrase ? misspellPhrase(item.item, sbSubWords) : misspellWord(item.item);
   const hasSpell = misspellings.length >= 2;
 
   const useSpell = hasSpell && Math.random() < 0.5;
@@ -1549,13 +1558,25 @@ function makeQ_1B(item, fullPool) {
   // for display so they look consistent with the correct answer.
   const sbSub = item.sbSubstitute || null;
 
+  // Prepositions that can take a noun object when they end a phrase
+  const PREP_ENDINGS = new Set(['about','above','across','after','against','along','among','around',
+    'at','before','behind','below','beside','between','beyond','by','down','for','from',
+    'in','inside','into','near','of','off','on','onto','out','outside','over','past',
+    'round','since','through','to','toward','towards','under','until','up','with','without']);
+
   function applyDistractorSbSub(phrase, sub) {
     // If the phrase already contains 'sb', replace it with the substitute noun
     if (/\bsb\b/i.test(phrase)) return phrase.replace(/\bsb\b/gi, sub);
-    // Otherwise always append the noun at the end.
-    // For verb+preposition phrases (e.g. 'struggle with', 'a majority of'),
-    // the noun is the object of the preposition, so it follows it naturally.
-    return phrase.trimEnd() + ' ' + sub;
+    // If the phrase already contains the substitute noun (e.g. misspelling distractors
+    // generated from sentenceForm already have 'sb' replaced), do not append it again.
+    // Use a word-boundary check so 'students' does not match inside 'studentship' etc.
+    const escapedSub = sub.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+    if (new RegExp('\\b' + escapedSub + '\\b', 'i').test(phrase)) return phrase;
+    // Only append the noun if the phrase ends with a preposition (so the noun is its natural
+    // object). Single-word items and non-preposition phrases are left unchanged.
+    const lastWord = phrase.trim().split(/\s+/).pop().toLowerCase();
+    if (PREP_ENDINGS.has(lastWord)) return phrase.trimEnd() + ' ' + sub;
+    return phrase;
   }
 
   // For display: replace sb/sth placeholders in non-answer options with neutral pronouns
@@ -2079,7 +2100,7 @@ validateData();
 
 <!-- ========== FOOTER ========== -->
 <footer class="site-footer">
-  <div style="font-size:0.7rem;color:var(--text-muted);opacity:0.5;margin-bottom:4px;">v260516-214128</div>
+  <div style="font-size:0.7rem;color:var(--text-muted);opacity:0.5;margin-bottom:4px;">v260516-222716</div>
   &copy; <span id="copyright-year">2026</span> K S Lo English. All Rights Reserved.
 </footer>
 
