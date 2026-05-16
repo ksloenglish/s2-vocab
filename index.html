@@ -1271,8 +1271,6 @@ function endExercise() {
   const displayScore = Math.min(score, total);
   document.getElementById('res-score').textContent = `${displayScore} / ${total}`;
   document.getElementById('res-time').textContent = formatTime(msElapsed);
-  document.getElementById('res-correct').textContent = displayScore;
-  document.getElementById('res-total').textContent = total;
 
   const pct = total > 0 ? displayScore / total : 0;
   let remark = '';
