@@ -487,7 +487,7 @@ function getDefDistractors(item, pool) {
 // STATE
 // ============================================================
 let selectedTerm = null;
-let selectedUnit = null;
+let selectedUnits = new Set(); // multi-select: set of unit IDs
 let selectedQ = null;
 let currentLang = 'zh';
 let questions = [];
@@ -549,50 +549,62 @@ function selectTerm(term) {
 function renderUnitOptions() {
   const group = document.getElementById('unit-group');
   group.innerHTML = '';
+  selectedUnits = new Set();
   const available = TERM_UNITS[selectedTerm] || [];
   if (available.length === 0) {
-    const allBtn = document.createElement('button');
-    allBtn.className = 'opt-btn';
-    allBtn.disabled = true;
-    allBtn.textContent = 'No units available';
-    group.appendChild(allBtn);
-    selectedUnit = null;
+    const placeholder = document.createElement('button');
+    placeholder.className = 'opt-btn';
+    placeholder.disabled = true;
+    placeholder.textContent = 'No units available';
+    group.appendChild(placeholder);
+    checkStartReady();
     return;
-  }
-  // All units button – only show when there are multiple units
-  if (available.length > 1) {
-    const allBtn = document.createElement('button');
-    allBtn.className = 'opt-btn';
-    allBtn.textContent = 'All Units';
-    allBtn.dataset.unit = 'all';
-    allBtn.onclick = () => selectUnit('all');
-    group.appendChild(allBtn);
   }
   available.forEach(uid => {
     const u = UNITS[uid];
     const btn = document.createElement('button');
-    btn.className = 'opt-btn';
-    btn.textContent = u.label;
+    btn.className = 'opt-btn unit-toggle-btn';
     btn.dataset.unit = uid;
-    btn.onclick = () => selectUnit(uid);
+    btn.onclick = () => toggleUnit(uid);
+    renderUnitBtnLabel(btn, uid, false);
     group.appendChild(btn);
   });
   if (available.length === 1) {
-    selectUnit(available[0]);
-    // Disable the button so it cannot be toggled off on mobile
+    // Only one unit — auto-select and lock
+    toggleUnit(available[0]);
     const singleBtn = group.querySelector('.opt-btn');
     if (singleBtn) {
       singleBtn.disabled = true;
-      singleBtn.style.opacity = '1';  // keep it visually fully selected
+      singleBtn.style.opacity = '1';
       singleBtn.style.cursor = 'default';
     }
   }
 }
 
-function selectUnit(uid) {
-  if (selectedUnit === uid) return; // already selected — ignore tap
-  selectedUnit = uid;
-  document.querySelectorAll('#unit-group .opt-btn').forEach(b => b.classList.toggle('selected', b.dataset.unit === uid));
+function renderUnitBtnLabel(btn, uid, selected) {
+  const label = (UNITS[uid] && UNITS[uid].label) ? UNITS[uid].label : uid;
+  btn.innerHTML = selected
+    ? `<span class="unit-tick">✓</span> ${label}`
+    : label;
+}
+
+function toggleUnit(uid) {
+  if (selectedUnits.has(uid)) {
+    // Deselect only if at least one other unit remains selected
+    if (selectedUnits.size > 1) {
+      selectedUnits.delete(uid);
+    }
+    // If it's the last one, do nothing (cannot deselect all)
+  } else {
+    selectedUnits.add(uid);
+  }
+  // Update button appearance
+  document.querySelectorAll('#unit-group .opt-btn').forEach(b => {
+    const id = b.dataset.unit;
+    const sel = selectedUnits.has(id);
+    b.classList.toggle('selected', sel);
+    renderUnitBtnLabel(b, id, sel);
+  });
   checkStartReady();
 }
 
@@ -610,7 +622,7 @@ function selectLang(lang) {
 }
 
 function checkStartReady() {
-  const ready = selectedTerm && selectedUnit && selectedQ;
+  const ready = selectedTerm && selectedUnits.size > 0 && selectedQ;
   document.getElementById('btn-start').disabled = !ready;
 }
 
@@ -618,7 +630,7 @@ function checkStartReady() {
 // QUESTION GENERATION
 // ============================================================
 function buildPool() {
-  let unitIds = selectedUnit === 'all' ? TERM_UNITS[selectedTerm] : [selectedUnit];
+  let unitIds = [...selectedUnits];
   let allPhrases = [], allWords = [];
   unitIds.forEach(uid => {
     allPhrases = allPhrases.concat(UNITS[uid].phrases.map(p => ({ ...p, unitId: uid })));
