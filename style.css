@@ -127,6 +127,8 @@
     .opt-btn:focus:not(.selected) { border-color: var(--primary-light); }
   }
   .opt-btn:focus { outline: none; }
+  /* Suppress focus-visible ring on touch devices — prevents bright border after tap on mobile */
+  .opt-btn:focus-visible:not(.selected) { outline: none; border-color: var(--border); }
   .opt-btn.selected {
     border-color: var(--primary) !important;
     background: linear-gradient(135deg, var(--primary), #7c3aed) !important;
