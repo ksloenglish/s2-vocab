@@ -1291,10 +1291,21 @@ function makeQ_1B(item, fullPool) {
   // Detect tense from the correct answer (sentenceForm)
   const rawAnswer = item.sentenceForm || item.item;
   let targetTense = detectTense(rawAnswer);
-  // Bug fix: if the sentence has a tense-bearing auxiliary immediately before {BLANK}
-  // (e.g. "was {BLANK} by"), distractors must stay in base form to avoid "was was in favour of".
-  const AUX_BEFORE_BLANK = /\b(is|are|was|were|has been|have been|had been|will be|be|being)\s+\{BLANK\}/i;
-  if (AUX_BEFORE_BLANK.test(item.sentence)) targetTense = 'base';
+  // If the sentence has a "to be" auxiliary immediately before {BLANK}
+  // (e.g. "was {BLANK} by"), two things must happen:
+  //   1. targetTense is overridden to 'base' so distractors are not re-conjugated.
+  //   2. Any distractor phrase that starts with 'be' must have that 'be' stripped,
+  //      because the auxiliary in the sentence already supplies it.
+  //      e.g. "be in favour of" → "in favour of" (sentence: "was _____ by")
+  const BE_AUX_BEFORE_BLANK = /\b(is|are|was|were|has been|have been|had been|will be|be|being)\s+\{BLANK\}/i;
+  const auxBeforeBlank = BE_AUX_BEFORE_BLANK.test(item.sentence);
+  if (auxBeforeBlank) targetTense = 'base';
+  // Strip leading 'be' from a phrase when the sentence already has a 'to be' auxiliary before the blank.
+  function stripLeadingBe(phrase) {
+    if (!auxBeforeBlank) return phrase;
+    // Only strip if the phrase starts with 'be ' (followed by a word, not 'be' alone)
+    return phrase.replace(/^be\s+/i, '');
+  }
 
   // Use sentenceForm for distractor generation so misspellings match the tense in the sentence
   const sentenceFormItem = item.sentenceForm ? { ...item, item: item.sentenceForm } : item;
@@ -1333,6 +1344,11 @@ function makeQ_1B(item, fullPool) {
     // If this option exactly matches a pool item (base form), conjugate only if it's a verb/phrase
     if (poolItemsLower.has(o.toLowerCase()) && shouldConjugate(o)) return conjugateFirstVerb(o, targetTense);
     return o; // noun/adj/adv or misspelling — use as-is
+  });
+  // Strip leading 'be' from distractors when the sentence already has a 'to be' auxiliary before the blank
+  opts = opts.map(o => {
+    if (o.toLowerCase() === rawAnswer.toLowerCase()) return o; // never strip the correct answer
+    return stripLeadingBe(o);
   });
   opts = [...new Set(opts.map(o => o.toLowerCase()))].map(low => {
     return opts.find(o => o.toLowerCase() === low) || low;
@@ -1857,7 +1873,7 @@ selectLang('en');
 
 <!-- ========== FOOTER ========== -->
 <footer class="site-footer">
-  <div style="font-size:0.7rem;color:var(--text-muted);opacity:0.5;margin-bottom:4px;">v260516-174554</div>
+  <div style="font-size:0.7rem;color:var(--text-muted);opacity:0.5;margin-bottom:4px;">v260516-175656</div>
   &copy; <span id="copyright-year">2026</span> K S Lo English. All Rights Reserved.
 </footer>
 
