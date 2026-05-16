@@ -476,8 +476,8 @@ const UNITS = {
         pos: "phrase",
         defEn: "to deal with a problem calmly without letting it affect you",
         defZh: "從容應對",
-        sentence: "She took the criticism in her stride and continued with her work.",
-        sentenceForm: "take sth in sb's stride"
+        sentence: "She {BLANK} and continued with her work.",
+        sentenceForm: "took the criticism in her stride"
       },
       {
         item: "play a part in",
@@ -1150,7 +1150,12 @@ function makeQ_1A(item, fullPool) {
 }
 
 function makeQ_1B(item, fullPool) {
-  const distractors = getDistractors(item, fullPool);
+  // Safety guard: if sentence has no {BLANK}, fall back to definition question
+  if (!item.sentence || !item.sentence.includes('{BLANK}')) return makeQ_1A(item, fullPool);
+
+  // Use sentenceForm for distractor generation so misspellings match the tense in the sentence
+  const sentenceFormItem = item.sentenceForm ? { ...item, item: item.sentenceForm } : item;
+  const distractors = getDistractors(sentenceFormItem, fullPool);
   const sentenceStart = isSentenceStart(item.sentence);
   const rawAnswer = item.sentenceForm || item.item;
   let opts = [rawAnswer, ...distractors];
@@ -1185,7 +1190,9 @@ function makeQ_1C(item, fullPool) {
   return { type: '1C', item, prompt: italicise(item.item), options: opts, displayOptions: displayOpts, answer: correctDef, noCapitalise: true };
 }
 
-function makeQ_Fill(item) {
+function makeQ_Fill(item, fullPool) {
+  // Safety guard: if sentence has no {BLANK}, fall back to definition question
+  if (!item.sentence || !item.sentence.includes('{BLANK}')) return makeQ_1A(item, fullPool);
   const rawAnswer = item.sentenceForm || item.item;
   const hint = firstLetterHint(rawAnswer);
   const sentenceDisplay = item.sentence.replace('{BLANK}', hint);
@@ -1242,7 +1249,7 @@ function generateQuestions(totalQ) {
     if (t === '1A') nonMatchQs.push(makeQ_1A(item, fullPool));
     else if (t === '1B') nonMatchQs.push(makeQ_1B(item, fullPool));
     else if (t === '1C') nonMatchQs.push(makeQ_1C(item, fullPool));
-    else nonMatchQs.push(makeQ_Fill(item));
+    else nonMatchQs.push(makeQ_Fill(item, fullPool));
   }
   shuffle(nonMatchQs);
 
