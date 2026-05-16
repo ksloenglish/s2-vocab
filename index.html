@@ -12,29 +12,46 @@
   /* ===== RESET & BASE ===== */
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
   :root {
-    --primary: #4f46e5;
+    --primary: #5b4ced;
     --primary-dark: #3730a3;
-    --primary-light: #818cf8;
+    --primary-light: #a78bfa;
     --secondary: #06b6d4;
+    --accent: #f59e0b;
     --success: #10b981;
     --danger: #ef4444;
     --warning: #f59e0b;
-    --bg: #0f172a;
-    --card: #1e293b;
-    --card2: #263347;
-    --text: #f1f5f9;
-    --text-muted: #94a3b8;
-    --border: #334155;
-    --radius: 14px;
-    --shadow: 0 4px 24px rgba(0,0,0,0.4);
+    --bg: #0d0f1a;
+    --bg2: #13162a;
+    --card: #1a1f38;
+    --card2: #222845;
+    --text: #e8eaf6;
+    --text-muted: #8892b0;
+    --border: #2e3560;
+    --radius: 16px;
+    --shadow: 0 8px 32px rgba(0,0,0,0.5);
+    --glow: 0 0 20px rgba(91,76,237,0.35);
   }
   html, body { height: 100%; font-family: 'Segoe UI', system-ui, -apple-system, sans-serif; background: var(--bg); color: var(--text); font-size: 16px; }
-  body { display: flex; flex-direction: column; min-height: 100vh; }
+  body { display: flex; flex-direction: column; min-height: 100vh; background: radial-gradient(ellipse at top, #1a1f3c 0%, #0d0f1a 70%); }
 
   /* ===== SITE HEADER BAR ===== */
-  .site-topbar { width: 100%; background: linear-gradient(135deg, #1e1b4b, #0f172a); border-bottom: 1px solid var(--border); padding: 10px 20px; display: flex; align-items: center; justify-content: space-between; flex-shrink: 0; }
-  .site-topbar .brand { display: flex; align-items: center; gap: 10px; }
-  .site-topbar .brand-logo { width: 40px; height: 40px; border-radius: 8px; background: linear-gradient(135deg, var(--primary), var(--secondary)); display: flex; align-items: center; justify-content: center; font-size: 0.7rem; font-weight: 900; color: #fff; letter-spacing: -0.02em; flex-shrink: 0; }
+  .site-topbar {
+    width: 100%;
+    background: linear-gradient(135deg, #1a1040 0%, #0d0f1a 100%);
+    border-bottom: 1px solid var(--border);
+    padding: 10px 20px;
+    display: flex; align-items: center; justify-content: space-between;
+    flex-shrink: 0;
+    box-shadow: 0 2px 16px rgba(0,0,0,0.4);
+  }
+  .site-topbar .brand { display: flex; align-items: center; gap: 12px; }
+  .site-topbar .brand-logo {
+    width: 42px; height: 42px; border-radius: 10px;
+    background: linear-gradient(135deg, var(--primary), var(--secondary));
+    display: flex; align-items: center; justify-content: center;
+    font-size: 0.68rem; font-weight: 900; color: #fff; letter-spacing: -0.02em;
+    flex-shrink: 0; box-shadow: var(--glow);
+  }
   .site-topbar .brand-name { font-size: 1rem; font-weight: 700; color: var(--primary-light); letter-spacing: 0.04em; }
   .site-topbar .brand-title { font-size: 0.95rem; color: var(--text); font-weight: 700; letter-spacing: 0.02em; }
 
@@ -42,130 +59,231 @@
   .site-footer { width: 100%; text-align: center; padding: 14px 16px; font-size: 0.78rem; color: var(--text-muted); border-top: 1px solid var(--border); background: var(--bg); flex-shrink: 0; margin-top: auto; }
 
   /* ===== SCREENS ===== */
-  .screen { display: none; flex-direction: column; align-items: center; justify-content: flex-start; flex: 1; padding: 20px 16px 30px; }
+  .screen { display: none; flex-direction: column; align-items: center; justify-content: flex-start; flex: 1; padding: 28px 16px 36px; }
   .screen.active { display: flex; }
 
-  /* ===== PAGE HEADER (title screen only) ===== */
-  .site-header { text-align: center; margin-bottom: 28px; }
-  .site-header h1 { font-size: clamp(1.6rem, 5vw, 2.4rem); font-weight: 800; background: linear-gradient(135deg, #818cf8, #06b6d4); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; margin-top: 6px; }
-  .site-header p { color: var(--text-muted); margin-top: 6px; font-size: 0.95rem; }
+  /* ===== PAGE HEADER (title screen) ===== */
+  .site-header { text-align: center; margin-bottom: 32px; }
+  .site-header h1 {
+    font-size: clamp(2rem, 6vw, 3rem); font-weight: 900;
+    background: linear-gradient(135deg, #a78bfa, #06b6d4);
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+    margin-top: 6px; text-shadow: none; letter-spacing: -0.01em;
+  }
+  .site-header p { color: var(--text-muted); margin-top: 8px; font-size: 1rem; }
 
-  /* ===== CARDS ===== */
-  .card { background: var(--card); border: 1px solid var(--border); border-radius: var(--radius); padding: 24px; width: 100%; max-width: 640px; box-shadow: var(--shadow); }
-  .card h2 { font-size: 1.1rem; font-weight: 700; color: var(--primary-light); margin-bottom: 16px; text-transform: uppercase; letter-spacing: 0.04em; }
+  /* ===== GAME-STYLE SETTING CARDS ===== */
+  .setting-section {
+    width: 100%; max-width: 660px;
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 22px 24px;
+    margin-bottom: 16px;
+    box-shadow: var(--shadow);
+    position: relative;
+    overflow: hidden;
+  }
+  .setting-section::before {
+    content: '';
+    position: absolute; top: 0; left: 0; right: 0; height: 3px;
+    background: linear-gradient(90deg, var(--primary), var(--secondary));
+    border-radius: var(--radius) var(--radius) 0 0;
+  }
+  .setting-label {
+    display: flex; align-items: center; gap: 10px;
+    font-size: 0.78rem; font-weight: 800; text-transform: uppercase;
+    letter-spacing: 0.12em; color: var(--primary-light);
+    margin-bottom: 16px;
+  }
+  .setting-label .step-badge {
+    width: 22px; height: 22px; border-radius: 50%;
+    background: linear-gradient(135deg, var(--primary), var(--secondary));
+    display: flex; align-items: center; justify-content: center;
+    font-size: 0.7rem; font-weight: 900; color: #fff; flex-shrink: 0;
+  }
 
   /* ===== OPTION GROUPS ===== */
-  .option-group { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 4px; }
-  .opt-btn { flex: 1; min-width: 80px; padding: 10px 8px; border-radius: 10px; border: 2px solid var(--border); background: var(--card2); color: var(--text); font-size: 0.9rem; font-weight: 600; cursor: pointer; transition: all 0.18s; text-align: center; }
-  .opt-btn:hover:not(:disabled) { border-color: var(--primary-light); color: var(--primary-light); }
-  .opt-btn.selected { border-color: var(--primary); background: var(--primary); color: #fff; }
-  .opt-btn:disabled { opacity: 0.35; cursor: not-allowed; }
-  .section-label { font-size: 0.82rem; color: var(--text-muted); margin-bottom: 8px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; }
+  .option-group { display: flex; gap: 10px; flex-wrap: wrap; }
+  .opt-btn {
+    flex: 1; min-width: 80px; padding: 11px 10px;
+    border-radius: 12px;
+    border: 2px solid var(--border);
+    background: var(--card2);
+    color: var(--text-muted);
+    font-size: 0.92rem; font-weight: 600; cursor: pointer;
+    transition: all 0.2s; text-align: center; letter-spacing: 0.01em;
+  }
+  .opt-btn:hover:not(:disabled) { border-color: var(--primary-light); color: var(--text); background: rgba(91,76,237,0.12); }
+  .opt-btn.selected {
+    border-color: var(--primary);
+    background: linear-gradient(135deg, var(--primary), #7c3aed);
+    color: #fff;
+    box-shadow: 0 0 14px rgba(91,76,237,0.45);
+  }
+  .opt-btn:disabled { opacity: 0.3; cursor: not-allowed; }
 
   /* ===== START BUTTON ===== */
-  .btn-start { width: 100%; max-width: 640px; margin-top: 20px; padding: 16px; border-radius: var(--radius); border: none; background: linear-gradient(135deg, var(--primary), var(--secondary)); color: #fff; font-size: 1.1rem; font-weight: 700; cursor: pointer; transition: opacity 0.2s, transform 0.15s; letter-spacing: 0.03em; }
-  .btn-start:hover:not(:disabled) { opacity: 0.9; transform: translateY(-1px); }
-  .btn-start:disabled { opacity: 0.35; cursor: not-allowed; }
+  .btn-start {
+    width: 100%; max-width: 660px; margin-top: 8px; padding: 18px;
+    border-radius: var(--radius); border: none;
+    background: linear-gradient(135deg, var(--primary), var(--secondary));
+    color: #fff; font-size: 1.15rem; font-weight: 800; cursor: pointer;
+    transition: opacity 0.2s, transform 0.15s, box-shadow 0.2s;
+    letter-spacing: 0.04em; box-shadow: 0 4px 24px rgba(91,76,237,0.4);
+    text-transform: uppercase;
+  }
+  .btn-start:hover:not(:disabled) { opacity: 0.92; transform: translateY(-2px); box-shadow: 0 8px 32px rgba(91,76,237,0.55); }
+  .btn-start:disabled { opacity: 0.3; cursor: not-allowed; box-shadow: none; }
 
   /* ===== HUD ===== */
-  .hud { display: flex; align-items: center; justify-content: space-between; width: 100%; max-width: 700px; margin-bottom: 14px; gap: 8px; flex-wrap: wrap; }
-  .hud-item { background: var(--card); border: 1px solid var(--border); border-radius: 10px; padding: 8px 14px; font-size: 0.85rem; font-weight: 700; display: flex; align-items: center; gap: 6px; }
-  .hud-item .label { color: var(--text-muted); font-weight: 500; }
-  .hud-item .value { color: var(--text); }
+  .hud {
+    display: flex; align-items: center; justify-content: space-between;
+    width: 100%; max-width: 720px; margin-bottom: 12px; gap: 8px; flex-wrap: wrap;
+  }
+  .hud-item {
+    background: var(--card); border: 1px solid var(--border); border-radius: 12px;
+    padding: 10px 16px; font-size: 0.88rem; font-weight: 700;
+    display: flex; align-items: center; gap: 6px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+  }
+  .hud-item .label { color: var(--text-muted); font-weight: 600; font-size: 0.78rem; text-transform: uppercase; letter-spacing: 0.06em; }
+  .hud-item .value { color: var(--text); font-size: 1rem; }
   .hud-item.score .value { color: var(--success); }
-  .btn-quit { background: transparent; border: 1px solid var(--border); color: var(--text-muted); border-radius: 8px; padding: 7px 14px; font-size: 0.82rem; cursor: pointer; transition: all 0.18s; }
-  .btn-quit:hover { border-color: var(--danger); color: var(--danger); }
+  .hud-item.timer .value { color: var(--secondary); font-variant-numeric: tabular-nums; font-family: 'Courier New', monospace; }
+  .btn-quit {
+    background: transparent; border: 1px solid var(--border); color: var(--text-muted);
+    border-radius: 10px; padding: 9px 16px; font-size: 0.84rem; cursor: pointer;
+    transition: all 0.18s; font-weight: 600;
+  }
+  .btn-quit:hover { border-color: var(--danger); color: var(--danger); background: rgba(239,68,68,0.08); }
 
   /* ===== PROGRESS BAR ===== */
-  .progress-bar-wrap { width: 100%; max-width: 700px; height: 6px; background: var(--border); border-radius: 99px; margin-bottom: 16px; overflow: hidden; }
+  .progress-bar-wrap { width: 100%; max-width: 720px; height: 6px; background: var(--border); border-radius: 99px; margin-bottom: 18px; overflow: hidden; }
   .progress-bar-fill { height: 100%; background: linear-gradient(90deg, var(--primary), var(--secondary)); border-radius: 99px; transition: width 0.4s; }
 
   /* ===== QUESTION CARD ===== */
-  .q-card { background: var(--card); border: 1px solid var(--border); border-radius: var(--radius); padding: 24px 22px; width: 100%; max-width: 700px; box-shadow: var(--shadow); }
-  .q-type-badge { display: inline-block; font-size: 0.75rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em; padding: 3px 10px; border-radius: 99px; margin-bottom: 12px; }
-  .badge-mcq { background: rgba(79,70,229,0.2); color: var(--primary-light); }
-  .badge-fill { background: rgba(6,182,212,0.2); color: var(--secondary); }
-  .badge-match { background: rgba(16,185,129,0.2); color: var(--success); }
-  .q-text { font-size: clamp(1rem, 2.5vw, 1.15rem); line-height: 1.65; margin-bottom: 18px; color: var(--text); }
-  .q-hint { font-size: 0.85rem; color: var(--text-muted); margin-bottom: 14px; font-style: italic; }
-  .def-reveal { margin-top: 14px; padding: 12px 16px; background: rgba(16,185,129,0.12); border-left: 3px solid var(--success); border-radius: 8px; font-size: 0.9rem; color: #a7f3d0; display: none; }
+  .q-card {
+    background: var(--card); border: 1px solid var(--border); border-radius: var(--radius);
+    padding: 26px 24px; width: 100%; max-width: 720px; box-shadow: var(--shadow);
+    position: relative; overflow: hidden;
+  }
+  .q-card::before {
+    content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px;
+    background: linear-gradient(90deg, var(--primary), var(--secondary));
+  }
+  .q-type-badge {
+    display: inline-block; font-size: 0.72rem; font-weight: 800; text-transform: uppercase;
+    letter-spacing: 0.08em; padding: 4px 12px; border-radius: 99px; margin-bottom: 14px;
+  }
+  .badge-mcq { background: rgba(91,76,237,0.2); color: var(--primary-light); border: 1px solid rgba(91,76,237,0.3); }
+  .badge-fill { background: rgba(6,182,212,0.2); color: var(--secondary); border: 1px solid rgba(6,182,212,0.3); }
+  .badge-match { background: rgba(16,185,129,0.2); color: var(--success); border: 1px solid rgba(16,185,129,0.3); }
+  .q-text { font-size: clamp(1rem, 2.5vw, 1.15rem); line-height: 1.7; margin-bottom: 20px; color: var(--text); }
+  .def-reveal { margin-top: 14px; padding: 12px 16px; background: rgba(16,185,129,0.1); border-left: 3px solid var(--success); border-radius: 8px; font-size: 0.9rem; color: #a7f3d0; display: none; }
   .def-reveal.show { display: block; }
 
   /* ===== MCQ OPTIONS ===== */
-  .mcq-options { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+  .mcq-options { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
   @media(max-width:480px){ .mcq-options { grid-template-columns: 1fr; } }
-  .mcq-opt { padding: 13px 16px; border-radius: 10px; border: 2px solid var(--border); background: var(--card2); color: var(--text); font-size: 0.95rem; cursor: pointer; transition: all 0.18s; text-align: left; line-height: 1.4; }
-  .mcq-opt:hover:not(:disabled):not(.correct):not(.wrong) { border-color: var(--primary-light); background: rgba(79,70,229,0.12); }
+  .mcq-opt {
+    padding: 14px 18px; border-radius: 12px; border: 2px solid var(--border);
+    background: var(--card2); color: var(--text); font-size: 0.95rem; cursor: pointer;
+    transition: all 0.18s; text-align: left; line-height: 1.45; font-weight: 500;
+  }
+  .mcq-opt:hover:not(:disabled):not(.correct):not(.wrong) { border-color: var(--primary-light); background: rgba(91,76,237,0.12); }
   .mcq-opt.correct { border-color: var(--success); background: rgba(16,185,129,0.18); color: #a7f3d0; }
   .mcq-opt.wrong { border-color: var(--danger); background: rgba(239,68,68,0.15); color: #fca5a5; }
   .mcq-opt:disabled { cursor: default; }
 
   /* ===== FILL IN THE BLANK ===== */
   .fill-wrap { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; }
-  .fill-input { flex: 1; min-width: 180px; padding: 12px 16px; border-radius: 10px; border: 2px solid var(--border); background: var(--card2); color: var(--text); font-size: 1rem; outline: none; transition: border-color 0.18s; font-family: inherit; }
+  .fill-input {
+    flex: 1; min-width: 180px; padding: 13px 16px; border-radius: 12px;
+    border: 2px solid var(--border); background: var(--card2); color: var(--text);
+    font-size: 1rem; outline: none; transition: border-color 0.18s; font-family: inherit;
+  }
   .fill-input:focus { border-color: var(--primary-light); }
   .fill-input.correct { border-color: var(--success); background: rgba(16,185,129,0.12); }
   .fill-input.wrong { border-color: var(--danger); background: rgba(239,68,68,0.1); }
-  .btn-submit { padding: 12px 22px; border-radius: 10px; border: none; background: var(--primary); color: #fff; font-size: 0.95rem; font-weight: 700; cursor: pointer; transition: opacity 0.18s; }
-  .btn-submit:hover:not(:disabled) { opacity: 0.85; }
-  .btn-submit:disabled { opacity: 0.4; cursor: default; }
+  .btn-submit {
+    padding: 13px 24px; border-radius: 12px; border: none;
+    background: linear-gradient(135deg, var(--primary), #7c3aed);
+    color: #fff; font-size: 0.95rem; font-weight: 700; cursor: pointer;
+    transition: opacity 0.18s, transform 0.15s; box-shadow: 0 2px 10px rgba(91,76,237,0.4);
+  }
+  .btn-submit:hover:not(:disabled) { opacity: 0.88; transform: translateY(-1px); }
+  .btn-submit:disabled { opacity: 0.4; cursor: default; box-shadow: none; }
   .fill-feedback { margin-top: 10px; font-size: 0.9rem; font-weight: 600; display: none; }
   .fill-feedback.show { display: block; }
   .fill-feedback.ok { color: var(--success); }
   .fill-feedback.err { color: var(--danger); }
 
   /* ===== MATCHING ===== */
-  .match-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+  .match-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
   @media(max-width:500px){ .match-grid { grid-template-columns: 1fr; } }
-  .match-col { display: flex; flex-direction: column; gap: 8px; }
-  .match-col-label { font-size: 0.78rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; color: var(--text-muted); margin-bottom: 2px; }
-  .match-item { padding: 11px 14px; border-radius: 10px; border: 2px solid var(--border); background: var(--card2); color: var(--text); font-size: 0.88rem; cursor: pointer; transition: all 0.18s; line-height: 1.4; min-height: 52px; display: flex; align-items: center; }
-  .match-item:hover:not(.matched):not(.wrong-flash) { border-color: var(--primary-light); }
-  .match-item.selected { border-color: var(--primary); background: rgba(79,70,229,0.2); }
+  .match-col { display: flex; flex-direction: column; gap: 10px; }
+  .match-col-label { font-size: 0.75rem; font-weight: 800; text-transform: uppercase; letter-spacing: 0.08em; color: var(--text-muted); margin-bottom: 4px; }
+  .match-item {
+    padding: 12px 16px; border-radius: 12px; border: 2px solid var(--border);
+    background: var(--card2); color: var(--text); font-size: 0.88rem; cursor: pointer;
+    transition: all 0.18s; line-height: 1.45; min-height: 54px; display: flex; align-items: center;
+    margin-bottom: 0;
+  }
+  .match-item:hover:not(.matched):not(.wrong-flash) { border-color: var(--primary-light); background: rgba(91,76,237,0.1); }
+  .match-item.selected { border-color: var(--primary); background: rgba(91,76,237,0.22); box-shadow: 0 0 10px rgba(91,76,237,0.3); }
   .match-item.matched { border-color: var(--success); background: rgba(16,185,129,0.15); color: #a7f3d0; cursor: default; }
-  .match-item.wrong-flash { border-color: var(--danger); background: rgba(239,68,68,0.15); }
-  .match-score-note { margin-top: 12px; font-size: 0.85rem; color: var(--text-muted); }
+  .match-item.wrong-flash { border-color: var(--danger); background: rgba(239,68,68,0.15); animation: shake 0.35s; }
+  @keyframes shake { 0%,100%{transform:translateX(0)} 25%{transform:translateX(-4px)} 75%{transform:translateX(4px)} }
+  .match-score-note { margin-top: 14px; font-size: 0.88rem; color: var(--success); font-weight: 600; }
 
   /* ===== NEXT BUTTON ===== */
-  .btn-next { margin-top: 18px; width: 100%; max-width: 700px; padding: 14px; border-radius: var(--radius); border: none; background: linear-gradient(135deg, var(--primary), var(--secondary)); color: #fff; font-size: 1rem; font-weight: 700; cursor: pointer; display: none; transition: opacity 0.2s; }
+  .btn-next {
+    margin-top: 20px; width: 100%; max-width: 720px; padding: 15px;
+    border-radius: var(--radius); border: none;
+    background: linear-gradient(135deg, var(--primary), var(--secondary));
+    color: #fff; font-size: 1rem; font-weight: 700; cursor: pointer;
+    display: none; transition: opacity 0.2s, transform 0.15s;
+    box-shadow: 0 4px 20px rgba(91,76,237,0.4); text-transform: uppercase; letter-spacing: 0.04em;
+  }
   .btn-next.show { display: block; }
-  .btn-next:hover { opacity: 0.88; }
+  .btn-next:hover { opacity: 0.88; transform: translateY(-1px); }
 
   /* ===== RESULTS SCREEN ===== */
-  .results-card { background: var(--card); border: 1px solid var(--border); border-radius: var(--radius); padding: 28px 24px; width: 100%; max-width: 700px; box-shadow: var(--shadow); }
-  .results-score-big { font-size: clamp(2.5rem, 8vw, 4rem); font-weight: 900; text-align: center; background: linear-gradient(135deg, #818cf8, #06b6d4); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+  .results-card { background: var(--card); border: 1px solid var(--border); border-radius: var(--radius); padding: 30px 26px; width: 100%; max-width: 720px; box-shadow: var(--shadow); }
+  .results-score-big { font-size: clamp(2.8rem, 9vw, 4.5rem); font-weight: 900; text-align: center; background: linear-gradient(135deg, #a78bfa, #06b6d4); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
   .results-label { text-align: center; color: var(--text-muted); font-size: 0.9rem; margin-bottom: 6px; }
-  .results-remark { text-align: center; font-size: 1.1rem; font-weight: 700; margin: 14px 0 20px; color: var(--warning); }
-  .results-meta { display: flex; justify-content: center; gap: 24px; margin-bottom: 20px; flex-wrap: wrap; }
+  .results-remark { text-align: center; font-size: 1.1rem; font-weight: 700; margin: 14px 0 22px; color: var(--warning); }
+  .results-meta { display: flex; justify-content: center; gap: 28px; margin-bottom: 22px; flex-wrap: wrap; }
   .results-meta-item { text-align: center; }
-  .results-meta-item .val { font-size: 1.3rem; font-weight: 800; color: var(--text); }
-  .results-meta-item .lbl { font-size: 0.78rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.05em; }
+  .results-meta-item .val { font-size: 1.4rem; font-weight: 800; color: var(--text); font-variant-numeric: tabular-nums; }
+  .results-meta-item .lbl { font-size: 0.75rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.06em; margin-top: 2px; }
   .vocab-review { margin-top: 20px; }
-  .vocab-review h3 { font-size: 0.9rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; color: var(--primary-light); margin-bottom: 12px; padding-bottom: 6px; border-bottom: 1px solid var(--border); }
+  .vocab-review h3 { font-size: 0.85rem; font-weight: 800; text-transform: uppercase; letter-spacing: 0.08em; color: var(--primary-light); margin-bottom: 12px; padding-bottom: 6px; border-bottom: 1px solid var(--border); }
   .vocab-list { display: flex; flex-direction: column; gap: 8px; max-height: 320px; overflow-y: auto; padding-right: 4px; }
   .vocab-list::-webkit-scrollbar { width: 5px; }
   .vocab-list::-webkit-scrollbar-track { background: var(--card2); border-radius: 99px; }
   .vocab-list::-webkit-scrollbar-thumb { background: var(--border); border-radius: 99px; }
-  .vocab-item { display: flex; gap: 10px; align-items: flex-start; padding: 10px 12px; background: var(--card2); border-radius: 8px; border: 1px solid var(--border); }
-  .vocab-item .vi-word { font-weight: 700; color: var(--text); min-width: 130px; font-size: 0.9rem; }
+  .vocab-item { display: flex; gap: 10px; align-items: flex-start; padding: 10px 14px; background: var(--card2); border-radius: 10px; border: 1px solid var(--border); }
+  .vocab-item .vi-word { font-weight: 700; color: var(--text); min-width: 140px; font-size: 0.9rem; }
   .vocab-item .vi-def { color: var(--text-muted); font-size: 0.88rem; line-height: 1.4; }
-  .btn-play-again { width: 100%; margin-top: 20px; padding: 14px; border-radius: var(--radius); border: none; background: linear-gradient(135deg, var(--primary), var(--secondary)); color: #fff; font-size: 1rem; font-weight: 700; cursor: pointer; transition: opacity 0.2s; }
-  .btn-play-again:hover { opacity: 0.88; }
+  .btn-play-again { width: 100%; margin-top: 22px; padding: 15px; border-radius: var(--radius); border: none; background: linear-gradient(135deg, var(--primary), var(--secondary)); color: #fff; font-size: 1rem; font-weight: 700; cursor: pointer; transition: opacity 0.2s, transform 0.15s; box-shadow: 0 4px 20px rgba(91,76,237,0.4); text-transform: uppercase; letter-spacing: 0.04em; }
+  .btn-play-again:hover { opacity: 0.88; transform: translateY(-1px); }
 
   /* ===== DIVIDER ===== */
-  .divider { height: 1px; background: var(--border); margin: 18px 0; }
+  .divider { height: 1px; background: var(--border); margin: 20px 0; }
 
-  /* ===== RESPONSIVE TWEAKS ===== */
+  /* ===== RESPONSIVE ===== */
   @media(max-width:640px){
-    .card, .q-card, .results-card { padding: 18px 14px; }
+    .setting-section, .q-card, .results-card { padding: 18px 14px; }
     .hud { gap: 6px; }
-    .hud-item { padding: 6px 10px; font-size: 0.78rem; }
+    .hud-item { padding: 7px 10px; font-size: 0.78rem; }
   }
 </style>
 </head>
 <body>
 
-<!-- ========== TOP BAR (shown on all screens) ========== -->
+<!-- ========== TOP BAR ========== -->
 <div class="site-topbar">
   <div class="brand">
     <div class="brand-logo">KSLO</div>
@@ -183,23 +301,23 @@
     <p>Choose your settings below to begin.</p>
   </div>
 
-  <div class="card" style="margin-bottom:14px;">
-    <h2>1. School Term</h2>
+  <div class="setting-section">
+    <div class="setting-label"><span class="step-badge">1</span>School Term</div>
     <div class="option-group" id="term-group">
       <button class="opt-btn" data-term="1" onclick="selectTerm(1)">First Term</button>
       <button class="opt-btn" data-term="2" onclick="selectTerm(2)">Second Term</button>
     </div>
   </div>
 
-  <div class="card" style="margin-bottom:14px;">
-    <h2>2. Unit</h2>
+  <div class="setting-section">
+    <div class="setting-label"><span class="step-badge">2</span>Unit</div>
     <div id="unit-group" class="option-group">
       <button class="opt-btn" disabled>—</button>
     </div>
   </div>
 
-  <div class="card" style="margin-bottom:14px;">
-    <h2>3. Number of Questions</h2>
+  <div class="setting-section">
+    <div class="setting-label"><span class="step-badge">3</span>Number of Questions</div>
     <div class="option-group" id="qcount-group">
       <button class="opt-btn" data-q="10" onclick="selectQ(10)">10</button>
       <button class="opt-btn" data-q="20" onclick="selectQ(20)">20</button>
@@ -210,8 +328,8 @@
     </div>
   </div>
 
-  <div class="card" style="margin-bottom:14px;">
-    <h2>4. Definition Language</h2>
+  <div class="setting-section">
+    <div class="setting-label"><span class="step-badge">4</span>Definition Language</div>
     <div class="option-group" id="lang-group">
       <button class="opt-btn selected" data-lang="en" onclick="selectLang('en')">English</button>
       <button class="opt-btn" data-lang="zh" onclick="selectLang('zh')">中文</button>
@@ -225,7 +343,7 @@
 <div id="screen-exercise" class="screen">
   <div class="hud">
     <div class="hud-item"><span class="label">Progress</span>&nbsp;<span class="value" id="hud-progress">1 / 10</span></div>
-    <div class="hud-item"><span class="label">⏱</span>&nbsp;<span class="value" id="hud-timer">0:00</span></div>
+    <div class="hud-item timer"><span class="label">⏱</span>&nbsp;<span class="value" id="hud-timer">00:00.00</span></div>
     <div class="hud-item score"><span class="label">Score</span>&nbsp;<span class="value" id="hud-score">0</span></div>
     <button class="btn-quit" onclick="quitToTitle()">✕ Quit</button>
   </div>
@@ -275,8 +393,6 @@ const UNITS = {
         defEn: "to do or conduct sth",
         defZh: "進行；落實",
         sentence: "This report presents the results of a survey which was {BLANK} by the Counselling Department in July this year.",
-        sentenceBase: "carry out",
-        forms: { base: "carry out", pastSimple: "carried out", pastParticiple: "carried out", presentParticiple: "carrying out", thirdPerson: "carries out" },
         sentenceForm: "carried out"
       },
       {
@@ -285,8 +401,6 @@ const UNITS = {
         defEn: "when someone faces challenges or difficulties",
         defZh: "在逆境中",
         sentence: "Participants were asked to rank responses according to how likely they would provide comfort {BLANK}.",
-        sentenceBase: "during times of adversity",
-        forms: { base: "during times of adversity" },
         sentenceForm: "during times of adversity"
       },
       {
@@ -295,8 +409,6 @@ const UNITS = {
         defEn: "a larger number or part of sth",
         defZh: "大多數",
         sentence: "{BLANK} respondents felt that these 'positive' statements assumed their negative emotions were wrong.",
-        sentenceBase: "a majority of",
-        forms: { base: "a majority of" },
         sentenceForm: "A majority of"
       },
       {
@@ -305,8 +417,6 @@ const UNITS = {
         defEn: "to feel worried or unhappy because you have done sth wrong",
         defZh: "為……感到內疚",
         sentence: "It sounded like I should {BLANK} being sad.",
-        sentenceBase: "feel guilty about",
-        forms: { base: "feel guilty about", pastSimple: "felt guilty about", pastParticiple: "felt guilty about", presentParticiple: "feeling guilty about" },
         sentenceForm: "feel guilty about"
       },
       {
@@ -315,8 +425,6 @@ const UNITS = {
         defEn: "to feel like doing or having sth",
         defZh: "有意（做／要……）",
         sentence: "If you were depressed, you wouldn't really {BLANK} count your blessings.",
-        sentenceBase: "be in the mood to",
-        forms: { base: "be in the mood to" },
         sentenceForm: "be in the mood to"
       },
       {
@@ -325,8 +433,6 @@ const UNITS = {
         defEn: "to support or approve of sth",
         defZh: "贊同；支持",
         sentence: "Participants {BLANK} statements that did not deny negative emotions.",
-        sentenceBase: "be in favour of",
-        forms: { base: "be in favour of", pastSimple: "were in favour of" },
         sentenceForm: "were in favour of"
       },
       {
@@ -335,8 +441,6 @@ const UNITS = {
         defEn: "to accept that a difficult situation exists",
         defZh: "接受；正視",
         sentence: "My counsellor encouraged me to {BLANK} my problems instead of avoiding them.",
-        sentenceBase: "face up to",
-        forms: { base: "face up to", pastSimple: "faced up to", pastParticiple: "faced up to", presentParticiple: "facing up to" },
         sentenceForm: "face up to"
       },
       {
@@ -345,8 +449,6 @@ const UNITS = {
         defEn: "to teach someone about sth",
         defZh: "教育（某人）關於（某事）",
         sentence: "The Counselling Department should {BLANK} students about ways to care for people experiencing negative emotions.",
-        sentenceBase: "educate sb about",
-        forms: { base: "educate sb about" },
         sentenceForm: "educate"
       },
       // TEXT 2
@@ -356,8 +458,6 @@ const UNITS = {
         defEn: "to think about a situation or problem in a reasonable way",
         defZh: "正確看待問題",
         sentence: "What manga and anime characters experience in the stories may help us {BLANK}.",
-        sentenceBase: "keep things in perspective",
-        forms: { base: "keep things in perspective" },
         sentenceForm: "keep things in perspective"
       },
       {
@@ -366,8 +466,6 @@ const UNITS = {
         defEn: "to keep believing that good things will happen in the future",
         defZh: "保持樂觀",
         sentence: "Manga and anime often teach us to {BLANK} as they tackle obstacles with determination.",
-        sentenceBase: "stay optimistic",
-        forms: { base: "stay optimistic" },
         sentenceForm: "stay optimistic"
       },
       {
@@ -376,8 +474,6 @@ const UNITS = {
         defEn: "to deal with a problem calmly and not allow it to influence what you are doing",
         defZh: "從容處理；對……處之泰然",
         sentence: "If the characters can crack a smile after a failure and {BLANK}, why can't we keep our chin up?",
-        sentenceBase: "take sth in sb's stride",
-        forms: { base: "take sth in sb's stride" },
         sentenceForm: "take it in their stride"
       },
       {
@@ -386,8 +482,6 @@ const UNITS = {
         defEn: "to help to achieve sth",
         defZh: "（在……中）起作用",
         sentence: "Manga and anime communities also {BLANK} building positivity among teenagers.",
-        sentenceBase: "play a part in",
-        forms: { base: "play a part in", pastSimple: "played a part in" },
         sentenceForm: "play a part in"
       },
       {
@@ -396,8 +490,6 @@ const UNITS = {
         defEn: "to fight against sb/sth in order to prevent a bad result",
         defZh: "鬥爭；抗爭",
         sentence: "Some teenagers, despite seeing friends at school every day, {BLANK} isolation and loneliness.",
-        sentenceBase: "struggle with",
-        forms: { base: "struggle with", thirdPerson: "struggles with", pastSimple: "struggled with", presentParticiple: "struggling with" },
         sentenceForm: "struggle with"
       },
       {
@@ -406,8 +498,6 @@ const UNITS = {
         defEn: "to reduce a negative feeling",
         defZh: "緩解（某負面情緒）",
         sentence: "Manga and anime may {BLANK} everyday stress and loneliness.",
-        sentenceBase: "offer relief from",
-        forms: { base: "offer relief from" },
         sentenceForm: "offer relief from"
       },
       {
@@ -416,8 +506,6 @@ const UNITS = {
         defEn: "to be all around sb/sth",
         defZh: "被……包圍",
         sentence: "{BLANK} like-minded people can really boost your confidence.",
-        sentenceBase: "be surrounded by",
-        forms: { base: "be surrounded by", presentParticiple: "being surrounded by" },
         sentenceForm: "Being surrounded by"
       },
       {
@@ -426,8 +514,6 @@ const UNITS = {
         defEn: "to communicate with",
         defZh: "與……互動",
         sentence: "By {BLANK} people from all ages and backgrounds, teenagers can develop a strong sense of self.",
-        sentenceBase: "interact with",
-        forms: { base: "interact with", presentParticiple: "interacting with" },
         sentenceForm: "interacting with"
       }
     ],
@@ -552,16 +638,16 @@ const UNITS = {
 
 // Term/unit availability config
 const TERM_UNITS = {
-  1: [], // No units available for first term yet
+  1: [],
   2: ["2nd-8"]
 };
 
 // ============================================================
-// SPELLING DISTRACTORS
+// SPELLING DISTRACTORS  (used ONLY when distractor mode = 'spell')
 // ============================================================
-const DISTRACTORS = {
+const SPELL_DISTRACTORS = {
   // Words
-  "suppress":       ["supress", "supres", "supresse"],
+  "suppress":       ["supress", "supresse", "supres"],
   "incident":       ["incidant", "incedent", "inciddent"],
   "assume":         ["asume", "assuma", "assoom"],
   "unsatisfactory": ["unsatisfactary", "unsatisfectory", "unsatisfactori"],
@@ -574,11 +660,11 @@ const DISTRACTORS = {
   "circumstance":   ["circumstanse", "circumstaince", "circumstence"],
   "resilience":     ["resillience", "resiliance", "resillance"],
   "foster":         ["fosta", "fostar", "fostor"],
-  "vibe":           ["vibe", "vybe", "vib"],
-  // Phrases – misspell the main content word
+  "vibe":           ["vybe", "vib", "vieb"],
+  // Phrases – misspell the main content word only
   "carry out":                   ["cary out", "carri out", "carry owt"],
   "during times of adversity":   ["during times of adversety", "during times of adversaty", "during times of adversitty"],
-  "a majority of":               ["a majorety of", "a majoriti of", "a majoreety of"],
+  "a majority of":               ["a majoreety of", "a majoriti of", "a majoreity of"],
   "feel guilty about":           ["feel gilty about", "feel guiltty about", "feel guiltie about"],
   "be in the mood to":           ["be in the mude to", "be in the moud to", "be in the moode to"],
   "be in favour of":             ["be in favur of", "be in favoure of", "be in favore of"],
@@ -594,14 +680,28 @@ const DISTRACTORS = {
   "interact with":               ["interract with", "intaract with", "interakt with"]
 };
 
+// ============================================================
+// DISTRACTOR LOGIC
+// Randomly choose EITHER (a) other items from the pool
+//                     OR  (b) misspelled versions of the target
+// Never mix both in the same question.
+// ============================================================
 function getDistractors(item, pool) {
-  const misspelled = (DISTRACTORS[item.item] || []).slice(0, 2);
-  const others = pool.filter(p => p.item !== item.item);
-  shuffle(others);
-  const otherItems = others.slice(0, 2).map(p => p.item);
-  const combined = [...misspelled, ...otherItems];
-  shuffle(combined);
-  return combined.slice(0, 3);
+  const hasSpell = SPELL_DISTRACTORS[item.item] && SPELL_DISTRACTORS[item.item].length >= 3;
+  // 50/50 chance between spell and other-items, but only if spell variants exist
+  const useSpell = hasSpell && Math.random() < 0.5;
+
+  if (useSpell) {
+    // Mode (b): 3 misspelled versions
+    const variants = SPELL_DISTRACTORS[item.item].slice();
+    shuffle(variants);
+    return variants.slice(0, 3);
+  } else {
+    // Mode (a): 3 other items from the FULL pool (words + phrases mixed)
+    const others = pool.filter(p => p.item !== item.item);
+    shuffle(others);
+    return others.slice(0, 3).map(p => p.item);
+  }
 }
 
 function getDefDistractors(item, pool) {
@@ -621,7 +721,7 @@ let questions = [];
 let currentQIndex = 0;
 let score = 0;
 let timerInterval = null;
-let secondsElapsed = 0;
+let msElapsed = 0;       // milliseconds
 let practisedItems = new Set();
 let matchState = {};
 
@@ -636,17 +736,37 @@ function shuffle(arr) {
   return arr;
 }
 
-function formatTime(s) {
-  const m = Math.floor(s / 60);
-  const sec = s % 60;
-  return `${m}:${sec.toString().padStart(2, '0')}`;
+function formatTime(ms) {
+  const totalSec = Math.floor(ms / 1000);
+  const m = Math.floor(totalSec / 60);
+  const s = totalSec % 60;
+  const cs = Math.floor((ms % 1000) / 10); // centiseconds
+  return `${m.toString().padStart(2,'0')}:${s.toString().padStart(2,'0')}.${cs.toString().padStart(2,'0')}`;
 }
 
+// Build a fill-in-the-blank hint: bold first letter, underscores for rest
+// e.g. "carry out" → "<b>c</b>____ <b>o</b>__"
 function firstLetterHint(phrase) {
   return phrase.split(' ').map(w => {
     if (w === 'sb' || w === 'sth' || w === "sb's") return w;
-    return w[0] + '_'.repeat(Math.max(3, w.length - 1));
+    const first = w[0];
+    const rest = '_'.repeat(Math.max(3, w.length - 1));
+    return `<b>${first}</b>${rest}`;
   }).join(' ');
+}
+
+// Capitalise all options if the answer starts at the beginning of a sentence
+function maybeCapitalise(opts, answer, isSentenceStart) {
+  if (!isSentenceStart) return opts;
+  return opts.map(o => {
+    if (typeof o !== 'string') return o;
+    return o.charAt(0).toUpperCase() + o.slice(1);
+  });
+}
+
+function isSentenceStart(sentence) {
+  // True if the blank is at the very beginning of the sentence
+  return sentence.trimStart().startsWith('{BLANK}');
 }
 
 function getDef(item) {
@@ -695,6 +815,10 @@ function renderUnitOptions() {
     btn.onclick = () => selectUnit(uid);
     group.appendChild(btn);
   });
+  // Auto-select if only one unit
+  if (available.length === 1) {
+    selectUnit(available[0]);
+  }
 }
 
 function selectUnit(uid) {
@@ -737,65 +861,58 @@ function buildPool() {
   return { allPhrases, allWords };
 }
 
-// Question type generators
-function makeQ_1A(item, pool) {
-  // MCQ: show definition, choose correct word/phrase
-  const distractors = getDistractors(item, pool);
-  const opts = shuffle([item.item, ...distractors]);
-  return {
-    type: '1A',
-    item,
-    prompt: getDef(item),
-    options: opts,
-    answer: item.item
-  };
+// Full combined pool for distractor purposes (words + phrases together)
+function buildFullPool() {
+  const { allPhrases, allWords } = buildPool();
+  return [...allPhrases, ...allWords];
 }
 
-function makeQ_1B(item, pool) {
-  // MCQ: show sentence with blank, choose correct word/phrase
-  const distractors = getDistractors(item, pool);
-  const opts = shuffle([item.sentenceForm || item.item, ...distractors.map(d => d)]);
+function makeQ_1A(item, fullPool) {
+  const distractors = getDistractors(item, fullPool);
+  const sentenceStart = isSentenceStart(item.sentence);
+  let opts = [item.item, ...distractors];
+  opts = maybeCapitalise(opts, item.item, sentenceStart);
+  const answer = sentenceStart ? (item.item.charAt(0).toUpperCase() + item.item.slice(1)) : item.item;
+  shuffle(opts);
+  return { type: '1A', item, prompt: getDef(item), options: opts, answer };
+}
+
+function makeQ_1B(item, fullPool) {
+  const distractors = getDistractors(item, fullPool);
+  const sentenceStart = isSentenceStart(item.sentence);
+  const rawAnswer = item.sentenceForm || item.item;
+  let opts = [rawAnswer, ...distractors];
+  if (sentenceStart) {
+    opts = opts.map(o => typeof o === 'string' ? (o.charAt(0).toUpperCase() + o.slice(1)) : o);
+  }
+  const answer = sentenceStart ? (rawAnswer.charAt(0).toUpperCase() + rawAnswer.slice(1)) : rawAnswer;
   const sentenceDisplay = item.sentence.replace('{BLANK}', '________');
-  return {
-    type: '1B',
-    item,
-    prompt: sentenceDisplay,
-    options: opts,
-    answer: item.sentenceForm || item.item,
-    revealDef: getDef(item)
-  };
+  shuffle(opts);
+  return { type: '1B', item, prompt: sentenceDisplay, options: opts, answer, revealDef: getDef(item) };
 }
 
-function makeQ_1C(item, pool) {
-  // MCQ: show word/phrase, choose correct definition
-  const defDistractors = getDefDistractors(item, pool);
+function makeQ_1C(item, fullPool) {
+  const defDistractors = getDefDistractors(item, fullPool);
   const correctDef = getDef(item);
   const opts = shuffle([correctDef, ...defDistractors.map(d => d.def)]);
-  return {
-    type: '1C',
-    item,
-    prompt: item.item,
-    options: opts,
-    answer: correctDef
-  };
+  return { type: '1C', item, prompt: item.item, options: opts, answer: correctDef };
 }
 
 function makeQ_Fill(item) {
-  // Fill in the blank with first-letter hint
-  const hint = firstLetterHint(item.sentenceForm || item.item);
-  const sentenceDisplay = item.sentence.replace('{BLANK}', `[${hint}]`);
+  const rawAnswer = item.sentenceForm || item.item;
+  const hint = firstLetterHint(rawAnswer);
+  const sentenceDisplay = item.sentence.replace('{BLANK}', hint);
   return {
     type: 'fill',
     item,
     prompt: sentenceDisplay,
     hint,
-    answer: (item.sentenceForm || item.item).toLowerCase(),
+    answer: rawAnswer.toLowerCase(),
     revealDef: getDef(item)
   };
 }
 
-function makeQ_Match(items, pool) {
-  // Matching: 5 items, match word/phrase to definition
+function makeQ_Match(items) {
   const selected = items.slice(0, 5);
   const defs = shuffle(selected.map(i => getDef(i)));
   return {
@@ -808,26 +925,21 @@ function makeQ_Match(items, pool) {
 
 function generateQuestions(totalQ) {
   const { allPhrases, allWords } = buildPool();
+  const fullPool = [...allPhrases, ...allWords];
   const halfQ = Math.floor(totalQ / 2);
-  const phraseCount = halfQ;
-  const wordCount = totalQ - halfQ;
 
   shuffle(allPhrases);
   shuffle(allWords);
 
-  // We'll cycle through items if totalQ > available items
   function cycleItems(arr, n) {
     const result = [];
     for (let i = 0; i < n; i++) result.push(arr[i % arr.length]);
     return result;
   }
 
-  const phraseItems = cycleItems(allPhrases, phraseCount);
-  const wordItems = cycleItems(allWords, wordCount);
-
-  // Distribute question types evenly: 1A, 1B, 1C, fill, match (match counts as 5)
-  // Types: 0=1A, 1=1B, 2=1C, 3=fill, 4=match
-  const allItems = shuffle([...phraseItems.map(i => ({ ...i, kind: 'phrase' })), ...wordItems.map(i => ({ ...i, kind: 'word' }))]);
+  const phraseItems = cycleItems(allPhrases, halfQ);
+  const wordItems = cycleItems(allWords, totalQ - halfQ);
+  const allItems = shuffle([...phraseItems, ...wordItems]);
 
   const qs = [];
   let matchBuffer = [];
@@ -836,31 +948,26 @@ function generateQuestions(totalQ) {
 
   for (let i = 0; i < allItems.length; i++) {
     const item = allItems[i];
-    const pool = item.kind === 'phrase' ? allPhrases : allWords;
 
-    // Insert a matching question every 5 items if we have 5 in buffer
     if (matchBuffer.length === 5) {
-      qs.push(makeQ_Match([...matchBuffer], pool));
+      qs.push(makeQ_Match([...matchBuffer]));
       matchBuffer = [];
     }
 
-    // Decide type
     const t = types[typeIndex % types.length];
     typeIndex++;
 
-    if (t === '1A') qs.push(makeQ_1A(item, pool));
-    else if (t === '1B') qs.push(makeQ_1B(item, pool));
-    else if (t === '1C') qs.push(makeQ_1C(item, pool));
+    if (t === '1A') qs.push(makeQ_1A(item, fullPool));
+    else if (t === '1B') qs.push(makeQ_1B(item, fullPool));
+    else if (t === '1C') qs.push(makeQ_1C(item, fullPool));
     else if (t === 'fill') qs.push(makeQ_Fill(item));
 
     matchBuffer.push(item);
   }
-  // Flush remaining match buffer if ≥ 2
   if (matchBuffer.length >= 2) {
-    qs.push(makeQ_Match(matchBuffer, allPhrases));
+    qs.push(makeQ_Match(matchBuffer));
   }
 
-  // Trim to totalQ and shuffle
   shuffle(qs);
   return qs.slice(0, totalQ);
 }
@@ -872,7 +979,7 @@ function startExercise() {
   questions = generateQuestions(selectedQ);
   currentQIndex = 0;
   score = 0;
-  secondsElapsed = 0;
+  msElapsed = 0;
   practisedItems = new Set();
 
   showScreen('screen-exercise');
@@ -882,16 +989,17 @@ function startExercise() {
 
 function startTimer() {
   clearInterval(timerInterval);
+  const startTime = performance.now() - msElapsed;
   timerInterval = setInterval(() => {
-    secondsElapsed++;
-    document.getElementById('hud-timer').textContent = formatTime(secondsElapsed);
-  }, 1000);
+    msElapsed = Math.floor(performance.now() - startTime);
+    document.getElementById('hud-timer').textContent = formatTime(msElapsed);
+  }, 50); // update every 50ms for smooth centiseconds
 }
 
 function updateHUD() {
   document.getElementById('hud-progress').textContent = `${currentQIndex + 1} / ${questions.length}`;
   document.getElementById('hud-score').textContent = score;
-  const pct = ((currentQIndex) / questions.length) * 100;
+  const pct = (currentQIndex / questions.length) * 100;
   document.getElementById('progress-fill').style.width = pct + '%';
 }
 
@@ -916,9 +1024,7 @@ function renderQuestion() {
 
 // ---- MCQ ----
 function renderMCQ(q, card) {
-  const badgeLabel = q.type === '1A' ? 'Choose the correct word / phrase' :
-                     q.type === '1B' ? 'Choose the correct word / phrase' :
-                     'Choose the correct definition';
+  const badgeLabel = (q.type === '1A' || q.type === '1B') ? 'Choose the correct word / phrase' : 'Choose the correct definition';
   card.innerHTML = `
     <span class="q-type-badge badge-mcq">${badgeLabel}</span>
     <div class="q-text">${q.prompt}</div>
@@ -945,9 +1051,10 @@ function handleMCQ(btn, chosen, q) {
       rev.textContent = '📖 ' + q.revealDef;
       rev.classList.add('show');
     }
-    // Only score if this is the first attempt (no wrong answers yet)
-    if (!q._wrongAttempt) score++;
-    document.getElementById('hud-score').textContent = score;
+    if (!q._wrongAttempt) {
+      score++;
+      document.getElementById('hud-score').textContent = score;
+    }
     practisedItems.add(q.item.item);
     document.getElementById('btn-next').classList.add('show');
   } else {
@@ -964,7 +1071,7 @@ function renderFill(q, card) {
     <div class="q-text">${q.prompt}</div>
     <div class="fill-wrap">
       <input type="text" class="fill-input" id="fill-input" placeholder="Type your answer…" autocomplete="off" autocorrect="off" spellcheck="false" />
-      <button class="btn-submit" id="btn-submit-fill" onclick="handleFill(event, '${escapeForAttr(q.answer)}', '${escapeForAttr(q.revealDef)}')">Submit</button>
+      <button class="btn-submit" id="btn-submit-fill" onclick="handleFill('${escapeForAttr(q.answer)}', '${escapeForAttr(q.revealDef)}')">Submit</button>
     </div>
     <div class="fill-feedback" id="fill-feedback"></div>
     <div class="def-reveal" id="def-reveal"></div>
@@ -973,13 +1080,14 @@ function renderFill(q, card) {
   input.addEventListener('keydown', e => {
     if (e.key === 'Enter') document.getElementById('btn-submit-fill').click();
   });
+  input.focus();
 }
 
 function escapeForAttr(str) {
-  return (str || '').replace(/'/g, "\\'").replace(/"/g, '&quot;');
+  return (str || '').replace(/\\/g, '\\\\').replace(/'/g, "\\'").replace(/"/g, '&quot;');
 }
 
-function handleFill(e, correctAnswer, revealDef) {
+function handleFill(correctAnswer, revealDef) {
   const input = document.getElementById('fill-input');
   const feedback = document.getElementById('fill-feedback');
   const submitBtn = document.getElementById('btn-submit-fill');
@@ -997,8 +1105,7 @@ function handleFill(e, correctAnswer, revealDef) {
     feedback.textContent = '✓ Correct!';
     score++;
     document.getElementById('hud-score').textContent = score;
-    const q = questions[currentQIndex];
-    practisedItems.add(q.item.item);
+    practisedItems.add(questions[currentQIndex].item.item);
   } else {
     input.classList.add('wrong');
     feedback.classList.add('err');
@@ -1021,9 +1128,8 @@ function renderMatch(q, card) {
     selectedWord: null,
     selectedDef: null,
     matched: {},
-    wrongPairs: 0,
-    totalItems: q.items.length,
-    firstAttemptFailed: {}
+    anyMistake: false,   // true if ANY wrong pair was made in this question
+    totalItems: q.items.length
   };
 
   card.innerHTML = `
@@ -1053,34 +1159,28 @@ function renderMatchItems() {
   defsDiv.innerHTML = '';
 
   q.items.forEach(item => {
+    const div = document.createElement('div');
     if (matchState.matched[item.item]) {
-      const div = document.createElement('div');
       div.className = 'match-item matched';
-      div.textContent = item.item;
-      wordsDiv.appendChild(div);
     } else {
-      const div = document.createElement('div');
       div.className = 'match-item' + (matchState.selectedWord === item.item ? ' selected' : '');
-      div.textContent = item.item;
       div.onclick = () => selectMatchWord(item.item);
-      wordsDiv.appendChild(div);
     }
+    div.textContent = item.item;
+    wordsDiv.appendChild(div);
   });
 
   q.defs.forEach(def => {
-    const matchedItem = Object.entries(matchState.matched).find(([k, v]) => v === def);
+    const matchedItem = Object.entries(matchState.matched).find(([, v]) => v === def);
+    const div = document.createElement('div');
     if (matchedItem) {
-      const div = document.createElement('div');
       div.className = 'match-item matched';
-      div.textContent = def;
-      defsDiv.appendChild(div);
     } else {
-      const div = document.createElement('div');
       div.className = 'match-item' + (matchState.selectedDef === def ? ' selected' : '');
-      div.textContent = def;
       div.onclick = () => selectMatchDef(def);
-      defsDiv.appendChild(div);
     }
+    div.textContent = def;
+    defsDiv.appendChild(div);
   });
 }
 
@@ -1108,24 +1208,21 @@ function tryMatchPair() {
     matchState.matched[word] = def;
     matchState.selectedWord = null;
     matchState.selectedDef = null;
-    // Award point only if first attempt for this word
-    if (!matchState.firstAttemptFailed[word]) {
-      score++;
-      document.getElementById('hud-score').textContent = score;
-    }
-    const q = questions[currentQIndex];
-    const matchedItem = q.items.find(i => i.item === word);
+    const matchedItem = matchState.q.items.find(i => i.item === word);
     if (matchedItem) practisedItems.add(matchedItem.item);
     renderMatchItems();
-    // Check if all matched
     if (Object.keys(matchState.matched).length === matchState.totalItems) {
-      document.getElementById('match-score-note').textContent = '✓ All matched!';
+      // All matched – award 1 point only if no mistakes were made
+      if (!matchState.anyMistake) {
+        score++;
+        document.getElementById('hud-score').textContent = score;
+      }
+      document.getElementById('match-score-note').textContent =
+        matchState.anyMistake ? '✗ Mistakes were made – no point awarded.' : '✓ All matched! +1 point';
       document.getElementById('btn-next').classList.add('show');
     }
   } else {
-    // Wrong pair – flash red
-    matchState.firstAttemptFailed[word] = true;
-    matchState.firstAttemptFailed[def] = true;
+    matchState.anyMistake = true;
     matchState.selectedWord = null;
     matchState.selectedDef = null;
     flashWrong(word, def);
@@ -1133,11 +1230,10 @@ function tryMatchPair() {
 }
 
 function flashWrong(word, def) {
-  // Temporarily add wrong-flash class
   document.querySelectorAll('.match-item').forEach(el => {
     if (el.textContent === word || el.textContent === def) {
       el.classList.add('wrong-flash');
-      setTimeout(() => { el.classList.remove('wrong-flash'); renderMatchItems(); }, 600);
+      setTimeout(() => { el.classList.remove('wrong-flash'); renderMatchItems(); }, 500);
     }
   });
 }
@@ -1164,12 +1260,14 @@ function endExercise() {
   showScreen('screen-results');
 
   const total = questions.length;
-  document.getElementById('res-score').textContent = `${score} / ${total}`;
-  document.getElementById('res-time').textContent = formatTime(secondsElapsed);
-  document.getElementById('res-correct').textContent = score;
+  // Score is already accumulated correctly; cap at total just in case
+  const displayScore = Math.min(score, total);
+  document.getElementById('res-score').textContent = `${displayScore} / ${total}`;
+  document.getElementById('res-time').textContent = formatTime(msElapsed);
+  document.getElementById('res-correct').textContent = displayScore;
   document.getElementById('res-total').textContent = total;
 
-  const pct = total > 0 ? score / total : 0;
+  const pct = total > 0 ? displayScore / total : 0;
   let remark = '';
   if (pct >= 0.9) remark = '🌟 Outstanding! You have mastered this unit!';
   else if (pct >= 0.75) remark = '🎉 Great work! Keep it up!';
@@ -1178,7 +1276,6 @@ function endExercise() {
   else remark = '💪 Don\'t give up! Review the words and try again.';
   document.getElementById('res-remark').textContent = remark;
 
-  // Build vocab review
   const { allPhrases, allWords } = buildPool();
   const practisedPhrases = allPhrases.filter(p => practisedItems.has(p.item)).sort((a, b) => a.item.localeCompare(b.item));
   const practisedWords = allWords.filter(w => practisedItems.has(w.item)).sort((a, b) => a.item.localeCompare(b.item));
@@ -1208,10 +1305,8 @@ function playAgain() {
 // ============================================================
 // INIT
 // ============================================================
-// Pre-select defaults
 selectLang('en');
 
-// Auto-update copyright year
 (function() {
   const el = document.getElementById('copyright-year');
   if (el) el.textContent = new Date().getFullYear();
