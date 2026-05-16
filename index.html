@@ -1169,22 +1169,136 @@ function neutralisePlaceholders(text) {
     .replace(/\bsth\b/gi, 'it');
 }
 
+/**
+ * Detect the grammatical tense/form of the correct answer (sentenceForm).
+ * Returns: 'base' | 'past' | 'gerund' | 'past-participle' | 'third-singular'
+ */
+function detectTense(sentenceForm) {
+  if (!sentenceForm) return 'base';
+  const sf = sentenceForm.trim().toLowerCase();
+  const firstWord = sf.split(/\s+/)[0];
+  // Gerund: starts with a word ending in -ing
+  if (firstWord.endsWith('ing')) return 'gerund';
+  // Past tense: first word ends in -ed, or is an irregular past form
+  const IRREGULAR_PAST = new Set(['took','was','were','had','did','went','came','said','got','made',
+    'knew','saw','gave','found','thought','told','became','showed','felt','left','put','brought',
+    'began','kept','held','wrote','stood','heard','let','meant','set','met','ran','paid','sat',
+    'spoke','lay','led','read','grew','lost','fell','sent','built','understood','drew','broke',
+    'spent','cut','rose','drove','bought','wore','chose','dealt','beat','caught','taught','sold',
+    'hung','stuck','struck','swore','threw','flew','blew','knew','drew','grew','chose']);
+  if (firstWord.endsWith('ed') || IRREGULAR_PAST.has(firstWord)) return 'past';
+  // Third-person singular present: ends in -s but not -ss, -us, -is, -ous
+  if (firstWord.endsWith('s') && !firstWord.endsWith('ss') && firstWord.length > 3) return 'third-singular';
+  return 'base';
+}
+
+/**
+ * Conjugate the first verb of a phrase/word to match a target tense.
+ * Only modifies pool-based distractors (not misspellings).
+ */
+function conjugateFirstVerb(phrase, targetTense) {
+  if (targetTense === 'base') return phrase;
+  const words = phrase.split(/\s+/);
+  let firstVerb = words[0].toLowerCase();
+
+  // Handle 'be' specially
+  if (firstVerb === 'be') {
+    if (targetTense === 'past') words[0] = 'was';
+    else if (targetTense === 'gerund') words[0] = 'being';
+    else if (targetTense === 'third-singular') words[0] = 'is';
+    else words[0] = 'be';
+    return words.join(' ');
+  }
+
+  if (targetTense === 'gerund') {
+    words[0] = toGerund(firstVerb);
+  } else if (targetTense === 'past') {
+    words[0] = toPast(firstVerb);
+  } else if (targetTense === 'third-singular') {
+    words[0] = toThirdSingular(firstVerb);
+  }
+  // Preserve original capitalisation
+  if (phrase[0] === phrase[0].toUpperCase() && phrase[0] !== phrase[0].toLowerCase()) {
+    words[0] = words[0].charAt(0).toUpperCase() + words[0].slice(1);
+  }
+  return words.join(' ');
+}
+
+function toGerund(verb) {
+  // Remove trailing 'e' before adding -ing (e.g. take -> taking, struggle -> struggling)
+  if (verb.endsWith('ie')) return verb.slice(0, -2) + 'ying';
+  if (verb.endsWith('e') && !verb.endsWith('ee') && !verb.endsWith('oe')) return verb.slice(0, -1) + 'ing';
+  // Double final consonant if CVC pattern (short vowel)
+  const m = verb.match(/^(.+)([aeiou])([bcdfghjklmnpqrstvwxyz])$/);
+  if (m && m[1].length >= 1 && !isVowel(m[1][m[1].length-1])) return verb + m[3] + 'ing';
+  return verb + 'ing';
+}
+
+function toPast(verb) {
+  const IRREG = {take:'took',make:'made',go:'went',come:'came',see:'saw',give:'gave',
+    find:'found',think:'thought',tell:'told',become:'became',show:'showed',feel:'felt',
+    leave:'left',put:'put',bring:'brought',begin:'began',keep:'kept',hold:'held',
+    write:'wrote',stand:'stood',hear:'heard',let:'let',mean:'meant',set:'set',
+    meet:'met',run:'ran',pay:'paid',sit:'sat',speak:'spoke',lie:'lay',lead:'led',
+    read:'read',grow:'grew',lose:'lost',fall:'fell',send:'sent',build:'built',
+    understand:'understood',draw:'drew',break:'broke',spend:'spent',cut:'cut',
+    rise:'rose',drive:'drove',buy:'bought',wear:'wore',choose:'chose',deal:'dealt',
+    beat:'beat',catch:'caught',teach:'taught',sell:'sold',hang:'hung',stick:'stuck',
+    strike:'struck',swear:'swore',throw:'threw',fly:'flew',blow:'blew',know:'knew',
+    draw:'drew',grow:'grew',choose:'chose',deny:'denied',carry:'carried',
+    struggle:'struggled',offer:'offered',interact:'interacted',encounter:'encountered',
+    foster:'fostered',suppress:'suppressed',assume:'assumed',play:'played',
+    stay:'stayed',face:'faced',educate:'educated',keep:'kept',struggle:'struggled'};
+  if (IRREG[verb]) return IRREG[verb];
+  if (verb.endsWith('e')) return verb + 'd';
+  if (verb.endsWith('y') && !isVowel(verb[verb.length-2])) return verb.slice(0,-1) + 'ied';
+  // Double final consonant if CVC
+  const m = verb.match(/^(.+)([aeiou])([bcdfghjklmnpqrstvwxyz])$/);
+  if (m && m[1].length >= 1 && !isVowel(m[1][m[1].length-1])) return verb + m[3] + 'ed';
+  return verb + 'ed';
+}
+
+function toThirdSingular(verb) {
+  if (verb.endsWith('s') || verb.endsWith('sh') || verb.endsWith('ch') || verb.endsWith('x') || verb.endsWith('o')) return verb + 'es';
+  if (verb.endsWith('y') && !isVowel(verb[verb.length-2])) return verb.slice(0,-1) + 'ies';
+  return verb + 's';
+}
+
 function makeQ_1B(item, fullPool) {
   // Safety guard: if sentence has no {BLANK}, fall back to definition question
   if (!item.sentence || !item.sentence.includes('{BLANK}')) return makeQ_1A(item, fullPool);
+
+  // Detect tense from the correct answer (sentenceForm)
+  const rawAnswer = item.sentenceForm || item.item;
+  const targetTense = detectTense(rawAnswer);
 
   // Use sentenceForm for distractor generation so misspellings match the tense in the sentence
   const sentenceFormItem = item.sentenceForm ? { ...item, item: item.sentenceForm } : item;
   const distractors = getDistractors(sentenceFormItem, fullPool);
   const sentenceStart = isSentenceStart(item.sentence);
-  const rawAnswer = item.sentenceForm || item.item;
   let opts = [rawAnswer, ...distractors];
   opts = [...new Set(opts)];
   while (opts.length < 4) {
     const extra = fullPool.filter(p => !opts.map(o => o.toLowerCase()).includes(p.item.toLowerCase()));
     if (extra.length === 0) break;
-    opts.push(extra[Math.floor(Math.random() * extra.length)].item);
+    // Conjugate pool-based distractor to match the tense of the answer
+    opts.push(conjugateFirstVerb(extra[Math.floor(Math.random() * extra.length)].item, targetTense));
   }
+  // Also conjugate any pool-based distractors already in the list (from getDistractors type 'pool')
+  // Note: misspelling distractors are already in the right form (generated from sentenceForm)
+  // We need to conjugate only the raw pool items added in the while loop above and any that
+  // slipped through from getDistractors when it fell back to pool items.
+  // Re-conjugate all non-answer options that are exact matches to pool items (not misspellings)
+  const poolItemsLower = new Set(fullPool.map(p => p.item.toLowerCase()));
+  opts = opts.map(o => {
+    if (o.toLowerCase() === rawAnswer.toLowerCase()) return o; // keep answer as-is
+    // If this option exactly matches a pool item (base form), conjugate it
+    if (poolItemsLower.has(o.toLowerCase())) return conjugateFirstVerb(o, targetTense);
+    return o; // misspelling — already in correct tense form
+  });
+  opts = [...new Set(opts.map(o => o.toLowerCase()))].map(low => {
+    return opts.find(o => o.toLowerCase() === low) || low;
+  });
   if (sentenceStart) {
     opts = opts.map(o => typeof o === 'string' ? (o.charAt(0).toUpperCase() + o.slice(1)) : o);
   }
@@ -1670,6 +1784,7 @@ selectLang('en');
 
 <!-- ========== FOOTER ========== -->
 <footer class="site-footer">
+  <div style="font-size:0.7rem;color:var(--text-muted);opacity:0.5;margin-bottom:4px;">v260516175800</div>
   &copy; <span id="copyright-year">2026</span> K S Lo English. All Rights Reserved.
 </footer>
 
