@@ -781,23 +781,6 @@ function misspellWord(word) {
     }
   }
 
-  // Strategy 2: Swap positions of two vowels (not at position 0, not in protected suffix)
-  if (results.size < 3) {
-    const vowelPositions = [];
-    for (let i = 1; i < pStart; i++) { if (isVowel(w[i])) vowelPositions.push(i); }
-    if (vowelPositions.length >= 2) {
-      for (let a = 0; a < vowelPositions.length - 1 && results.size < 3; a++) {
-        for (let b = a + 1; b < vowelPositions.length && results.size < 3; b++) {
-          const pi = vowelPositions[a], pj = vowelPositions[b];
-          const arr = w.split('');
-          [arr[pi], arr[pj]] = [arr[pj], arr[pi]];
-          const candidate = arr.join('');
-          if (candidate !== w && !results.has(candidate)) results.add(candidate);
-        }
-      }
-    }
-  }
-
   // Strategy 3: Replace a consonant with a similar-sounding one (not at position 0, not in protected suffix)
   if (results.size < 3) {
     for (let i = 1; i < pStart && results.size < 3; i++) {
@@ -2047,7 +2030,7 @@ validateData();
 
 <!-- ========== FOOTER ========== -->
 <footer class="site-footer">
-  <div style="font-size:0.7rem;color:var(--text-muted);opacity:0.5;margin-bottom:4px;">v260516-205708</div>
+  <div style="font-size:0.7rem;color:var(--text-muted);opacity:0.5;margin-bottom:4px;">v260516-210604</div>
   &copy; <span id="copyright-year">2026</span> K S Lo English. All Rights Reserved.
 </footer>
 
