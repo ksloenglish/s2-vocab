@@ -831,6 +831,30 @@ function misspellWord(word) {
     }
   }
 
+  // Strategy 6: Swap a consecutive pair of letters in the middle of the word.
+  // Prioritise vowel pairs (e.g. "ea" → "ae", "ie" → "ei") then consonant pairs (e.g. "lt" → "tl").
+  // Both characters must be within the unprotected region (not at position 0, not in suffix).
+  if (results.size < 3) {
+    // First pass: consecutive vowel pairs
+    for (let i = 1; i < pStart - 1 && results.size < 3; i++) {
+      if (isVowel(w[i]) && isVowel(w[i + 1]) && w[i] !== w[i + 1] && i + 1 < pStart) {
+        const arr = w.split('');
+        [arr[i], arr[i + 1]] = [arr[i + 1], arr[i]];
+        const candidate = arr.join('');
+        if (candidate !== w && !results.has(candidate) && !isValidWord(candidate)) results.add(candidate);
+      }
+    }
+    // Second pass: consecutive consonant pairs
+    for (let i = 1; i < pStart - 1 && results.size < 3; i++) {
+      if (isConsonant(w[i]) && isConsonant(w[i + 1]) && w[i] !== w[i + 1] && i + 1 < pStart) {
+        const arr = w.split('');
+        [arr[i], arr[i + 1]] = [arr[i + 1], arr[i]];
+        const candidate = arr.join('');
+        if (candidate !== w && !results.has(candidate) && looksReal(candidate) && !isValidWord(candidate)) results.add(candidate);
+      }
+    }
+  }
+
   return [...results].slice(0, 3);
 }
 
@@ -961,7 +985,12 @@ function misspellPhrase(phrase) {
 /**
  * Main distractor function.
  * Randomly chooses EITHER (a) other items from the pool OR (b) algorithmic misspellings.
- * Guarantees all 4 options (target + 3 distractors) are unique.
+ * Returns { items: string[], isMisspellMode: boolean }.
+ *
+ * isMisspellMode = true means all returned distractors are algorithmic misspellings/swaps.
+ * Callers must NOT pad misspell-mode results with pool items, because mixing correctly-spelt
+ * vocabulary phrases with misspelling distractors in the same question violates the rule that
+ * letter/preposition-swap distractors must not include correctly-spelt vocabulary phrases.
  */
 function getDistractors(item, pool) {
   const isPhrase = item.pos === 'phrase';
@@ -970,42 +999,41 @@ function getDistractors(item, pool) {
 
   const useSpell = hasSpell && Math.random() < 0.5;
 
+  // Build a set of all pool item texts (lowercase) for the pool-item guard
+  const poolItemsLowerSet = new Set(pool.map(p => p.item.toLowerCase()));
+
   if (useSpell) {
-    // Mode (b): algorithmic misspellings – ensure uniqueness vs target (case-insensitive)
+    // Mode (b): algorithmic misspellings only.
+    // Rule: distractors formed by replacing letters or prepositions must NOT include
+    // correctly-spelt vocabulary phrases. Therefore this mode NEVER pads with pool items.
+    // If there are not enough valid misspellings, fall through to mode (a) instead.
     const seenLower = new Set([item.item.toLowerCase()]);
     const unique = [];
     for (const m of misspellings) {
       const ml = m.toLowerCase();
-      if (!seenLower.has(ml)) { seenLower.add(ml); unique.push(m); }
+      // Exclude any misspelling that is itself a correctly-spelt pool item
+      if (!seenLower.has(ml) && !poolItemsLowerSet.has(ml)) { seenLower.add(ml); unique.push(m); }
     }
-    // Pad with pool items if not enough unique misspellings
-    if (unique.length < 3) {
-      const others = pool.filter(p => p.item.toLowerCase() !== item.item.toLowerCase());
-      shuffle(others);
-      for (const o of others) {
-        if (unique.length >= 3) break;
-        if (!seenLower.has(o.item.toLowerCase())) {
-          seenLower.add(o.item.toLowerCase());
-          unique.push(o.item);
-        }
-      }
+    // Only use misspelling mode if we have at least 2 pure misspellings.
+    // If not, fall through to mode (a) so all 3 distractors are consistently pool items.
+    if (unique.length >= 2) {
+      return { items: unique.slice(0, 3), isMisspellMode: true };
     }
-    return unique.slice(0, 3);
-  } else {
-    // Mode (a): other items from the FULL pool (words + phrases mixed)
-    const others = pool.filter(p => p.item.toLowerCase() !== item.item.toLowerCase());
-    shuffle(others);
-    const seenLower = new Set([item.item.toLowerCase()]);
-    const chosen = [];
-    for (const o of others) {
-      if (chosen.length >= 3) break;
-      if (!seenLower.has(o.item.toLowerCase())) {
-        seenLower.add(o.item.toLowerCase());
-        chosen.push(o.item);
-      }
-    }
-    return chosen;
+    // Fall through to mode (a)
   }
+  // Mode (a): other items from the FULL pool (words + phrases mixed)
+  const others = pool.filter(p => p.item.toLowerCase() !== item.item.toLowerCase());
+  shuffle(others);
+  const seenLower = new Set([item.item.toLowerCase()]);
+  const chosen = [];
+  for (const o of others) {
+    if (chosen.length >= 3) break;
+    if (!seenLower.has(o.item.toLowerCase())) {
+      seenLower.add(o.item.toLowerCase());
+      chosen.push(o.item);
+    }
+  }
+  return { items: chosen, isMisspellMode: false };
 }
 
 function getDefDistractors(item, pool) {
@@ -1171,7 +1199,7 @@ function buildFullPool() {
 }
 
 function makeQ_1A(item, fullPool) {
-  const distractors = getDistractors(item, fullPool);
+  const { items: distractors } = getDistractors(item, fullPool);
   let opts = [item.item, ...distractors];
   // Ensure all 4 options are unique
   opts = [...new Set(opts)];
@@ -1332,7 +1360,7 @@ function makeQ_1B(item, fullPool) {
 
   // Use sentenceForm for distractor generation so misspellings match the tense in the sentence
   const sentenceFormItem = item.sentenceForm ? { ...item, item: item.sentenceForm } : item;
-  const distractors = getDistractors(sentenceFormItem, fullPool);
+  const { items: distractors, isMisspellMode } = getDistractors(sentenceFormItem, fullPool);
   const sentenceStart = isSentenceStart(item.sentence);
   let opts = [rawAnswer, ...distractors];
   opts = [...new Set(opts)];
@@ -1358,12 +1386,18 @@ function makeQ_1B(item, fullPool) {
     }
     return false;
   }
-  while (opts.length < 4) {
-    const extra = fullPool.filter(p => !opts.map(o => o.toLowerCase()).includes(p.item.toLowerCase()));
-    if (extra.length === 0) break;
-    const picked = extra[Math.floor(Math.random() * extra.length)];
-    // Only conjugate verbs and phrases; use base form for nouns/adj/adv
-    opts.push(shouldConjugate(picked.item) ? conjugateFirstVerb(picked.item, targetTense) : picked.item);
+  // Pad to 4 options only when in pool-item mode (mode-a).
+  // In misspelling mode (mode-b), never pad with pool items — mixing correctly-spelt vocabulary
+  // phrases with misspelling distractors in the same question violates the rule that
+  // letter/preposition-swap distractors must not include correctly-spelt vocabulary phrases.
+  if (!isMisspellMode) {
+    while (opts.length < 4) {
+      const extra = fullPool.filter(p => !opts.map(o => o.toLowerCase()).includes(p.item.toLowerCase()));
+      if (extra.length === 0) break;
+      const picked = extra[Math.floor(Math.random() * extra.length)];
+      // Only conjugate verbs and phrases; use base form for nouns/adj/adv
+      opts.push(shouldConjugate(picked.item) ? conjugateFirstVerb(picked.item, targetTense) : picked.item);
+    }
   }
   // Re-conjugate pool-based distractors already in the list (from getDistractors type 'pool')
   // Misspelling distractors are already in the right form (generated from sentenceForm)
@@ -1381,30 +1415,36 @@ function makeQ_1B(item, fullPool) {
   });
   // Remove any distractor whose base form (pool item) is the same as the correct answer's base form.
   // This prevents e.g. "carry out" appearing alongside "carried out" (the correct answer).
+  // Also removes any string that lowercases to the same as the correct answer (e.g. "a majority of"
+  // appearing alongside "A majority of" — the case-sensitive Set at line 1338 would not catch this).
   const correctBaseForm = item.item.toLowerCase();
   opts = opts.filter(o => {
-    if (o.toLowerCase() === rawAnswer.toLowerCase()) return true; // always keep correct answer
-    return o.toLowerCase() !== correctBaseForm; // remove base form of correct answer
+    if (o === rawAnswer) return true; // keep ONLY the exact correct answer string
+    // Remove anything that lowercases to the same as the answer (catches case variants)
+    // or that is the base form of the correct answer
+    return o.toLowerCase() !== rawAnswer.toLowerCase() && o.toLowerCase() !== correctBaseForm;
   });
-  // Pad back to 4 if we removed something
-  // Use a simple exclusion: avoid the correct answer's base form and anything already in opts (by base form).
-  const optsBaseForms = new Set(opts.map(o => o.toLowerCase()));
-  while (opts.length < 4) {
-    const extra = fullPool.filter(p =>
-      p.item.toLowerCase() !== correctBaseForm &&
-      !optsBaseForms.has(p.item.toLowerCase())
-    );
-    if (extra.length === 0) break;
-    const picked = extra[Math.floor(Math.random() * extra.length)];
-    const conjugated = shouldConjugate(picked.item) ? conjugateFirstVerb(picked.item, targetTense) : picked.item;
-    // Only add if the conjugated form is not already present
-    if (!optsBaseForms.has(conjugated.toLowerCase())) {
-      opts.push(conjugated);
-      optsBaseForms.add(picked.item.toLowerCase());
-      optsBaseForms.add(conjugated.toLowerCase());
-    } else {
-      // Mark as seen to avoid infinite loop
-      optsBaseForms.add(picked.item.toLowerCase());
+  // Pad back to 4 if we removed something — only in pool-item mode.
+  // In misspelling mode, never pad with pool items (see isMisspellMode guard above).
+  if (!isMisspellMode) {
+    const optsBaseForms = new Set(opts.map(o => o.toLowerCase()));
+    while (opts.length < 4) {
+      const extra = fullPool.filter(p =>
+        p.item.toLowerCase() !== correctBaseForm &&
+        !optsBaseForms.has(p.item.toLowerCase())
+      );
+      if (extra.length === 0) break;
+      const picked = extra[Math.floor(Math.random() * extra.length)];
+      const conjugated = shouldConjugate(picked.item) ? conjugateFirstVerb(picked.item, targetTense) : picked.item;
+      // Only add if the conjugated form is not already present
+      if (!optsBaseForms.has(conjugated.toLowerCase())) {
+        opts.push(conjugated);
+        optsBaseForms.add(picked.item.toLowerCase());
+        optsBaseForms.add(conjugated.toLowerCase());
+      } else {
+        // Mark as seen to avoid infinite loop
+        optsBaseForms.add(picked.item.toLowerCase());
+      }
     }
   }
   opts = [...new Set(opts.map(o => o.toLowerCase()))].map(low => {
@@ -1438,7 +1478,7 @@ function makeQ_1B(item, fullPool) {
     if (sbSub) return italicise(applyDistractorSbSub(o, sbSub));
     return italicise(neutralisePlaceholders(o));
   });
-  return { type: '1B', item, prompt: italicise(sentenceDisplay), options: opts, displayOptions: displayOpts, answer, revealDef: italicise(getDef(item)) };
+  return { type: '1B', item, prompt: italicise(sentenceDisplay), options: opts, displayOptions: displayOpts, answer, revealDef: italicise(getDef(item)), isMisspellMode };
 }
 
 function makeQ_1C(item, fullPool) {
@@ -1944,7 +1984,7 @@ validateData();
 
 <!-- ========== FOOTER ========== -->
 <footer class="site-footer">
-  <div style="font-size:0.7rem;color:var(--text-muted);opacity:0.5;margin-bottom:4px;">v260516-193941</div>
+  <div style="font-size:0.7rem;color:var(--text-muted);opacity:0.5;margin-bottom:4px;">v260516-200458</div>
   &copy; <span id="copyright-year">2026</span> K S Lo English. All Rights Reserved.
 </footer>
 
