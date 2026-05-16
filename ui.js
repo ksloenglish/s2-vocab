@@ -81,8 +81,10 @@ function matchUnitBadgeHTML(items) {
 function renderMCQ(q, card) {
   const badgeLabel = (q.type === '1A' || q.type === '1B') ? 'Choose the correct word / phrase' : 'Choose the correct definition';
   card.innerHTML = `
-    ${unitBadgeHTML(q.item && q.item.unitId)}
-    <span class="q-type-badge badge-mcq">${badgeLabel}</span>
+    <div class="q-card-header">
+      <span class="q-type-badge badge-mcq">${badgeLabel}</span>
+      ${unitBadgeHTML(q.item && q.item.unitId)}
+    </div>
     <div class="q-text">${q.prompt}</div>
     <div class="mcq-options" id="mcq-opts"></div>
     <div class="def-reveal" id="def-reveal"></div>
@@ -124,8 +126,10 @@ function handleMCQ(btn, chosen, q) {
 // ---- FILL IN THE BLANK ----
 function renderFill(q, card) {
   card.innerHTML = `
-    ${unitBadgeHTML(q.item && q.item.unitId)}
-    <span class="q-type-badge badge-fill">Fill in the Blank</span>
+    <div class="q-card-header">
+      <span class="q-type-badge badge-fill">Fill in the Blank</span>
+      ${unitBadgeHTML(q.item && q.item.unitId)}
+    </div>
     <div class="q-text">${q.prompt}</div>
     <div class="fill-wrap">
       <input type="text" class="fill-input" id="fill-input" placeholder="Type your answer…" autocomplete="off" autocorrect="off" spellcheck="false" />
@@ -210,8 +214,10 @@ function renderMatch(q, card) {
   };
 
   card.innerHTML = `
-    ${matchUnitBadgeHTML(q.items)}
-    <span class="q-type-badge badge-match">Matching</span>
+    <div class="q-card-header">
+      <span class="q-type-badge badge-match">Matching</span>
+      ${matchUnitBadgeHTML(q.items)}
+    </div>
     <div class="q-text" style="font-size:0.9rem;margin-bottom:14px;">Match each word or phrase with its correct definition.</div>
     <div class="match-grid">
       <div class="match-col">

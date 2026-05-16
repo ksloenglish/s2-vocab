@@ -175,10 +175,17 @@
   /* ===== QUESTION CARD ===== */
   .q-card {
     background: var(--card); border: 1px solid var(--border); border-radius: var(--radius);
-    padding: 26px 24px 26px; padding-top: 44px; /* extra top room for .q-unit-badge */
+    padding: 20px 24px 26px;
     width: 100%; max-width: 720px; box-shadow: var(--shadow);
     position: relative; overflow: hidden; text-align: center;
   }
+  /* Header row: type badge on left, unit badge on right — never overlaps */
+  .q-card-header {
+    display: flex; align-items: center; justify-content: center;
+    gap: 8px; flex-wrap: nowrap; margin-bottom: 14px;
+  }
+  .q-card-header .q-type-badge { margin-bottom: 0; flex-shrink: 1; min-width: 0; }
+  .q-card-header .q-unit-badge { flex-shrink: 0; }
   .q-card::before {
     content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px;
     background: linear-gradient(90deg, var(--primary), var(--secondary));
@@ -195,12 +202,12 @@
   .badge-mcq { background: rgba(91,76,237,0.2); color: var(--primary-light); border: 1px solid rgba(91,76,237,0.3); }
   .badge-fill { background: rgba(6,182,212,0.2); color: var(--secondary); border: 1px solid rgba(6,182,212,0.3); }
   .badge-match { background: rgba(16,185,129,0.2); color: var(--success); border: 1px solid rgba(16,185,129,0.3); }
-  /* Unit origin badge — top-right corner of question card */
+  /* Unit origin badge — inline in the card header row */
   .q-unit-badge {
-    position: absolute; top: 10px; right: 14px;
+    display: inline-block;
     font-size: 0.62rem; font-weight: 900; text-transform: uppercase; letter-spacing: 0.1em;
     padding: 3px 9px; border-radius: 99px;
-    opacity: 0.92; pointer-events: none;
+    opacity: 0.92; pointer-events: none; white-space: nowrap;
   }
   /* Tick mark inside selected unit button */
   .unit-tick {
