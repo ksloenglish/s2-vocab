@@ -456,8 +456,9 @@ const UNITS = {
         pos: "phrase",
         defEn: "to teach sb about a particular subject",
         defZh: "教導某人有關……",
-        sentence: "Schools should {BLANK} students {BLANK} mental health.",
-        sentenceForm: "educate sb about"
+        sentence: "Schools should {BLANK} mental health.",
+        sentenceForm: "educate students about",
+        sbSubstitute: "students"
       },
       // TEXT 2
       {
@@ -1307,10 +1308,38 @@ function makeQ_1B(item, fullPool) {
   const answer = sentenceStart ? (rawAnswer.charAt(0).toUpperCase() + rawAnswer.slice(1)) : rawAnswer;
   const sentenceDisplay = item.sentence.replace('{BLANK}', '________');
   shuffle(opts);
+
+  // If the item has an sbSubstitute (a concrete noun replacing 'sb'), apply it to all options
+  // for display so they look consistent with the correct answer.
+  const sbSub = item.sbSubstitute || null;
+
+  function applyDistractorSbSub(phrase, sub) {
+    // If the phrase already contains 'sb' or 'sth', replace with sub
+    if (/\bsb\b/i.test(phrase)) return phrase.replace(/\bsb\b/gi, sub);
+    // Otherwise append sub: if phrase ends in a preposition, insert before it
+    const words = phrase.trimEnd().split(/\s+/);
+    const lastWord = words[words.length - 1].toLowerCase();
+    const PREPS = new Set(['about','above','across','after','against','along','among','around','at',
+      'before','behind','below','beneath','beside','between','beyond','by','despite','down',
+      'during','except','for','from','in','inside','into','near','of','off','on','onto','out',
+      'outside','over','past','since','through','till','to','toward','towards','under',
+      'underneath','until','up','upon','with','within','without']);
+    if (PREPS.has(lastWord) && words.length > 1) {
+      // Insert sub before the final preposition
+      words.splice(words.length - 1, 0, sub);
+    } else {
+      words.push(sub);
+    }
+    return words.join(' ');
+  }
+
   // For display: replace sb/sth placeholders in non-answer options with neutral pronouns
+  // OR with the sbSubstitute if one is defined
   const displayOpts = opts.map(o => {
     const isAnswer = o.toLowerCase() === answer.toLowerCase();
-    return italicise(isAnswer ? o : neutralisePlaceholders(o));
+    if (isAnswer) return italicise(o);
+    if (sbSub) return italicise(applyDistractorSbSub(o, sbSub));
+    return italicise(neutralisePlaceholders(o));
   });
   return { type: '1B', item, prompt: italicise(sentenceDisplay), options: opts, displayOptions: displayOpts, answer, revealDef: italicise(getDef(item)) };
 }
@@ -1786,7 +1815,7 @@ selectLang('en');
 
 <!-- ========== FOOTER ========== -->
 <footer class="site-footer">
-  <div style="font-size:0.7rem;color:var(--text-muted);opacity:0.5;margin-bottom:4px;">v260516-162021</div>
+  <div style="font-size:0.7rem;color:var(--text-muted);opacity:0.5;margin-bottom:4px;">v260516-162820</div>
   &copy; <span id="copyright-year">2026</span> K S Lo English. All Rights Reserved.
 </footer>
 
