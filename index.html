@@ -1290,7 +1290,11 @@ function makeQ_1B(item, fullPool) {
 
   // Detect tense from the correct answer (sentenceForm)
   const rawAnswer = item.sentenceForm || item.item;
-  const targetTense = detectTense(rawAnswer);
+  let targetTense = detectTense(rawAnswer);
+  // Bug fix: if the sentence has a tense-bearing auxiliary immediately before {BLANK}
+  // (e.g. "was {BLANK} by"), distractors must stay in base form to avoid "was was in favour of".
+  const AUX_BEFORE_BLANK = /\b(is|are|was|were|has been|have been|had been|will be|be|being)\s+\{BLANK\}/i;
+  if (AUX_BEFORE_BLANK.test(item.sentence)) targetTense = 'base';
 
   // Use sentenceForm for distractor generation so misspellings match the tense in the sentence
   const sentenceFormItem = item.sentenceForm ? { ...item, item: item.sentenceForm } : item;
@@ -1301,10 +1305,18 @@ function makeQ_1B(item, fullPool) {
   // Build a lookup: item text (lowercase) -> pos, for POS-guarded conjugation
   const poolPosMap = {};
   fullPool.forEach(p => { poolPosMap[p.item.toLowerCase()] = p.pos; });
-  // Only verbs (pos 'v') and phrases (pos 'phrase') should be conjugated
+  // Only verbs (pos 'v') and verb-led phrases (pos 'phrase') should be conjugated.
+  // Noun phrases starting with an article (a, an, the) must NOT be conjugated
+  // — e.g. "a majority of" would otherwise become "aed majority of".
+  const ARTICLES = new Set(['a','an','the']);
   function shouldConjugate(itemText) {
     const p = poolPosMap[itemText.toLowerCase()];
-    return p === 'v' || p === 'phrase';
+    if (p === 'v') return true;
+    if (p === 'phrase') {
+      const firstWord = itemText.trim().toLowerCase().split(/\s+/)[0];
+      return !ARTICLES.has(firstWord); // skip noun phrases starting with articles
+    }
+    return false;
   }
   while (opts.length < 4) {
     const extra = fullPool.filter(p => !opts.map(o => o.toLowerCase()).includes(p.item.toLowerCase()));
@@ -1845,7 +1857,7 @@ selectLang('en');
 
 <!-- ========== FOOTER ========== -->
 <footer class="site-footer">
-  <div style="font-size:0.7rem;color:var(--text-muted);opacity:0.5;margin-bottom:4px;">v260516-172753</div>
+  <div style="font-size:0.7rem;color:var(--text-muted);opacity:0.5;margin-bottom:4px;">v260516-174554</div>
   &copy; <span id="copyright-year">2026</span> K S Lo English. All Rights Reserved.
 </footer>
 
