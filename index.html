@@ -1044,6 +1044,7 @@ function getDef(item) {
 // TITLE SCREEN LOGIC
 // ============================================================
 function selectTerm(term) {
+  if (selectedTerm === term) return; // already selected — ignore tap
   selectedTerm = term;
   document.querySelectorAll('#term-group .opt-btn').forEach(b => b.classList.toggle('selected', parseInt(b.dataset.term) === term));
   renderUnitOptions();
@@ -1094,18 +1095,21 @@ function renderUnitOptions() {
 }
 
 function selectUnit(uid) {
+  if (selectedUnit === uid) return; // already selected — ignore tap
   selectedUnit = uid;
   document.querySelectorAll('#unit-group .opt-btn').forEach(b => b.classList.toggle('selected', b.dataset.unit === uid));
   checkStartReady();
 }
 
 function selectQ(n) {
+  if (selectedQ === n) return; // already selected — ignore tap
   selectedQ = n;
   document.querySelectorAll('#qcount-group .opt-btn').forEach(b => b.classList.toggle('selected', parseInt(b.dataset.q) === n));
   checkStartReady();
 }
 
 function selectLang(lang) {
+  if (currentLang === lang) return; // already selected — ignore tap
   currentLang = lang;
   document.querySelectorAll('#lang-group .opt-btn').forEach(b => b.classList.toggle('selected', b.dataset.lang === lang));
 }
