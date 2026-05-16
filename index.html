@@ -759,13 +759,23 @@ function misspellWord(word) {
   const w = word.toLowerCase();
   const pStart = protectedStart(w); // indices >= pStart must not be touched
 
-  // Strategy 1: Replace a vowel (not at position 0, not in protected suffix) with a different vowel
-  for (let i = 1; i < pStart && results.size < 3; i++) {
-    if (isVowel(w[i])) {
-      for (const v of VOWELS) {
-        if (v !== w[i]) {
+  // Strategy 1: Replace a vowel (not at position 0, not in protected suffix) with a different vowel.
+  // Track which replacement vowels have already been used so each distractor uses a different vowel.
+  // For each position, prefer an unused replacement vowel; only reuse a vowel if no unused one works.
+  {
+    const usedReplacements = new Set();
+    for (let i = 1; i < pStart && results.size < 3; i++) {
+      if (isVowel(w[i])) {
+        // Build candidate list: unused replacements first, then used ones as fallback
+        const unused = VOWELS.split('').filter(v => v !== w[i] && !usedReplacements.has(v));
+        const used   = VOWELS.split('').filter(v => v !== w[i] &&  usedReplacements.has(v));
+        for (const v of [...unused, ...used]) {
           const candidate = w.slice(0, i) + v + w.slice(i + 1);
-          if (candidate !== w && looksReal(candidate) && !isValidWord(candidate)) { results.add(candidate); break; }
+          if (candidate !== w && looksReal(candidate) && !isValidWord(candidate) && !results.has(candidate)) {
+            results.add(candidate);
+            usedReplacements.add(v);
+            break;
+          }
         }
       }
     }
@@ -1991,7 +2001,7 @@ validateData();
 
 <!-- ========== FOOTER ========== -->
 <footer class="site-footer">
-  <div style="font-size:0.7rem;color:var(--text-muted);opacity:0.5;margin-bottom:4px;">v260516-202041</div>
+  <div style="font-size:0.7rem;color:var(--text-muted);opacity:0.5;margin-bottom:4px;">v260516-202247</div>
   &copy; <span id="copyright-year">2026</span> K S Lo English. All Rights Reserved.
 </footer>
 
