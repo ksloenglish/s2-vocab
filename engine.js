@@ -1208,11 +1208,28 @@ function fcRender() {
   document.getElementById('fc-item-reminder').textContent = card.item || '';
   document.getElementById('fc-def').textContent = def || '';
 
-  // Sample sentence — replace {BLANK} with the sentenceForm in bold
+  // Sample sentence — replace {BLANK} with sentenceForm in bold amber,
+  // then highlight any remaining words of the full phrase that appear elsewhere in the sentence.
   const sentEl = document.getElementById('fc-sentence');
   if (card.sentence) {
     const form = card.sentenceForm || card.item || '___';
-    sentEl.innerHTML = card.sentence.replace('{BLANK}', '<strong>' + form + '</strong>');
+    // Step 1: replace {BLANK} with highlighted sentenceForm
+    let html = card.sentence.replace('{BLANK}', '<strong>' + form + '</strong>');
+    // Step 2: for phrases, find any words of card.item not already inside the {BLANK}
+    // that still appear verbatim in the remaining sentence text, and highlight them.
+    if (card.pos === 'phrase' && card.item) {
+      // Build list of words in the phrase that are NOT in sentenceForm
+      const formWords = form.toLowerCase().split(/\s+/);
+      const phraseWords = card.item.split(/\s+/);
+      const extraWords = phraseWords.filter(w => !formWords.includes(w.toLowerCase()));
+      extraWords.forEach(function(w) {
+        // Case-insensitive whole-word replacement, but only outside existing <strong> tags
+        // Simple approach: replace the word in the plain-text portions of html
+        const re = new RegExp('(?<![>\\w])(' + w.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + ')(?![\\w<])', 'gi');
+        html = html.replace(re, '<strong>$1</strong>');
+      });
+    }
+    sentEl.innerHTML = html;
   } else {
     sentEl.textContent = '';
   }
