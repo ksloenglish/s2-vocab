@@ -823,42 +823,41 @@ function looksReal(s) {
  * Strategy 2: Misspell the main content word (the longest non-preposition, non-function word).
  */
 function misspellPhrase(phrase) {
-  const results = [];
   const words = phrase.toLowerCase().split(' ');
+
+  // Replacement prepositions pool
+  const PREP_REPLACEMENTS = ['on','in','at','by','for','with','from','about','over','under',
+    'into','onto','off','through','against','across','along','behind','beyond','past',
+    'since','till','toward','within','without'];
 
   // Find prepositions in the phrase
   const prepIndices = words.map((w, i) => PREPOSITIONS.includes(w) ? i : -1).filter(i => i >= 0);
 
-  // Strategy 1: swap each preposition with a wrong one (up to 2 distractors)
-  const usedPreps = new Set();
-  for (const pi of prepIndices) {
-    if (results.length >= 2) break;
-    const origPrep = words[pi];
-    // Pick a replacement preposition that isn't already in the phrase
-    const replacements = ['on','in','at','by','for','with','from','about','over','under','into','onto','off','through','against','across','along','behind','beyond','past','since','till','toward','within','without']
-      .filter(p => p !== origPrep && !words.includes(p) && !usedPreps.has(p));
-    if (replacements.length > 0) {
-      const newPrep = replacements[Math.floor(Math.random() * Math.min(3, replacements.length))];
-      usedPreps.add(newPrep);
+  // Build the word-misspelling distractor (always 1, used as the third option)
+  const functionWords = new Set(['a','an','the','be','is','are','was','were','been','being',
+    'have','has','had','do','does','did','will','would','shall','should','may','might',
+    'must','can','could','to','of','in','on','at','by','for','with','from','about',
+    'up','out','off','sb',"sb's",'sth','and','or','but','not','no','so','yet','both',
+    'each','few','more','most','other','some','such','than','that','these','those',
+    'when','where','which','while','who','whom','whose','how','if','though','although',
+    'because','since','until','unless','after','before','as','like','times','during']);
+  const contentWords = words.map((w, i) => ({ w, i }))
+    .filter(({ w }) => !functionWords.has(w) && w.length > 3)
+    .sort((a, b) => b.w.length - a.w.length);
+  let wordMisspelling = null;
+  if (contentWords.length > 0) {
+    const { w: mainWord, i: mainIdx } = contentWords[0];
+    const misspellings = misspellWord(mainWord);
+    if (misspellings.length > 0) {
       const newWords = [...words];
-      newWords[pi] = newPrep;
-      results.push(newWords.join(' '));
+      newWords[mainIdx] = misspellings[0];
+      wordMisspelling = newWords.join(' ');
     }
   }
 
-  // Strategy 2: misspell the main content word (longest non-function word)
-  if (results.length < 3) {
-    const functionWords = new Set(['a','an','the','be','is','are','was','were','been','being',
-      'have','has','had','do','does','did','will','would','shall','should','may','might',
-      'must','can','could','to','of','in','on','at','by','for','with','from','about',
-      'up','out','off','sb',"sb's",'sth','and','or','but','not','no','so','yet','both',
-      'each','few','more','most','other','some','such','than','that','these','those',
-      'when','where','which','while','who','whom','whose','how','if','though','although',
-      'because','since','until','unless','after','before','as','like','times','during']);
-    const contentWords = words.map((w, i) => ({ w, i }))
-      .filter(({ w }) => !functionWords.has(w) && w.length > 3)
-      .sort((a, b) => b.w.length - a.w.length);
-
+  // If there are no prepositions, fall back to word misspellings only
+  if (prepIndices.length === 0) {
+    const results = [];
     if (contentWords.length > 0) {
       const { w: mainWord, i: mainIdx } = contentWords[0];
       const misspellings = misspellWord(mainWord);
@@ -870,6 +869,52 @@ function misspellPhrase(phrase) {
         if (!results.includes(candidate)) results.push(candidate);
       }
     }
+    return results.slice(0, 3);
+  }
+
+  // There is at least one preposition: always produce EXACTLY 2 preposition-swapped distractors
+  // so the preposition variant never stands alone among the options.
+  const prepResults = [];
+  const usedPreps = new Set(words); // avoid replacements already in the phrase
+
+  // First, try to get 2 different replacements for the FIRST preposition slot
+  const pi0 = prepIndices[0];
+  const origPrep0 = words[pi0];
+  const pool0 = PREP_REPLACEMENTS.filter(p => p !== origPrep0 && !usedPreps.has(p));
+  shuffle(pool0);
+  for (const p of pool0) {
+    if (prepResults.length >= 2) break;
+    const newWords = [...words];
+    newWords[pi0] = p;
+    const candidate = newWords.join(' ');
+    if (!prepResults.includes(candidate)) {
+      prepResults.push(candidate);
+      usedPreps.add(p);
+    }
+  }
+
+  // If the phrase has a second preposition and we still need more, use it
+  if (prepResults.length < 2 && prepIndices.length >= 2) {
+    const pi1 = prepIndices[1];
+    const origPrep1 = words[pi1];
+    const pool1 = PREP_REPLACEMENTS.filter(p => p !== origPrep1 && !usedPreps.has(p));
+    shuffle(pool1);
+    for (const p of pool1) {
+      if (prepResults.length >= 2) break;
+      const newWords = [...words];
+      newWords[pi1] = p;
+      const candidate = newWords.join(' ');
+      if (!prepResults.includes(candidate)) {
+        prepResults.push(candidate);
+        usedPreps.add(p);
+      }
+    }
+  }
+
+  // Third distractor: word misspelling (or another pool item if no misspelling available)
+  const results = [...prepResults];
+  if (wordMisspelling && !results.includes(wordMisspelling)) {
+    results.push(wordMisspelling);
   }
 
   return results.slice(0, 3);
