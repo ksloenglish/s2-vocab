@@ -113,12 +113,15 @@
     color: var(--text-muted);
     font-size: 0.92rem; font-weight: 600; cursor: pointer;
     transition: all 0.2s; text-align: center; letter-spacing: 0.01em;
+    -webkit-appearance: none;
+    appearance: none;
+    font-family: inherit;
   }
   .opt-btn:hover:not(:disabled) { border-color: var(--primary-light); color: var(--text); background: rgba(91,76,237,0.12); }
   .opt-btn.selected {
-    border-color: var(--primary);
-    background: linear-gradient(135deg, var(--primary), #7c3aed);
-    color: #fff;
+    border-color: var(--primary) !important;
+    background: linear-gradient(135deg, var(--primary), #7c3aed) !important;
+    color: #fff !important;
     box-shadow: 0 0 14px rgba(91,76,237,0.45);
   }
   .opt-btn:disabled { opacity: 0.3; cursor: not-allowed; }
