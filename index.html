@@ -776,22 +776,25 @@ function misspellWord(word) {
   // Strategy 7 (middle letter removal) only applies to words with ≥7 letters.
 
   // Strategy 1: Replace a vowel (not at position 0, not in protected suffix) with a different vowel.
-  // For each vowel position, tries ALL valid replacement vowels (not just one), so that words
-  // with a single vowel (e.g. "deny": e→a, e→i, e→o) can still yield multiple candidates.
-  // Uses usedReplacements to prefer unused replacement vowels first, ensuring variety across
-  // positions when multiple vowel positions exist.
-  function strategy1() {
+  // maxPerPosition controls how many candidates are added per vowel position:
+  //   - During the shuffle phase: 1 per position (so other strategies get a fair turn)
+  //   - During the fallback phase: Infinity (exhausts all valid replacements to fill remaining slots)
+  // Uses usedReplacements to prefer unused replacement vowels first across positions.
+  function strategy1(maxPerPosition) {
+    if (maxPerPosition === undefined) maxPerPosition = 1;
     const usedReplacements = new Set();
     for (let i = 1; i < pStart && results.size < 3; i++) {
       if (isVowel(w[i])) {
         const unused = VOWELS.split('').filter(v => v !== w[i] && !usedReplacements.has(v));
         const used   = VOWELS.split('').filter(v => v !== w[i] &&  usedReplacements.has(v));
+        let addedThisPos = 0;
         for (const v of [...unused, ...used]) {
-          if (results.size >= 3) break;
+          if (results.size >= 3 || addedThisPos >= maxPerPosition) break;
           const candidate = w.slice(0, i) + v + w.slice(i + 1);
           if (candidate !== w && looksReal(candidate) && !isValidWord(candidate) && !results.has(candidate)) {
             results.add(candidate);
             usedReplacements.add(v);
+            addedThisPos++;
           }
         }
       }
@@ -799,18 +802,24 @@ function misspellWord(word) {
   }
 
   // Strategy 3: Replace a consonant with a similar-sounding one (not at position 0, not in protected suffix).
-  function strategy3() {
+  // maxPerConsonant controls how many candidates are added per consonant position:
+  //   - During the shuffle phase: 1 per position
+  //   - During the fallback phase: Infinity (tries all similar consonants at each position)
+  function strategy3(maxPerConsonant) {
+    if (maxPerConsonant === undefined) maxPerConsonant = 1;
     for (let i = 1; i < pStart && results.size < 3; i++) {
       const ch = w[i];
       if (!isConsonant(ch)) continue;
       for (const group of SIMILAR_CONSONANTS) {
         if (group.includes(ch)) {
+          let addedThisPos = 0;
           for (const alt of group) {
             if (alt !== ch) {
+              if (results.size >= 3 || addedThisPos >= maxPerConsonant) break;
               const candidate = w.slice(0, i) + alt + w.slice(i + 1);
               if (candidate !== w && !results.has(candidate) && looksReal(candidate) && !isValidWord(candidate)) {
                 results.add(candidate);
-                break;
+                addedThisPos++;
               }
             }
           }
@@ -898,11 +907,15 @@ function misspellWord(word) {
     strategy();
   }
 
-  // Fallback: if all strategies are exhausted and we still have fewer than 3 candidates,
-  // re-run Strategy 1 (vowel replacement) then Strategy 3 (consonant replacement) to fill
-  // remaining slots. These are the most productive strategies and serve as a safety net.
-  if (results.size < 3) strategy1();
-  if (results.size < 3) strategy3();
+  // Fallback: if all strategies are exhausted and fewer than 3 candidates remain, re-run
+  // Strategy 1 and Strategy 3 in a random order, this time without the 1-per-position cap,
+  // so they can fill multiple slots from a single position
+  // (e.g. "deny": S1 gives dany/diny/dony; S3 gives demy/dely).
+  const fallbacks = Math.random() < 0.5 ? [strategy1, strategy3] : [strategy3, strategy1];
+  for (const fb of fallbacks) {
+    if (results.size >= 3) break;
+    fb(Infinity);
+  }
 
   return [...results].slice(0, 3);
 }
@@ -2066,7 +2079,7 @@ validateData();
 
 <!-- ========== FOOTER ========== -->
 <footer class="site-footer">
-  <div style="font-size:0.7rem;color:var(--text-muted);opacity:0.5;margin-bottom:4px;">v260516-213612</div>
+  <div style="font-size:0.7rem;color:var(--text-muted);opacity:0.5;margin-bottom:4px;">v260516-214128</div>
   &copy; <span id="copyright-year">2026</span> K S Lo English. All Rights Reserved.
 </footer>
 
