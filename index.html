@@ -960,15 +960,23 @@ function getDistractors(item, pool) {
   const useSpell = hasSpell && Math.random() < 0.5;
 
   if (useSpell) {
-    // Mode (b): algorithmic misspellings – ensure uniqueness vs target
-    const unique = misspellings.filter(m => m.toLowerCase() !== item.item.toLowerCase());
-    // Pad with pool items if not enough
+    // Mode (b): algorithmic misspellings – ensure uniqueness vs target (case-insensitive)
+    const seenLower = new Set([item.item.toLowerCase()]);
+    const unique = [];
+    for (const m of misspellings) {
+      const ml = m.toLowerCase();
+      if (!seenLower.has(ml)) { seenLower.add(ml); unique.push(m); }
+    }
+    // Pad with pool items if not enough unique misspellings
     if (unique.length < 3) {
       const others = pool.filter(p => p.item.toLowerCase() !== item.item.toLowerCase());
       shuffle(others);
       for (const o of others) {
         if (unique.length >= 3) break;
-        if (!unique.includes(o.item)) unique.push(o.item);
+        if (!seenLower.has(o.item.toLowerCase())) {
+          seenLower.add(o.item.toLowerCase());
+          unique.push(o.item);
+        }
       }
     }
     return unique.slice(0, 3);
@@ -976,10 +984,14 @@ function getDistractors(item, pool) {
     // Mode (a): other items from the FULL pool (words + phrases mixed)
     const others = pool.filter(p => p.item.toLowerCase() !== item.item.toLowerCase());
     shuffle(others);
+    const seenLower = new Set([item.item.toLowerCase()]);
     const chosen = [];
     for (const o of others) {
       if (chosen.length >= 3) break;
-      if (!chosen.includes(o.item)) chosen.push(o.item);
+      if (!seenLower.has(o.item.toLowerCase())) {
+        seenLower.add(o.item.toLowerCase());
+        chosen.push(o.item);
+      }
     }
     return chosen;
   }
@@ -1873,7 +1885,7 @@ selectLang('en');
 
 <!-- ========== FOOTER ========== -->
 <footer class="site-footer">
-  <div style="font-size:0.7rem;color:var(--text-muted);opacity:0.5;margin-bottom:4px;">v260516-175656</div>
+  <div style="font-size:0.7rem;color:var(--text-muted);opacity:0.5;margin-bottom:4px;">v260516-181235</div>
   &copy; <span id="copyright-year">2026</span> K S Lo English. All Rights Reserved.
 </footer>
 
