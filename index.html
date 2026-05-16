@@ -1,0 +1,1195 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>S2 Vocabulary Exercise – K S Lo English</title>
+<meta name="description" content="Interactive vocabulary exercise for S2 students at HKMA K S Lo College.">
+<meta property="og:title" content="S2 Vocabulary Exercise – K S Lo English">
+<meta property="og:description" content="Practise your S2 vocabulary with MCQ, fill-in-the-blank, and matching questions.">
+<meta property="og:type" content="website">
+<style>
+  /* ===== RESET & BASE ===== */
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  :root {
+    --primary: #4f46e5;
+    --primary-dark: #3730a3;
+    --primary-light: #818cf8;
+    --secondary: #06b6d4;
+    --success: #10b981;
+    --danger: #ef4444;
+    --warning: #f59e0b;
+    --bg: #0f172a;
+    --card: #1e293b;
+    --card2: #263347;
+    --text: #f1f5f9;
+    --text-muted: #94a3b8;
+    --border: #334155;
+    --radius: 14px;
+    --shadow: 0 4px 24px rgba(0,0,0,0.4);
+  }
+  html, body { height: 100%; font-family: 'Segoe UI', system-ui, -apple-system, sans-serif; background: var(--bg); color: var(--text); font-size: 16px; }
+  body { display: flex; flex-direction: column; min-height: 100vh; }
+
+  /* ===== SCREENS ===== */
+  .screen { display: none; flex-direction: column; align-items: center; justify-content: flex-start; min-height: 100vh; padding: 20px 16px 40px; }
+  .screen.active { display: flex; }
+
+  /* ===== HEADER ===== */
+  .site-header { text-align: center; margin-bottom: 28px; }
+  .site-header .logo { font-size: 1.1rem; font-weight: 700; color: var(--primary-light); letter-spacing: 0.05em; text-transform: uppercase; }
+  .site-header h1 { font-size: clamp(1.6rem, 5vw, 2.4rem); font-weight: 800; background: linear-gradient(135deg, #818cf8, #06b6d4); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; margin-top: 6px; }
+  .site-header p { color: var(--text-muted); margin-top: 6px; font-size: 0.95rem; }
+
+  /* ===== CARDS ===== */
+  .card { background: var(--card); border: 1px solid var(--border); border-radius: var(--radius); padding: 24px; width: 100%; max-width: 640px; box-shadow: var(--shadow); }
+  .card h2 { font-size: 1.1rem; font-weight: 700; color: var(--primary-light); margin-bottom: 16px; text-transform: uppercase; letter-spacing: 0.04em; }
+
+  /* ===== OPTION GROUPS ===== */
+  .option-group { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 4px; }
+  .opt-btn { flex: 1; min-width: 80px; padding: 10px 8px; border-radius: 10px; border: 2px solid var(--border); background: var(--card2); color: var(--text); font-size: 0.9rem; font-weight: 600; cursor: pointer; transition: all 0.18s; text-align: center; }
+  .opt-btn:hover:not(:disabled) { border-color: var(--primary-light); color: var(--primary-light); }
+  .opt-btn.selected { border-color: var(--primary); background: var(--primary); color: #fff; }
+  .opt-btn:disabled { opacity: 0.35; cursor: not-allowed; }
+  .section-label { font-size: 0.82rem; color: var(--text-muted); margin-bottom: 8px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; }
+
+  /* ===== START BUTTON ===== */
+  .btn-start { width: 100%; max-width: 640px; margin-top: 20px; padding: 16px; border-radius: var(--radius); border: none; background: linear-gradient(135deg, var(--primary), var(--secondary)); color: #fff; font-size: 1.1rem; font-weight: 700; cursor: pointer; transition: opacity 0.2s, transform 0.15s; letter-spacing: 0.03em; }
+  .btn-start:hover:not(:disabled) { opacity: 0.9; transform: translateY(-1px); }
+  .btn-start:disabled { opacity: 0.35; cursor: not-allowed; }
+
+  /* ===== HUD ===== */
+  .hud { display: flex; align-items: center; justify-content: space-between; width: 100%; max-width: 700px; margin-bottom: 14px; gap: 8px; flex-wrap: wrap; }
+  .hud-item { background: var(--card); border: 1px solid var(--border); border-radius: 10px; padding: 8px 14px; font-size: 0.85rem; font-weight: 700; display: flex; align-items: center; gap: 6px; }
+  .hud-item .label { color: var(--text-muted); font-weight: 500; }
+  .hud-item .value { color: var(--text); }
+  .hud-item.score .value { color: var(--success); }
+  .btn-quit { background: transparent; border: 1px solid var(--border); color: var(--text-muted); border-radius: 8px; padding: 7px 14px; font-size: 0.82rem; cursor: pointer; transition: all 0.18s; }
+  .btn-quit:hover { border-color: var(--danger); color: var(--danger); }
+
+  /* ===== PROGRESS BAR ===== */
+  .progress-bar-wrap { width: 100%; max-width: 700px; height: 6px; background: var(--border); border-radius: 99px; margin-bottom: 16px; overflow: hidden; }
+  .progress-bar-fill { height: 100%; background: linear-gradient(90deg, var(--primary), var(--secondary)); border-radius: 99px; transition: width 0.4s; }
+
+  /* ===== QUESTION CARD ===== */
+  .q-card { background: var(--card); border: 1px solid var(--border); border-radius: var(--radius); padding: 24px 22px; width: 100%; max-width: 700px; box-shadow: var(--shadow); }
+  .q-type-badge { display: inline-block; font-size: 0.75rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em; padding: 3px 10px; border-radius: 99px; margin-bottom: 12px; }
+  .badge-mcq { background: rgba(79,70,229,0.2); color: var(--primary-light); }
+  .badge-fill { background: rgba(6,182,212,0.2); color: var(--secondary); }
+  .badge-match { background: rgba(16,185,129,0.2); color: var(--success); }
+  .q-text { font-size: clamp(1rem, 2.5vw, 1.15rem); line-height: 1.65; margin-bottom: 18px; color: var(--text); }
+  .q-hint { font-size: 0.85rem; color: var(--text-muted); margin-bottom: 14px; font-style: italic; }
+  .def-reveal { margin-top: 14px; padding: 12px 16px; background: rgba(16,185,129,0.12); border-left: 3px solid var(--success); border-radius: 8px; font-size: 0.9rem; color: #a7f3d0; display: none; }
+  .def-reveal.show { display: block; }
+
+  /* ===== MCQ OPTIONS ===== */
+  .mcq-options { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+  @media(max-width:480px){ .mcq-options { grid-template-columns: 1fr; } }
+  .mcq-opt { padding: 13px 16px; border-radius: 10px; border: 2px solid var(--border); background: var(--card2); color: var(--text); font-size: 0.95rem; cursor: pointer; transition: all 0.18s; text-align: left; line-height: 1.4; }
+  .mcq-opt:hover:not(:disabled):not(.correct):not(.wrong) { border-color: var(--primary-light); background: rgba(79,70,229,0.12); }
+  .mcq-opt.correct { border-color: var(--success); background: rgba(16,185,129,0.18); color: #a7f3d0; }
+  .mcq-opt.wrong { border-color: var(--danger); background: rgba(239,68,68,0.15); color: #fca5a5; }
+  .mcq-opt:disabled { cursor: default; }
+
+  /* ===== FILL IN THE BLANK ===== */
+  .fill-wrap { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; }
+  .fill-input { flex: 1; min-width: 180px; padding: 12px 16px; border-radius: 10px; border: 2px solid var(--border); background: var(--card2); color: var(--text); font-size: 1rem; outline: none; transition: border-color 0.18s; font-family: inherit; }
+  .fill-input:focus { border-color: var(--primary-light); }
+  .fill-input.correct { border-color: var(--success); background: rgba(16,185,129,0.12); }
+  .fill-input.wrong { border-color: var(--danger); background: rgba(239,68,68,0.1); }
+  .btn-submit { padding: 12px 22px; border-radius: 10px; border: none; background: var(--primary); color: #fff; font-size: 0.95rem; font-weight: 700; cursor: pointer; transition: opacity 0.18s; }
+  .btn-submit:hover:not(:disabled) { opacity: 0.85; }
+  .btn-submit:disabled { opacity: 0.4; cursor: default; }
+  .fill-feedback { margin-top: 10px; font-size: 0.9rem; font-weight: 600; display: none; }
+  .fill-feedback.show { display: block; }
+  .fill-feedback.ok { color: var(--success); }
+  .fill-feedback.err { color: var(--danger); }
+
+  /* ===== MATCHING ===== */
+  .match-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+  @media(max-width:500px){ .match-grid { grid-template-columns: 1fr; } }
+  .match-col { display: flex; flex-direction: column; gap: 8px; }
+  .match-col-label { font-size: 0.78rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; color: var(--text-muted); margin-bottom: 2px; }
+  .match-item { padding: 11px 14px; border-radius: 10px; border: 2px solid var(--border); background: var(--card2); color: var(--text); font-size: 0.88rem; cursor: pointer; transition: all 0.18s; line-height: 1.4; min-height: 52px; display: flex; align-items: center; }
+  .match-item:hover:not(.matched):not(.wrong-flash) { border-color: var(--primary-light); }
+  .match-item.selected { border-color: var(--primary); background: rgba(79,70,229,0.2); }
+  .match-item.matched { border-color: var(--success); background: rgba(16,185,129,0.15); color: #a7f3d0; cursor: default; }
+  .match-item.wrong-flash { border-color: var(--danger); background: rgba(239,68,68,0.15); }
+  .match-score-note { margin-top: 12px; font-size: 0.85rem; color: var(--text-muted); }
+
+  /* ===== NEXT BUTTON ===== */
+  .btn-next { margin-top: 18px; width: 100%; max-width: 700px; padding: 14px; border-radius: var(--radius); border: none; background: linear-gradient(135deg, var(--primary), var(--secondary)); color: #fff; font-size: 1rem; font-weight: 700; cursor: pointer; display: none; transition: opacity 0.2s; }
+  .btn-next.show { display: block; }
+  .btn-next:hover { opacity: 0.88; }
+
+  /* ===== RESULTS SCREEN ===== */
+  .results-card { background: var(--card); border: 1px solid var(--border); border-radius: var(--radius); padding: 28px 24px; width: 100%; max-width: 700px; box-shadow: var(--shadow); }
+  .results-score-big { font-size: clamp(2.5rem, 8vw, 4rem); font-weight: 900; text-align: center; background: linear-gradient(135deg, #818cf8, #06b6d4); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+  .results-label { text-align: center; color: var(--text-muted); font-size: 0.9rem; margin-bottom: 6px; }
+  .results-remark { text-align: center; font-size: 1.1rem; font-weight: 700; margin: 14px 0 20px; color: var(--warning); }
+  .results-meta { display: flex; justify-content: center; gap: 24px; margin-bottom: 20px; flex-wrap: wrap; }
+  .results-meta-item { text-align: center; }
+  .results-meta-item .val { font-size: 1.3rem; font-weight: 800; color: var(--text); }
+  .results-meta-item .lbl { font-size: 0.78rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.05em; }
+  .vocab-review { margin-top: 20px; }
+  .vocab-review h3 { font-size: 0.9rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; color: var(--primary-light); margin-bottom: 12px; padding-bottom: 6px; border-bottom: 1px solid var(--border); }
+  .vocab-list { display: flex; flex-direction: column; gap: 8px; max-height: 320px; overflow-y: auto; padding-right: 4px; }
+  .vocab-list::-webkit-scrollbar { width: 5px; }
+  .vocab-list::-webkit-scrollbar-track { background: var(--card2); border-radius: 99px; }
+  .vocab-list::-webkit-scrollbar-thumb { background: var(--border); border-radius: 99px; }
+  .vocab-item { display: flex; gap: 10px; align-items: flex-start; padding: 10px 12px; background: var(--card2); border-radius: 8px; border: 1px solid var(--border); }
+  .vocab-item .vi-word { font-weight: 700; color: var(--text); min-width: 130px; font-size: 0.9rem; }
+  .vocab-item .vi-def { color: var(--text-muted); font-size: 0.88rem; line-height: 1.4; }
+  .btn-play-again { width: 100%; margin-top: 20px; padding: 14px; border-radius: var(--radius); border: none; background: linear-gradient(135deg, var(--primary), var(--secondary)); color: #fff; font-size: 1rem; font-weight: 700; cursor: pointer; transition: opacity 0.2s; }
+  .btn-play-again:hover { opacity: 0.88; }
+
+  /* ===== DIVIDER ===== */
+  .divider { height: 1px; background: var(--border); margin: 18px 0; }
+
+  /* ===== RESPONSIVE TWEAKS ===== */
+  @media(max-width:640px){
+    .card, .q-card, .results-card { padding: 18px 14px; }
+    .hud { gap: 6px; }
+    .hud-item { padding: 6px 10px; font-size: 0.78rem; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ========== TITLE SCREEN ========== -->
+<div id="screen-title" class="screen active">
+  <div class="site-header">
+    <div class="logo">K S Lo English</div>
+    <h1>Vocabulary Exercise</h1>
+    <p>Secondary 2 &nbsp;·&nbsp; Exam Revision</p>
+  </div>
+
+  <div class="card" style="margin-bottom:14px;">
+    <h2>1. School Term</h2>
+    <div class="option-group" id="term-group">
+      <button class="opt-btn" data-term="1" onclick="selectTerm(1)">First Term</button>
+      <button class="opt-btn" data-term="2" onclick="selectTerm(2)">Second Term</button>
+    </div>
+  </div>
+
+  <div class="card" style="margin-bottom:14px;">
+    <h2>2. Unit</h2>
+    <div id="unit-group" class="option-group">
+      <button class="opt-btn" disabled>—</button>
+    </div>
+  </div>
+
+  <div class="card" style="margin-bottom:14px;">
+    <h2>3. Number of Questions</h2>
+    <div class="option-group" id="qcount-group">
+      <button class="opt-btn" data-q="10" onclick="selectQ(10)">10</button>
+      <button class="opt-btn" data-q="20" onclick="selectQ(20)">20</button>
+      <button class="opt-btn" data-q="30" onclick="selectQ(30)">30</button>
+      <button class="opt-btn" data-q="40" onclick="selectQ(40)">40</button>
+      <button class="opt-btn" data-q="50" onclick="selectQ(50)">50</button>
+      <button class="opt-btn" data-q="100" onclick="selectQ(100)">100</button>
+    </div>
+  </div>
+
+  <div class="card" style="margin-bottom:14px;">
+    <h2>4. Definition Language</h2>
+    <div class="option-group" id="lang-group">
+      <button class="opt-btn selected" data-lang="en" onclick="selectLang('en')">English</button>
+      <button class="opt-btn" data-lang="zh" onclick="selectLang('zh')">Chinese 中文</button>
+    </div>
+  </div>
+
+  <button class="btn-start" id="btn-start" disabled onclick="startExercise()">Start Exercise ▶</button>
+</div>
+
+<!-- ========== EXERCISE SCREEN ========== -->
+<div id="screen-exercise" class="screen">
+  <div class="hud">
+    <div class="hud-item"><span class="label">Progress</span>&nbsp;<span class="value" id="hud-progress">1 / 10</span></div>
+    <div class="hud-item"><span class="label">⏱</span>&nbsp;<span class="value" id="hud-timer">0:00</span></div>
+    <div class="hud-item score"><span class="label">Score</span>&nbsp;<span class="value" id="hud-score">0</span></div>
+    <button class="btn-quit" onclick="quitToTitle()">✕ Quit</button>
+  </div>
+  <div class="progress-bar-wrap"><div class="progress-bar-fill" id="progress-fill" style="width:0%"></div></div>
+  <div class="q-card" id="q-card"><!-- question injected here --></div>
+  <button class="btn-next" id="btn-next" onclick="nextQuestion()">Next Question →</button>
+</div>
+
+<!-- ========== RESULTS SCREEN ========== -->
+<div id="screen-results" class="screen">
+  <div class="site-header" style="margin-bottom:16px;">
+    <div class="logo">K S Lo English</div>
+    <h1>Exercise Complete!</h1>
+  </div>
+  <div class="results-card">
+    <div class="results-label">Your Score</div>
+    <div class="results-score-big" id="res-score">—</div>
+    <div class="results-remark" id="res-remark">—</div>
+    <div class="results-meta">
+      <div class="results-meta-item"><div class="val" id="res-time">—</div><div class="lbl">Time</div></div>
+      <div class="results-meta-item"><div class="val" id="res-correct">—</div><div class="lbl">Correct</div></div>
+      <div class="results-meta-item"><div class="val" id="res-total">—</div><div class="lbl">Total Qs</div></div>
+    </div>
+    <div class="divider"></div>
+    <div class="vocab-review" id="vocab-review-section">
+      <h3>Words Practised</h3>
+      <div class="vocab-list" id="vocab-words-list"></div>
+      <h3 style="margin-top:16px;">Phrases Practised</h3>
+      <div class="vocab-list" id="vocab-phrases-list"></div>
+    </div>
+    <button class="btn-play-again" onclick="playAgain()">Play Again ↺</button>
+  </div>
+</div>
+
+<script>
+// ============================================================
+// VOCABULARY DATA – UNIT 8
+// ============================================================
+const UNITS = {
+  "2nd-8": {
+    label: "Unit 8",
+    term: 2,
+    phrases: [
+      // TEXT 1
+      {
+        item: "carry out",
+        pos: "phrase",
+        defEn: "to do or conduct sth",
+        defZh: "進行；落實",
+        sentence: "This report presents the results of a survey which was {BLANK} by the Counselling Department in July this year.",
+        sentenceBase: "carry out",
+        forms: { base: "carry out", pastSimple: "carried out", pastParticiple: "carried out", presentParticiple: "carrying out", thirdPerson: "carries out" },
+        sentenceForm: "carried out"
+      },
+      {
+        item: "during times of adversity",
+        pos: "phrase",
+        defEn: "when someone faces challenges or difficulties",
+        defZh: "在逆境中",
+        sentence: "Participants were asked to rank responses according to how likely they would provide comfort {BLANK}.",
+        sentenceBase: "during times of adversity",
+        forms: { base: "during times of adversity" },
+        sentenceForm: "during times of adversity"
+      },
+      {
+        item: "a majority of",
+        pos: "phrase",
+        defEn: "a larger number or part of sth",
+        defZh: "大多數",
+        sentence: "{BLANK} respondents felt that these 'positive' statements assumed their negative emotions were wrong.",
+        sentenceBase: "a majority of",
+        forms: { base: "a majority of" },
+        sentenceForm: "A majority of"
+      },
+      {
+        item: "feel guilty about",
+        pos: "phrase",
+        defEn: "to feel worried or unhappy because you have done sth wrong",
+        defZh: "為……感到內疚",
+        sentence: "It sounded like I should {BLANK} being sad.",
+        sentenceBase: "feel guilty about",
+        forms: { base: "feel guilty about", pastSimple: "felt guilty about", pastParticiple: "felt guilty about", presentParticiple: "feeling guilty about" },
+        sentenceForm: "feel guilty about"
+      },
+      {
+        item: "be in the mood to",
+        pos: "phrase",
+        defEn: "to feel like doing or having sth",
+        defZh: "有意（做／要……）",
+        sentence: "If you were depressed, you wouldn't really {BLANK} count your blessings.",
+        sentenceBase: "be in the mood to",
+        forms: { base: "be in the mood to" },
+        sentenceForm: "be in the mood to"
+      },
+      {
+        item: "be in favour of",
+        pos: "phrase",
+        defEn: "to support or approve of sth",
+        defZh: "贊同；支持",
+        sentence: "Participants {BLANK} statements that did not deny negative emotions.",
+        sentenceBase: "be in favour of",
+        forms: { base: "be in favour of", pastSimple: "were in favour of" },
+        sentenceForm: "were in favour of"
+      },
+      {
+        item: "face up to",
+        pos: "phrase",
+        defEn: "to accept that a difficult situation exists",
+        defZh: "接受；正視",
+        sentence: "My counsellor encouraged me to {BLANK} my problems instead of avoiding them.",
+        sentenceBase: "face up to",
+        forms: { base: "face up to", pastSimple: "faced up to", pastParticiple: "faced up to", presentParticiple: "facing up to" },
+        sentenceForm: "face up to"
+      },
+      {
+        item: "educate sb about",
+        pos: "phrase",
+        defEn: "to teach someone about sth",
+        defZh: "教育（某人）關於（某事）",
+        sentence: "The Counselling Department should {BLANK} students about ways to care for people experiencing negative emotions.",
+        sentenceBase: "educate sb about",
+        forms: { base: "educate sb about" },
+        sentenceForm: "educate"
+      },
+      // TEXT 2
+      {
+        item: "keep things in perspective",
+        pos: "phrase",
+        defEn: "to think about a situation or problem in a reasonable way",
+        defZh: "正確看待問題",
+        sentence: "What manga and anime characters experience in the stories may help us {BLANK}.",
+        sentenceBase: "keep things in perspective",
+        forms: { base: "keep things in perspective" },
+        sentenceForm: "keep things in perspective"
+      },
+      {
+        item: "stay optimistic",
+        pos: "phrase",
+        defEn: "to keep believing that good things will happen in the future",
+        defZh: "保持樂觀",
+        sentence: "Manga and anime often teach us to {BLANK} as they tackle obstacles with determination.",
+        sentenceBase: "stay optimistic",
+        forms: { base: "stay optimistic" },
+        sentenceForm: "stay optimistic"
+      },
+      {
+        item: "take sth in sb's stride",
+        pos: "phrase",
+        defEn: "to deal with a problem calmly and not allow it to influence what you are doing",
+        defZh: "從容處理；對……處之泰然",
+        sentence: "If the characters can crack a smile after a failure and {BLANK}, why can't we keep our chin up?",
+        sentenceBase: "take sth in sb's stride",
+        forms: { base: "take sth in sb's stride" },
+        sentenceForm: "take it in their stride"
+      },
+      {
+        item: "play a part in",
+        pos: "phrase",
+        defEn: "to help to achieve sth",
+        defZh: "（在……中）起作用",
+        sentence: "Manga and anime communities also {BLANK} building positivity among teenagers.",
+        sentenceBase: "play a part in",
+        forms: { base: "play a part in", pastSimple: "played a part in" },
+        sentenceForm: "play a part in"
+      },
+      {
+        item: "struggle with",
+        pos: "phrase",
+        defEn: "to fight against sb/sth in order to prevent a bad result",
+        defZh: "鬥爭；抗爭",
+        sentence: "Some teenagers, despite seeing friends at school every day, {BLANK} isolation and loneliness.",
+        sentenceBase: "struggle with",
+        forms: { base: "struggle with", thirdPerson: "struggles with", pastSimple: "struggled with", presentParticiple: "struggling with" },
+        sentenceForm: "struggle with"
+      },
+      {
+        item: "offer relief from",
+        pos: "phrase",
+        defEn: "to reduce a negative feeling",
+        defZh: "緩解（某負面情緒）",
+        sentence: "Manga and anime may {BLANK} everyday stress and loneliness.",
+        sentenceBase: "offer relief from",
+        forms: { base: "offer relief from" },
+        sentenceForm: "offer relief from"
+      },
+      {
+        item: "be surrounded by",
+        pos: "phrase",
+        defEn: "to be all around sb/sth",
+        defZh: "被……包圍",
+        sentence: "{BLANK} like-minded people can really boost your confidence.",
+        sentenceBase: "be surrounded by",
+        forms: { base: "be surrounded by", presentParticiple: "being surrounded by" },
+        sentenceForm: "Being surrounded by"
+      },
+      {
+        item: "interact with",
+        pos: "phrase",
+        defEn: "to communicate with",
+        defZh: "與……互動",
+        sentence: "By {BLANK} people from all ages and backgrounds, teenagers can develop a strong sense of self.",
+        sentenceBase: "interact with",
+        forms: { base: "interact with", presentParticiple: "interacting with" },
+        sentenceForm: "interacting with"
+      }
+    ],
+    words: [
+      // TEXT 1
+      {
+        item: "suppress",
+        pos: "v",
+        defEn: "to prevent sth from being expressed",
+        defZh: "抑壓",
+        sentence: "He couldn't {BLANK} the excitement in his voice.",
+        sentenceForm: "suppress"
+      },
+      {
+        item: "incident",
+        pos: "n",
+        defEn: "an event that is either unpleasant or unusual",
+        defZh: "（不愉快或不尋常的）事件",
+        sentence: "A youth was seriously injured in a shooting {BLANK} on Saturday night.",
+        sentenceForm: "incident"
+      },
+      {
+        item: "assume",
+        pos: "v",
+        defEn: "to accept sth to be true without proof",
+        defZh: "假設",
+        sentence: "He {BLANK} that we knew each other because we went to the same school, but that was not true.",
+        sentenceForm: "assumed"
+      },
+      {
+        item: "unsatisfactory",
+        pos: "adj",
+        defEn: "not good enough",
+        defZh: "不令人滿意的",
+        sentence: "His examination result of 30 out of 100 was considered to be {BLANK}.",
+        sentenceForm: "unsatisfactory"
+      },
+      {
+        item: "deny",
+        pos: "v",
+        defEn: "to say that something is not true",
+        defZh: "否認；否定",
+        sentence: "John {BLANK} that he had broken the window, but I was sure he had done it.",
+        sentenceForm: "denied"
+      },
+      {
+        item: "complicated",
+        pos: "adj",
+        defEn: "involving a lot of different parts, in a way that is difficult to understand",
+        defZh: "複雜的；麻煩的；費解的",
+        sentence: "The relationship is a bit {BLANK}. He's my mother's cousin's daughter's child.",
+        sentenceForm: "complicated"
+      },
+      {
+        item: "conflict",
+        pos: "n",
+        defEn: "an active disagreement between people",
+        defZh: "衝突；分歧；爭論",
+        sentence: "There was a lot of {BLANK} between him and his father.",
+        sentenceForm: "conflict"
+      },
+      // TEXT 2
+      {
+        item: "inspiring",
+        pos: "adj",
+        defEn: "exciting and encouraging you to do or feel sth",
+        defZh: "鼓舞人心的",
+        sentence: "Her {BLANK} speech motivated everyone in the room to strive for their personal best.",
+        sentenceForm: "inspiring"
+      },
+      {
+        item: "encounter",
+        pos: "v",
+        defEn: "to experience sth, especially sth unpleasant",
+        defZh: "遭遇；遇上",
+        sentence: "When did you first {BLANK} these difficulties?",
+        sentenceForm: "encounter"
+      },
+      {
+        item: "eventually",
+        pos: "adv",
+        defEn: "in the end, especially after a long time or a lot of effort",
+        defZh: "終於",
+        sentence: "It might take him ages but he will do it {BLANK}.",
+        sentenceForm: "eventually"
+      },
+      {
+        item: "circumstance",
+        pos: "n",
+        defEn: "an event that makes a situation the way it is",
+        defZh: "形勢",
+        sentence: "I think she coped very well under the {BLANK}, which were very difficult.",
+        sentenceForm: "circumstances"
+      },
+      {
+        item: "resilience",
+        pos: "n",
+        defEn: "the ability to be happy or successful again after sth difficult has happened",
+        defZh: "抗逆能力",
+        sentence: "He showed great {BLANK} in fighting back from a losing position to win the game.",
+        sentenceForm: "resilience"
+      },
+      {
+        item: "foster",
+        pos: "v",
+        defEn: "to encourage the development of ideas or feelings",
+        defZh: "促進；培養",
+        sentence: "I'm trying to {BLANK} an interest in classical music in my children.",
+        sentenceForm: "foster"
+      },
+      {
+        item: "vibe",
+        pos: "n",
+        defEn: "the mood or character of a place, situation, or piece of music",
+        defZh: "（某地、某局面或某音樂的）氣氛；氛圍",
+        sentence: "The music has a soothing {BLANK}. You will feel calm when listening to it.",
+        sentenceForm: "vibe"
+      }
+    ]
+  }
+};
+
+// Term/unit availability config
+const TERM_UNITS = {
+  1: [], // No units available for first term yet
+  2: ["2nd-8"]
+};
+
+// ============================================================
+// SPELLING DISTRACTORS
+// ============================================================
+const DISTRACTORS = {
+  // Words
+  "suppress":       ["supress", "supres", "supresse"],
+  "incident":       ["incidant", "incedent", "inciddent"],
+  "assume":         ["asume", "assuma", "assoom"],
+  "unsatisfactory": ["unsatisfactary", "unsatisfectory", "unsatisfactori"],
+  "deny":           ["denie", "denny", "deni"],
+  "complicated":    ["complecated", "complicatted", "complicaited"],
+  "conflict":       ["conflikt", "confict", "conflickt"],
+  "inspiring":      ["inspring", "inspirring", "inspyring"],
+  "encounter":      ["encownter", "encunter", "encountir"],
+  "eventually":     ["eventualy", "eventully", "eventuelly"],
+  "circumstance":   ["circumstanse", "circumstaince", "circumstence"],
+  "resilience":     ["resillience", "resiliance", "resillance"],
+  "foster":         ["fosta", "fostar", "fostor"],
+  "vibe":           ["vibe", "vybe", "vib"],
+  // Phrases – misspell the main content word
+  "carry out":                   ["cary out", "carri out", "carry owt"],
+  "during times of adversity":   ["during times of adversety", "during times of adversaty", "during times of adversitty"],
+  "a majority of":               ["a majorety of", "a majoriti of", "a majoreety of"],
+  "feel guilty about":           ["feel gilty about", "feel guiltty about", "feel guiltie about"],
+  "be in the mood to":           ["be in the mude to", "be in the moud to", "be in the moode to"],
+  "be in favour of":             ["be in favur of", "be in favoure of", "be in favore of"],
+  "face up to":                  ["fase up to", "faise up to", "faze up to"],
+  "educate sb about":            ["educait sb about", "educete sb about", "educatte sb about"],
+  "keep things in perspective":  ["keep things in perspektive", "keep things in perspectiv", "keep things in perspectave"],
+  "stay optimistic":             ["stay optomistic", "stay optimestik", "stay optimistik"],
+  "take sth in sb's stride":     ["take sth in sb's stried", "take sth in sb's stide", "take sth in sb's stryde"],
+  "play a part in":              ["play a pairt in", "play a prat in", "play a parte in"],
+  "struggle with":               ["strugle with", "struglle with", "strugle wiht"],
+  "offer relief from":           ["offer releif from", "offer releef from", "offer relef from"],
+  "be surrounded by":            ["be sorrounded by", "be surrownded by", "be surounded by"],
+  "interact with":               ["interract with", "intaract with", "interakt with"]
+};
+
+function getDistractors(item, pool) {
+  const misspelled = (DISTRACTORS[item.item] || []).slice(0, 2);
+  const others = pool.filter(p => p.item !== item.item);
+  shuffle(others);
+  const otherItems = others.slice(0, 2).map(p => p.item);
+  const combined = [...misspelled, ...otherItems];
+  shuffle(combined);
+  return combined.slice(0, 3);
+}
+
+function getDefDistractors(item, pool) {
+  const others = pool.filter(p => p.item !== item.item);
+  shuffle(others);
+  return others.slice(0, 3).map(p => ({ item: p.item, def: currentLang === 'en' ? p.defEn : p.defZh }));
+}
+
+// ============================================================
+// STATE
+// ============================================================
+let selectedTerm = null;
+let selectedUnit = null;
+let selectedQ = null;
+let currentLang = 'en';
+let questions = [];
+let currentQIndex = 0;
+let score = 0;
+let timerInterval = null;
+let secondsElapsed = 0;
+let practisedItems = new Set();
+let matchState = {};
+
+// ============================================================
+// UTILITY
+// ============================================================
+function shuffle(arr) {
+  for (let i = arr.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [arr[i], arr[j]] = [arr[j], arr[i]];
+  }
+  return arr;
+}
+
+function formatTime(s) {
+  const m = Math.floor(s / 60);
+  const sec = s % 60;
+  return `${m}:${sec.toString().padStart(2, '0')}`;
+}
+
+function firstLetterHint(phrase) {
+  return phrase.split(' ').map(w => {
+    if (w === 'sb' || w === 'sth' || w === "sb's") return w;
+    return w[0] + '_'.repeat(Math.max(3, w.length - 1));
+  }).join(' ');
+}
+
+function getDef(item) {
+  return currentLang === 'en' ? item.defEn : item.defZh;
+}
+
+// ============================================================
+// TITLE SCREEN LOGIC
+// ============================================================
+function selectTerm(term) {
+  selectedTerm = term;
+  document.querySelectorAll('#term-group .opt-btn').forEach(b => b.classList.toggle('selected', parseInt(b.dataset.term) === term));
+  renderUnitOptions();
+  checkStartReady();
+}
+
+function renderUnitOptions() {
+  const group = document.getElementById('unit-group');
+  group.innerHTML = '';
+  const available = TERM_UNITS[selectedTerm] || [];
+  if (available.length === 0) {
+    const allBtn = document.createElement('button');
+    allBtn.className = 'opt-btn';
+    allBtn.disabled = true;
+    allBtn.textContent = 'No units available';
+    group.appendChild(allBtn);
+    selectedUnit = null;
+    return;
+  }
+  // All units button
+  const allBtn = document.createElement('button');
+  allBtn.className = 'opt-btn';
+  allBtn.textContent = 'All Units';
+  allBtn.dataset.unit = 'all';
+  allBtn.onclick = () => selectUnit('all');
+  group.appendChild(allBtn);
+  // Individual units
+  available.forEach(uid => {
+    const u = UNITS[uid];
+    const btn = document.createElement('button');
+    btn.className = 'opt-btn';
+    btn.textContent = u.label;
+    btn.dataset.unit = uid;
+    btn.onclick = () => selectUnit(uid);
+    group.appendChild(btn);
+  });
+}
+
+function selectUnit(uid) {
+  selectedUnit = uid;
+  document.querySelectorAll('#unit-group .opt-btn').forEach(b => b.classList.toggle('selected', b.dataset.unit === uid));
+  checkStartReady();
+}
+
+function selectQ(n) {
+  selectedQ = n;
+  document.querySelectorAll('#qcount-group .opt-btn').forEach(b => b.classList.toggle('selected', parseInt(b.dataset.q) === n));
+  checkStartReady();
+}
+
+function selectLang(lang) {
+  currentLang = lang;
+  document.querySelectorAll('#lang-group .opt-btn').forEach(b => b.classList.toggle('selected', b.dataset.lang === lang));
+}
+
+function checkStartReady() {
+  const ready = selectedTerm && selectedUnit && selectedQ;
+  document.getElementById('btn-start').disabled = !ready;
+}
+
+// ============================================================
+// QUESTION GENERATION
+// ============================================================
+function buildPool() {
+  let unitIds = [];
+  if (selectedUnit === 'all') {
+    unitIds = TERM_UNITS[selectedTerm];
+  } else {
+    unitIds = [selectedUnit];
+  }
+  let allPhrases = [], allWords = [];
+  unitIds.forEach(uid => {
+    allPhrases = allPhrases.concat(UNITS[uid].phrases.map(p => ({ ...p, unitId: uid })));
+    allWords = allWords.concat(UNITS[uid].words.map(w => ({ ...w, unitId: uid })));
+  });
+  return { allPhrases, allWords };
+}
+
+// Question type generators
+function makeQ_1A(item, pool) {
+  // MCQ: show definition, choose correct word/phrase
+  const distractors = getDistractors(item, pool);
+  const opts = shuffle([item.item, ...distractors]);
+  return {
+    type: '1A',
+    item,
+    prompt: getDef(item),
+    options: opts,
+    answer: item.item
+  };
+}
+
+function makeQ_1B(item, pool) {
+  // MCQ: show sentence with blank, choose correct word/phrase
+  const distractors = getDistractors(item, pool);
+  const opts = shuffle([item.sentenceForm || item.item, ...distractors.map(d => d)]);
+  const sentenceDisplay = item.sentence.replace('{BLANK}', '________');
+  return {
+    type: '1B',
+    item,
+    prompt: sentenceDisplay,
+    options: opts,
+    answer: item.sentenceForm || item.item,
+    revealDef: getDef(item)
+  };
+}
+
+function makeQ_1C(item, pool) {
+  // MCQ: show word/phrase, choose correct definition
+  const defDistractors = getDefDistractors(item, pool);
+  const correctDef = getDef(item);
+  const opts = shuffle([correctDef, ...defDistractors.map(d => d.def)]);
+  return {
+    type: '1C',
+    item,
+    prompt: item.item,
+    options: opts,
+    answer: correctDef
+  };
+}
+
+function makeQ_Fill(item) {
+  // Fill in the blank with first-letter hint
+  const hint = firstLetterHint(item.sentenceForm || item.item);
+  const sentenceDisplay = item.sentence.replace('{BLANK}', `[${hint}]`);
+  return {
+    type: 'fill',
+    item,
+    prompt: sentenceDisplay,
+    hint,
+    answer: (item.sentenceForm || item.item).toLowerCase(),
+    revealDef: getDef(item)
+  };
+}
+
+function makeQ_Match(items, pool) {
+  // Matching: 5 items, match word/phrase to definition
+  const selected = items.slice(0, 5);
+  const defs = shuffle(selected.map(i => getDef(i)));
+  return {
+    type: 'match',
+    items: selected,
+    defs,
+    answers: Object.fromEntries(selected.map(i => [i.item, getDef(i)]))
+  };
+}
+
+function generateQuestions(totalQ) {
+  const { allPhrases, allWords } = buildPool();
+  const halfQ = Math.floor(totalQ / 2);
+  const phraseCount = halfQ;
+  const wordCount = totalQ - halfQ;
+
+  shuffle(allPhrases);
+  shuffle(allWords);
+
+  // We'll cycle through items if totalQ > available items
+  function cycleItems(arr, n) {
+    const result = [];
+    for (let i = 0; i < n; i++) result.push(arr[i % arr.length]);
+    return result;
+  }
+
+  const phraseItems = cycleItems(allPhrases, phraseCount);
+  const wordItems = cycleItems(allWords, wordCount);
+
+  // Distribute question types evenly: 1A, 1B, 1C, fill, match (match counts as 5)
+  // Types: 0=1A, 1=1B, 2=1C, 3=fill, 4=match
+  const allItems = shuffle([...phraseItems.map(i => ({ ...i, kind: 'phrase' })), ...wordItems.map(i => ({ ...i, kind: 'word' }))]);
+
+  const qs = [];
+  let matchBuffer = [];
+  let typeIndex = 0;
+  const types = ['1A', '1B', '1C', 'fill'];
+
+  for (let i = 0; i < allItems.length; i++) {
+    const item = allItems[i];
+    const pool = item.kind === 'phrase' ? allPhrases : allWords;
+
+    // Insert a matching question every 5 items if we have 5 in buffer
+    if (matchBuffer.length === 5) {
+      qs.push(makeQ_Match([...matchBuffer], pool));
+      matchBuffer = [];
+    }
+
+    // Decide type
+    const t = types[typeIndex % types.length];
+    typeIndex++;
+
+    if (t === '1A') qs.push(makeQ_1A(item, pool));
+    else if (t === '1B') qs.push(makeQ_1B(item, pool));
+    else if (t === '1C') qs.push(makeQ_1C(item, pool));
+    else if (t === 'fill') qs.push(makeQ_Fill(item));
+
+    matchBuffer.push(item);
+  }
+  // Flush remaining match buffer if ≥ 2
+  if (matchBuffer.length >= 2) {
+    qs.push(makeQ_Match(matchBuffer, allPhrases));
+  }
+
+  // Trim to totalQ and shuffle
+  shuffle(qs);
+  return qs.slice(0, totalQ);
+}
+
+// ============================================================
+// EXERCISE FLOW
+// ============================================================
+function startExercise() {
+  questions = generateQuestions(selectedQ);
+  currentQIndex = 0;
+  score = 0;
+  secondsElapsed = 0;
+  practisedItems = new Set();
+
+  showScreen('screen-exercise');
+  startTimer();
+  renderQuestion();
+}
+
+function startTimer() {
+  clearInterval(timerInterval);
+  timerInterval = setInterval(() => {
+    secondsElapsed++;
+    document.getElementById('hud-timer').textContent = formatTime(secondsElapsed);
+  }, 1000);
+}
+
+function updateHUD() {
+  document.getElementById('hud-progress').textContent = `${currentQIndex + 1} / ${questions.length}`;
+  document.getElementById('hud-score').textContent = score;
+  const pct = ((currentQIndex) / questions.length) * 100;
+  document.getElementById('progress-fill').style.width = pct + '%';
+}
+
+function showScreen(id) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+}
+
+function renderQuestion() {
+  updateHUD();
+  const q = questions[currentQIndex];
+  const card = document.getElementById('q-card');
+  const nextBtn = document.getElementById('btn-next');
+  nextBtn.classList.remove('show');
+
+  if (!q) { endExercise(); return; }
+
+  if (q.type === '1A' || q.type === '1B' || q.type === '1C') renderMCQ(q, card);
+  else if (q.type === 'fill') renderFill(q, card);
+  else if (q.type === 'match') renderMatch(q, card);
+}
+
+// ---- MCQ ----
+function renderMCQ(q, card) {
+  const badgeLabel = q.type === '1A' ? 'Choose the correct word / phrase' :
+                     q.type === '1B' ? 'Choose the correct word / phrase' :
+                     'Choose the correct definition';
+  card.innerHTML = `
+    <span class="q-type-badge badge-mcq">${badgeLabel}</span>
+    <div class="q-text">${q.prompt}</div>
+    <div class="mcq-options" id="mcq-opts"></div>
+    <div class="def-reveal" id="def-reveal"></div>
+  `;
+  const optsDiv = document.getElementById('mcq-opts');
+  q.options.forEach(opt => {
+    const btn = document.createElement('button');
+    btn.className = 'mcq-opt';
+    btn.textContent = opt;
+    btn.onclick = () => handleMCQ(btn, opt, q);
+    optsDiv.appendChild(btn);
+  });
+}
+
+function handleMCQ(btn, chosen, q) {
+  const allBtns = document.querySelectorAll('.mcq-opt');
+  if (chosen === q.answer) {
+    btn.classList.add('correct');
+    allBtns.forEach(b => b.disabled = true);
+    if (q.revealDef) {
+      const rev = document.getElementById('def-reveal');
+      rev.textContent = '📖 ' + q.revealDef;
+      rev.classList.add('show');
+    }
+    // Only score if this is the first attempt (no wrong answers yet)
+    if (!q._wrongAttempt) score++;
+    document.getElementById('hud-score').textContent = score;
+    practisedItems.add(q.item.item);
+    document.getElementById('btn-next').classList.add('show');
+  } else {
+    btn.classList.add('wrong');
+    btn.disabled = true;
+    q._wrongAttempt = true;
+  }
+}
+
+// ---- FILL IN THE BLANK ----
+function renderFill(q, card) {
+  card.innerHTML = `
+    <span class="q-type-badge badge-fill">Fill in the Blank</span>
+    <div class="q-text">${q.prompt}</div>
+    <div class="fill-wrap">
+      <input type="text" class="fill-input" id="fill-input" placeholder="Type your answer…" autocomplete="off" autocorrect="off" spellcheck="false" />
+      <button class="btn-submit" id="btn-submit-fill" onclick="handleFill(event, '${escapeForAttr(q.answer)}', '${escapeForAttr(q.revealDef)}')">Submit</button>
+    </div>
+    <div class="fill-feedback" id="fill-feedback"></div>
+    <div class="def-reveal" id="def-reveal"></div>
+  `;
+  const input = document.getElementById('fill-input');
+  input.addEventListener('keydown', e => {
+    if (e.key === 'Enter') document.getElementById('btn-submit-fill').click();
+  });
+}
+
+function escapeForAttr(str) {
+  return (str || '').replace(/'/g, "\\'").replace(/"/g, '&quot;');
+}
+
+function handleFill(e, correctAnswer, revealDef) {
+  const input = document.getElementById('fill-input');
+  const feedback = document.getElementById('fill-feedback');
+  const submitBtn = document.getElementById('btn-submit-fill');
+  const userAnswer = input.value.trim().toLowerCase();
+
+  submitBtn.disabled = true;
+  input.disabled = true;
+
+  const isCorrect = userAnswer === correctAnswer.toLowerCase();
+  feedback.classList.add('show');
+
+  if (isCorrect) {
+    input.classList.add('correct');
+    feedback.classList.add('ok');
+    feedback.textContent = '✓ Correct!';
+    score++;
+    document.getElementById('hud-score').textContent = score;
+    const q = questions[currentQIndex];
+    practisedItems.add(q.item.item);
+  } else {
+    input.classList.add('wrong');
+    feedback.classList.add('err');
+    feedback.textContent = `✗ The correct answer is: ${correctAnswer}`;
+  }
+
+  if (revealDef) {
+    const rev = document.getElementById('def-reveal');
+    rev.textContent = '📖 ' + revealDef;
+    rev.classList.add('show');
+  }
+
+  document.getElementById('btn-next').classList.add('show');
+}
+
+// ---- MATCHING ----
+function renderMatch(q, card) {
+  matchState = {
+    q,
+    selectedWord: null,
+    selectedDef: null,
+    matched: {},
+    wrongPairs: 0,
+    totalItems: q.items.length,
+    firstAttemptFailed: {}
+  };
+
+  card.innerHTML = `
+    <span class="q-type-badge badge-match">Matching</span>
+    <div class="q-text" style="font-size:0.9rem;margin-bottom:14px;">Match each word or phrase with its correct definition.</div>
+    <div class="match-grid">
+      <div class="match-col">
+        <div class="match-col-label">Words / Phrases</div>
+        <div id="match-words"></div>
+      </div>
+      <div class="match-col">
+        <div class="match-col-label">Definitions</div>
+        <div id="match-defs"></div>
+      </div>
+    </div>
+    <div class="match-score-note" id="match-score-note"></div>
+  `;
+
+  renderMatchItems();
+}
+
+function renderMatchItems() {
+  const q = matchState.q;
+  const wordsDiv = document.getElementById('match-words');
+  const defsDiv = document.getElementById('match-defs');
+  wordsDiv.innerHTML = '';
+  defsDiv.innerHTML = '';
+
+  q.items.forEach(item => {
+    if (matchState.matched[item.item]) {
+      const div = document.createElement('div');
+      div.className = 'match-item matched';
+      div.textContent = item.item;
+      wordsDiv.appendChild(div);
+    } else {
+      const div = document.createElement('div');
+      div.className = 'match-item' + (matchState.selectedWord === item.item ? ' selected' : '');
+      div.textContent = item.item;
+      div.onclick = () => selectMatchWord(item.item);
+      wordsDiv.appendChild(div);
+    }
+  });
+
+  q.defs.forEach(def => {
+    const matchedItem = Object.entries(matchState.matched).find(([k, v]) => v === def);
+    if (matchedItem) {
+      const div = document.createElement('div');
+      div.className = 'match-item matched';
+      div.textContent = def;
+      defsDiv.appendChild(div);
+    } else {
+      const div = document.createElement('div');
+      div.className = 'match-item' + (matchState.selectedDef === def ? ' selected' : '');
+      div.textContent = def;
+      div.onclick = () => selectMatchDef(def);
+      defsDiv.appendChild(div);
+    }
+  });
+}
+
+function selectMatchWord(word) {
+  if (matchState.matched[word]) return;
+  matchState.selectedWord = word;
+  renderMatchItems();
+  tryMatchPair();
+}
+
+function selectMatchDef(def) {
+  if (Object.values(matchState.matched).includes(def)) return;
+  matchState.selectedDef = def;
+  renderMatchItems();
+  tryMatchPair();
+}
+
+function tryMatchPair() {
+  if (!matchState.selectedWord || !matchState.selectedDef) return;
+  const word = matchState.selectedWord;
+  const def = matchState.selectedDef;
+  const correctDef = matchState.q.answers[word];
+
+  if (def === correctDef) {
+    matchState.matched[word] = def;
+    matchState.selectedWord = null;
+    matchState.selectedDef = null;
+    // Award point only if first attempt for this word
+    if (!matchState.firstAttemptFailed[word]) {
+      score++;
+      document.getElementById('hud-score').textContent = score;
+    }
+    const q = questions[currentQIndex];
+    const matchedItem = q.items.find(i => i.item === word);
+    if (matchedItem) practisedItems.add(matchedItem.item);
+    renderMatchItems();
+    // Check if all matched
+    if (Object.keys(matchState.matched).length === matchState.totalItems) {
+      document.getElementById('match-score-note').textContent = '✓ All matched!';
+      document.getElementById('btn-next').classList.add('show');
+    }
+  } else {
+    // Wrong pair – flash red
+    matchState.firstAttemptFailed[word] = true;
+    matchState.firstAttemptFailed[def] = true;
+    matchState.selectedWord = null;
+    matchState.selectedDef = null;
+    flashWrong(word, def);
+  }
+}
+
+function flashWrong(word, def) {
+  // Temporarily add wrong-flash class
+  document.querySelectorAll('.match-item').forEach(el => {
+    if (el.textContent === word || el.textContent === def) {
+      el.classList.add('wrong-flash');
+      setTimeout(() => { el.classList.remove('wrong-flash'); renderMatchItems(); }, 600);
+    }
+  });
+}
+
+// ---- NEXT QUESTION ----
+function nextQuestion() {
+  currentQIndex++;
+  if (currentQIndex >= questions.length) {
+    endExercise();
+  } else {
+    renderQuestion();
+  }
+}
+
+// ---- QUIT ----
+function quitToTitle() {
+  clearInterval(timerInterval);
+  showScreen('screen-title');
+}
+
+// ---- END ----
+function endExercise() {
+  clearInterval(timerInterval);
+  showScreen('screen-results');
+
+  const total = questions.length;
+  document.getElementById('res-score').textContent = `${score} / ${total}`;
+  document.getElementById('res-time').textContent = formatTime(secondsElapsed);
+  document.getElementById('res-correct').textContent = score;
+  document.getElementById('res-total').textContent = total;
+
+  const pct = total > 0 ? score / total : 0;
+  let remark = '';
+  if (pct >= 0.9) remark = '🌟 Outstanding! You have mastered this unit!';
+  else if (pct >= 0.75) remark = '🎉 Great work! Keep it up!';
+  else if (pct >= 0.6) remark = '👍 Good effort! A little more practice will get you there.';
+  else if (pct >= 0.4) remark = '📚 Keep practising — you are making progress!';
+  else remark = '💪 Don\'t give up! Review the words and try again.';
+  document.getElementById('res-remark').textContent = remark;
+
+  // Build vocab review
+  const { allPhrases, allWords } = buildPool();
+  const practisedPhrases = allPhrases.filter(p => practisedItems.has(p.item)).sort((a, b) => a.item.localeCompare(b.item));
+  const practisedWords = allWords.filter(w => practisedItems.has(w.item)).sort((a, b) => a.item.localeCompare(b.item));
+
+  function renderVocabList(items, containerId) {
+    const container = document.getElementById(containerId);
+    container.innerHTML = '';
+    if (items.length === 0) {
+      container.innerHTML = '<div style="color:var(--text-muted);font-size:0.85rem;">None practised.</div>';
+      return;
+    }
+    items.forEach(item => {
+      const div = document.createElement('div');
+      div.className = 'vocab-item';
+      div.innerHTML = `<span class="vi-word">${item.item}</span><span class="vi-def">${getDef(item)}</span>`;
+      container.appendChild(div);
+    });
+  }
+  renderVocabList(practisedPhrases, 'vocab-phrases-list');
+  renderVocabList(practisedWords, 'vocab-words-list');
+}
+
+function playAgain() {
+  showScreen('screen-title');
+}
+
+// ============================================================
+// INIT
+// ============================================================
+// Pre-select defaults
+selectLang('en');
+</script>
+</body>
+</html>
