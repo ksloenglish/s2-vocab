@@ -626,6 +626,10 @@ function selectLang(lang) {
 function checkStartReady() {
   const ready = selectedTerm && selectedUnits.size > 0 && selectedQ;
   document.getElementById('btn-start').disabled = !ready;
+  // Revision button only needs at least one unit selected (no question count required)
+  const revisionReady = selectedUnits.size > 0;
+  const btnRevision = document.getElementById('btn-revision');
+  if (btnRevision) btnRevision.disabled = !revisionReady;
 }
 
 // ============================================================
@@ -1119,3 +1123,201 @@ function validateData() {
   });
 }
 
+
+// ============================================================
+// FLASHCARD REVISION MODE
+// ============================================================
+
+// Flashcard state
+let fcDeck = [];
+let fcIndex = 0;
+let fcFlipped = false;
+
+/**
+ * Build an ordered flash card deck from selectedUnits.
+ * Order: unit by unit (in UNITS array order), phrases A–Z then words A–Z within each unit.
+ * Each item gets a .unitId property attached.
+ */
+function buildFlashDeck() {
+  const deck = [];
+  // Iterate UNITS in definition order to preserve unit ordering
+  Object.keys(UNITS).forEach(uid => {
+    if (!selectedUnits.has(uid)) return;
+    const unit = UNITS[uid];
+    const phrases = (unit.phrases || []).map(p => ({ ...p, unitId: uid })).sort((a, b) => a.item.localeCompare(b.item));
+    const words   = (unit.words   || []).map(w => ({ ...w, unitId: uid })).sort((a, b) => a.item.localeCompare(b.item));
+    deck.push(...phrases, ...words);
+  });
+  return deck;
+}
+
+/**
+ * Start the flashcard revision session.
+ * Called when the user taps "Do Revision".
+ */
+function startRevision() {
+  fcDeck = buildFlashDeck();
+  if (fcDeck.length === 0) return;
+  fcIndex = 0;
+  fcFlipped = false;
+  showScreen('screen-flashcard');
+  window.scrollTo(0, 0);
+  fcRender();
+  fcInitSwipe();
+}
+
+/**
+ * Sync the card wrapper height to the taller of the two faces.
+ * Called after content is updated so the card never collapses.
+ */
+function fcSyncHeight() {
+  const inner = document.getElementById('fc-card-inner');
+  const front = inner.querySelector('.fc-front');
+  const back  = inner.querySelector('.fc-back');
+  // Temporarily make both faces visible (not rotated) to measure natural height
+  const frontH = front.scrollHeight;
+  const backH  = back.scrollHeight;
+  const maxH = Math.max(frontH, backH, 280);
+  inner.style.minHeight = maxH + 'px';
+  // Also update the outer card wrapper so it doesn't collapse
+  document.getElementById('fc-card').style.minHeight = maxH + 'px';
+}
+
+/**
+ * Render the current card (both front and back faces) and update counter/buttons.
+ */
+function fcRender() {
+  const card = fcDeck[fcIndex];
+  const unitClass = card.unitId.replace('2nd-', 'unit-');
+  const unitLabel = (UNITS[card.unitId] && UNITS[card.unitId].label) ? UNITS[card.unitId].label : card.unitId;
+  const def = currentLang === 'en' ? card.defEn : card.defZh;
+
+  // Front face
+  const badge = document.getElementById('fc-unit-badge');
+  badge.textContent = unitLabel;
+  badge.className = 'fc-unit-badge ' + unitClass;
+
+  document.getElementById('fc-pos').textContent = card.pos || '';
+  document.getElementById('fc-item').textContent = card.item || '';
+
+  // Back face
+  const badgeBack = document.getElementById('fc-unit-badge-back');
+  badgeBack.textContent = unitLabel;
+  badgeBack.className = 'fc-unit-badge ' + unitClass;
+
+  document.getElementById('fc-item-reminder').textContent = card.item || '';
+  document.getElementById('fc-def').textContent = def || '';
+
+  // Counter
+  document.getElementById('fc-counter').textContent = (fcIndex + 1) + ' / ' + fcDeck.length;
+
+  // Flip state: remove .flipped from card outer element
+  document.getElementById('fc-card').classList.remove('flipped');
+  fcFlipped = false;
+
+  // Prev / Next button states
+  document.getElementById('fc-prev').disabled = (fcIndex === 0);
+  document.getElementById('fc-next').disabled = (fcIndex === fcDeck.length - 1);
+
+  // Sync card height to fit the taller face
+  // Use requestAnimationFrame so the DOM has painted before we measure
+  requestAnimationFrame(fcSyncHeight);
+}
+
+/**
+ * Toggle the flip state of the current card.
+ * The .flipped class is toggled on #fc-card (outer container);
+ * the CSS rotates #fc-card-inner.
+ */
+function fcFlip() {
+  // Suppress flip if a swipe gesture was just detected on this touch sequence
+  if (fcSwiping) { fcSwiping = false; return; }
+  fcFlipped = !fcFlipped;
+  document.getElementById('fc-card').classList.toggle('flipped', fcFlipped);
+}
+
+/**
+ * Navigate to the previous card with a slide-right animation.
+ */
+function fcPrev() {
+  if (fcIndex <= 0) return;
+  fcIndex--;
+  fcAnimateSlide('right');
+}
+
+/**
+ * Navigate to the next card with a slide-left animation.
+ */
+function fcNext() {
+  if (fcIndex >= fcDeck.length - 1) return;
+  fcIndex++;
+  fcAnimateSlide('left');
+}
+
+/**
+ * Apply a slide animation class, render the new card, then remove the class.
+ * @param {'left'|'right'} direction
+ */
+function fcAnimateSlide(direction) {
+  const cardEl = document.getElementById('fc-card');
+  const cls = direction === 'left' ? 'fc-slide-left' : 'fc-slide-right';
+  // Remove any existing slide classes first
+  cardEl.classList.remove('fc-slide-left', 'fc-slide-right');
+  // Render new card content (flip state reset inside fcRender)
+  fcRender();
+  // Force reflow so the animation fires fresh
+  void cardEl.offsetWidth;
+  cardEl.classList.add(cls);
+  setTimeout(() => cardEl.classList.remove(cls), 300);
+}
+
+/**
+ * Shuffle the deck in place, reset to card 1, and re-render.
+ */
+function fcShuffle() {
+  shuffle(fcDeck);
+  fcIndex = 0;
+  const cardEl = document.getElementById('fc-card');
+  cardEl.classList.remove('fc-slide-left', 'fc-slide-right', 'flipped');
+  fcFlipped = false;
+  fcRender();
+}
+
+/**
+ * Return to the title screen.
+ */
+function fcBackToTitle() {
+  showScreen('screen-title');
+  window.scrollTo(0, 0);
+}
+
+/**
+ * Initialise touch/swipe listeners on the flash card element.
+ * Called once when the flashcard screen is first shown.
+ * Swipe left → next card; swipe right → previous card.
+ */
+let fcSwipeInitialised = false;
+let fcSwiping = false; // flag to suppress onclick when a swipe was detected
+function fcInitSwipe() {
+  if (fcSwipeInitialised) return;
+  fcSwipeInitialised = true;
+  const cardEl = document.getElementById('fc-card');
+  let touchStartX = 0;
+  let touchStartY = 0;
+  cardEl.addEventListener('touchstart', e => {
+    touchStartX = e.changedTouches[0].clientX;
+    touchStartY = e.changedTouches[0].clientY;
+    fcSwiping = false;
+  }, { passive: true });
+  cardEl.addEventListener('touchend', e => {
+    const dx = e.changedTouches[0].clientX - touchStartX;
+    const dy = e.changedTouches[0].clientY - touchStartY;
+    // Only treat as a swipe if horizontal movement dominates and exceeds threshold
+    if (Math.abs(dx) > 50 && Math.abs(dx) > Math.abs(dy) * 1.5) {
+      fcSwiping = true; // suppress the subsequent onclick
+      if (dx < 0) fcNext();   // swipe left → next
+      else         fcPrev();  // swipe right → previous
+    }
+    // Tap: fcFlip() is wired via onclick on #fc-card; nothing to do here
+  }, { passive: true });
+}

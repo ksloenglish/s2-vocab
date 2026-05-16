@@ -8,7 +8,7 @@
 <meta property="og:title" content="S2 Vocab Revision – K S Lo English">
 <meta property="og:description" content="S2 Vocab Revision – Practise your S2 vocabulary with MCQ, fill-in-the-blank, and matching questions.">
 <meta property="og:type" content="website">
-<link rel="stylesheet" href="style.css?v=v260517-030457">
+<link rel="stylesheet" href="style.css?v=v260517-034714">
 </head>
 <body>
 <!-- ========== TOP BAR ========== -->
@@ -58,7 +58,10 @@
       <button class="opt-btn" data-lang="en" onclick="selectLang('en')">English</button>
     </div>
   </div>
-  <button class="btn-start" id="btn-start" disabled onclick="startExercise()">Start Exercise ▶</button>
+  <div class="btn-action-row">
+    <button class="btn-revision" id="btn-revision" disabled onclick="startRevision()">📖 Do Revision</button>
+    <button class="btn-start" id="btn-start" disabled onclick="startExercise()">Start Exercise ▶</button>
+  </div>
 </div>
 <!-- ========== EXERCISE SCREEN ========== -->
 <div id="screen-exercise" class="screen">
@@ -94,13 +97,42 @@
     <button class="btn-play-again" onclick="playAgain()">Play Again ↺</button>
   </div>
 </div>
+<!-- ========== FLASHCARD SCREEN ========== -->
+<div id="screen-flashcard" class="screen">
+  <div class="fc-topbar">
+    <button class="fc-btn-back" onclick="fcBackToTitle()">← Back</button>
+    <div class="fc-counter" id="fc-counter">1 / 1</div>
+    <button class="fc-btn-shuffle" onclick="fcShuffle()">⇄ Shuffle</button>
+  </div>
+  <div class="fc-area">
+    <div class="fc-card" id="fc-card" onclick="fcFlip()">
+      <div class="fc-card-inner" id="fc-card-inner">
+        <div class="fc-face fc-front">
+          <div class="fc-unit-badge" id="fc-unit-badge"></div>
+          <div class="fc-pos" id="fc-pos"></div>
+          <div class="fc-item" id="fc-item"></div>
+          <div class="fc-tap-hint">Tap to reveal definition</div>
+        </div>
+        <div class="fc-face fc-back">
+          <div class="fc-unit-badge" id="fc-unit-badge-back"></div>
+          <div class="fc-item-reminder" id="fc-item-reminder"></div>
+          <div class="fc-def" id="fc-def"></div>
+        </div>
+      </div>
+    </div>
+    <div class="fc-nav">
+      <button class="fc-nav-btn" id="fc-prev" onclick="fcPrev()">‹ Prev</button>
+      <button class="fc-nav-btn" id="fc-next" onclick="fcNext()">Next ›</button>
+    </div>
+  </div>
+</div>
 <!-- ========== FOOTER ========== -->
 <footer class="site-footer">
-  <div style="font-size:0.7rem;color:var(--text-muted);opacity:0.5;margin-bottom:4px;">v260517-030457</div>
+  <div style="font-size:0.7rem;color:var(--text-muted);opacity:0.5;margin-bottom:4px;">v260517-034714</div>
   &copy; <span id="copyright-year">2026</span> K S Lo English. All Rights Reserved.
 </footer>
-<script src="data.js?v=v260517-030457"></script>
-<script src="engine.js?v=v260517-030457"></script>
-<script src="ui.js?v=v260517-030457"></script>
+<script src="data.js?v=v260517-034714"></script>
+<script src="engine.js?v=v260517-034714"></script>
+<script src="ui.js?v=v260517-034714"></script>
 </body>
 </html>
