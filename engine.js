@@ -595,20 +595,17 @@ function renderUnitBtnLabel(btn, uid, selected) {
 
 function toggleUnit(uid) {
   if (selectedUnits.has(uid)) {
-    // Deselect only if at least one other unit remains selected
-    if (selectedUnits.size > 1) {
-      selectedUnits.delete(uid);
-    }
-    // If it's the last one, do nothing (cannot deselect all)
+    selectedUnits.delete(uid); // allow full deselection
   } else {
     selectedUnits.add(uid);
   }
-  // Update button appearance
+  // Update button appearance and remove focus ring
   document.querySelectorAll('#unit-group .opt-btn').forEach(b => {
     const id = b.dataset.unit;
     const sel = selectedUnits.has(id);
     b.classList.toggle('selected', sel);
     renderUnitBtnLabel(b, id, sel);
+    b.blur(); // remove focus outline after toggle
   });
   checkStartReady();
 }
