@@ -546,7 +546,7 @@
   margin-top: 8px;
 }
 .fc-item {
-  font-size: clamp(1.2rem, 5vw, 1.7rem);
+  font-size: clamp(1.5rem, 6vw, 2.2rem);
   font-weight: 800;
   color: #fff;
   text-align: center;
@@ -570,7 +570,7 @@
   font-style: italic;
 }
 .fc-def {
-  font-size: clamp(1rem, 4vw, 1.25rem);
+  font-size: clamp(1.25rem, 5vw, 1.65rem);
   color: #e2e8f0;
   text-align: center;
   line-height: 1.55;
