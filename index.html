@@ -729,12 +729,27 @@ function isValidWord(w) {
   return VALID_WORD_BLOCKLIST.has(w.toLowerCase());
 }
 
+// Common tense/form suffixes whose characters must not be modified
+const PROTECTED_SUFFIXES = ['tion','ness','ing','est','ed','er','ly'];
+
+/**
+ * Returns the index of the first protected character in word w.
+ * Any strategy must only modify characters at indices < this value.
+ */
+function protectedStart(w) {
+  for (const sfx of PROTECTED_SUFFIXES) {
+    if (w.endsWith(sfx)) return w.length - sfx.length;
+  }
+  return w.length;
+}
+
 function misspellWord(word) {
   const results = new Set();
   const w = word.toLowerCase();
+  const pStart = protectedStart(w); // indices >= pStart must not be touched
 
-  // Strategy 1: Replace a vowel (not at position 0) with a different vowel
-  for (let i = 1; i < w.length && results.size < 3; i++) {
+  // Strategy 1: Replace a vowel (not at position 0, not in protected suffix) with a different vowel
+  for (let i = 1; i < pStart && results.size < 3; i++) {
     if (isVowel(w[i])) {
       for (const v of VOWELS) {
         if (v !== w[i]) {
@@ -745,10 +760,10 @@ function misspellWord(word) {
     }
   }
 
-  // Strategy 2: Swap positions of two vowels (not at position 0), skip if only one vowel
+  // Strategy 2: Swap positions of two vowels (not at position 0, not in protected suffix)
   if (results.size < 3) {
     const vowelPositions = [];
-    for (let i = 1; i < w.length; i++) { if (isVowel(w[i])) vowelPositions.push(i); }
+    for (let i = 1; i < pStart; i++) { if (isVowel(w[i])) vowelPositions.push(i); }
     if (vowelPositions.length >= 2) {
       for (let a = 0; a < vowelPositions.length - 1 && results.size < 3; a++) {
         for (let b = a + 1; b < vowelPositions.length && results.size < 3; b++) {
@@ -762,9 +777,9 @@ function misspellWord(word) {
     }
   }
 
-  // Strategy 3: Replace a consonant with a similar-sounding one
+  // Strategy 3: Replace a consonant with a similar-sounding one (not in protected suffix)
   if (results.size < 3) {
-    for (let i = 0; i < w.length && results.size < 3; i++) {
+    for (let i = 0; i < pStart && results.size < 3; i++) {
       const ch = w[i];
       if (!isConsonant(ch)) continue;
       for (const group of SIMILAR_CONSONANTS) {
@@ -784,9 +799,9 @@ function misspellWord(word) {
     }
   }
 
-  // Strategy 4: Remove one letter from a double consonant
+  // Strategy 4: Remove one letter from a double consonant (not in protected suffix)
   if (results.size < 3) {
-    for (let i = 1; i < w.length && results.size < 3; i++) {
+    for (let i = 1; i < pStart && results.size < 3; i++) {
       if (isConsonant(w[i]) && w[i] === w[i - 1]) {
         const candidate = w.slice(0, i) + w.slice(i + 1);
         if (candidate !== w && !results.has(candidate)) results.add(candidate);
@@ -794,9 +809,9 @@ function misspellWord(word) {
     }
   }
 
-  // Strategy 5: Double a plausible letter
+  // Strategy 5: Double a plausible letter (not in protected suffix)
   if (results.size < 3) {
-    for (let i = 1; i < w.length && results.size < 3; i++) {
+    for (let i = 1; i < pStart && results.size < 3; i++) {
       const ch = w[i].toLowerCase();
       if (DOUBLING_CANDIDATES.has(ch)) {
         const candidate = w.slice(0, i) + ch + w.slice(i);
