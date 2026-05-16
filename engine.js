@@ -1208,27 +1208,36 @@ function fcRender() {
   document.getElementById('fc-item-reminder').textContent = card.item || '';
   document.getElementById('fc-def').textContent = def || '';
 
-  // Sample sentence — replace {BLANK} with sentenceForm in bold amber,
-  // then highlight any remaining words of the full phrase that appear elsewhere in the sentence.
+  // Sample sentence — replace {BLANK} tokens with highlighted sentenceForm parts.
+  // sentenceForm may be slash-separated (e.g. "consult / for") for split-blank phrases
+  // that have two {BLANK} tokens in the sentence.
   const sentEl = document.getElementById('fc-sentence');
   if (card.sentence) {
-    const form = card.sentenceForm || card.item || '___';
-    // Step 1: replace {BLANK} with highlighted sentenceForm
-    let html = card.sentence.replace('{BLANK}', '<strong>' + form + '</strong>');
-    // Step 2: for phrases, find any words of card.item not already inside the {BLANK}
-    // that still appear verbatim in the remaining sentence text, and highlight them.
-    if (card.pos === 'phrase' && card.item) {
-      // Build list of words in the phrase that are NOT in sentenceForm
-      const formWords = form.toLowerCase().split(/\s+/);
-      const phraseWords = card.item.split(/\s+/);
+    const rawForm = card.sentenceForm || card.item || '___';
+    const formParts = rawForm.split(' / ');  // split on " / " for multi-blank phrases
+    const blankCount = (card.sentence.match(/\{BLANK\}/g) || []).length;
+
+    // Step 1: replace each {BLANK} sequentially with the corresponding part in <strong>
+    let html = card.sentence;
+    formParts.forEach(function(part) {
+      html = html.replace('{BLANK}', '<strong>' + part + '</strong>');
+    });
+    // If any {BLANK} tokens remain (data mismatch), replace with placeholder
+    html = html.replace(/\{BLANK\}/g, '<strong>___</strong>');
+
+    // Step 2: for SINGLE-blank phrases only, also highlight any remaining words of
+    // card.item that appear verbatim elsewhere in the sentence (e.g. "out" in "figure out").
+    // This step is SKIPPED for split-blank phrases (blankCount > 1) to avoid false positives.
+    if (card.pos === 'phrase' && card.item && blankCount === 1) {
+      const formWords = formParts[0].toLowerCase().split(/\s+/);
+      const phraseWords = card.item.replace(/\.\.\./g, '').split(/\s+/).filter(Boolean);
       const extraWords = phraseWords.filter(w => !formWords.includes(w.toLowerCase()));
       extraWords.forEach(function(w) {
-        // Case-insensitive whole-word replacement, but only outside existing <strong> tags
-        // Simple approach: replace the word in the plain-text portions of html
         const re = new RegExp('(?<![>\\w])(' + w.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + ')(?![\\w<])', 'gi');
         html = html.replace(re, '<strong>$1</strong>');
       });
     }
+
     sentEl.innerHTML = html;
   } else {
     sentEl.textContent = '';
