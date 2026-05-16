@@ -36,17 +36,9 @@ function updateHUD() {
 }
 
 function showScreen(id) {
-  // 6. Fade transition between screens
-  const current = document.querySelector('.screen.active');
-  const next = document.getElementById(id);
-  if (current && current !== next) {
-    current.classList.remove('active');
-    // Brief delay so fade-out starts before fade-in
-    setTimeout(() => next.classList.add('active'), 60);
-  } else {
-    document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
-    next.classList.add('active');
-  }
+  // 6. Screen fade is handled by CSS animation on .screen.active
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
 }
 
 function renderQuestion() {

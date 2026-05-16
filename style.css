@@ -49,15 +49,19 @@
   .site-footer { width: 100%; text-align: center; padding: 14px 16px; font-size: 0.78rem; color: var(--text-muted); border-top: 1px solid var(--border); background: var(--bg); flex-shrink: 0; margin-top: auto; }
 
   /* ===== SCREENS ===== */
-  /* 6. Screen fade transition — use opacity+visibility so CSS transitions work */
+  /* 6. Screen fade — hide inactive screens without position:absolute to avoid clipping */
   .screen {
-    display: flex; flex-direction: column; align-items: center; justify-content: flex-start;
+    display: none; flex-direction: column; align-items: center; justify-content: flex-start;
     flex: 1; padding: 28px 16px 36px;
-    opacity: 0; visibility: hidden; pointer-events: none;
-    position: absolute; width: 100%; min-height: calc(100vh - 64px - 44px);
-    transition: opacity 0.28s ease;
   }
-  .screen.active { opacity: 1; visibility: visible; pointer-events: auto; position: relative; }
+  .screen.active {
+    display: flex;
+    animation: screenFadeIn 0.28s ease both;
+  }
+  @keyframes screenFadeIn {
+    from { opacity: 0; transform: translateY(8px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
 
   /* ===== PAGE HEADER (title screen) ===== */
   .site-header { text-align: center; margin-bottom: 32px; }
