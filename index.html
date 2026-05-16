@@ -1232,9 +1232,21 @@ function toGerund(verb) {
   // Remove trailing 'e' before adding -ing (e.g. take -> taking, struggle -> struggling)
   if (verb.endsWith('ie')) return verb.slice(0, -2) + 'ying';
   if (verb.endsWith('e') && !verb.endsWith('ee') && !verb.endsWith('oe')) return verb.slice(0, -1) + 'ing';
-  // Double final consonant if CVC pattern (short vowel)
-  const m = verb.match(/^(.+)([aeiou])([bcdfghjklmnpqrstvwxyz])$/);
-  if (m && m[1].length >= 1 && !isVowel(m[1][m[1].length-1])) return verb + m[3] + 'ing';
+  // Special cases: stress-on-final-syllable polysyllabic verbs that do double
+  const DOUBLE_FINAL = new Set(['begin','forget','permit','prefer','refer','occur','omit','regret','admit','commit','submit','transmit']);
+  if (DOUBLE_FINAL.has(verb)) {
+    const last = verb[verb.length-1];
+    return verb + last + 'ing';
+  }
+  // Double final consonant only for monosyllabic verbs (CVC pattern with exactly one vowel group in the stem)
+  // e.g. run->running, sit->sitting, stop->stopping — but NOT foster->fostering, play->playing
+  // Exclude y and w from doubling (semivowels: play->playing not playying)
+  const m = verb.match(/^(.+)([aeiou])([bcdfghjklmnpqrstvxz])$/);
+  if (m && m[1].length >= 1 && !isVowel(m[1][m[1].length-1])) {
+    // Only double if the entire verb is monosyllabic (no vowel in the prefix part)
+    const prefixHasVowel = /[aeiou]/.test(m[1]);
+    if (!prefixHasVowel) return verb + m[3] + 'ing';
+  }
   return verb + 'ing';
 }
 
@@ -1256,9 +1268,12 @@ function toPast(verb) {
   if (IRREG[verb]) return IRREG[verb];
   if (verb.endsWith('e')) return verb + 'd';
   if (verb.endsWith('y') && !isVowel(verb[verb.length-2])) return verb.slice(0,-1) + 'ied';
-  // Double final consonant if CVC
+  // Double final consonant only for monosyllabic verbs (e.g. run->ran handled above; stop->stopped)
   const m = verb.match(/^(.+)([aeiou])([bcdfghjklmnpqrstvwxyz])$/);
-  if (m && m[1].length >= 1 && !isVowel(m[1][m[1].length-1])) return verb + m[3] + 'ed';
+  if (m && m[1].length >= 1 && !isVowel(m[1][m[1].length-1])) {
+    const prefixHasVowel = /[aeiou]/.test(m[1]);
+    if (!prefixHasVowel) return verb + m[3] + 'ed';
+  }
   return verb + 'ed';
 }
 
@@ -1829,7 +1844,7 @@ selectLang('en');
 
 <!-- ========== FOOTER ========== -->
 <footer class="site-footer">
-  <div style="font-size:0.7rem;color:var(--text-muted);opacity:0.5;margin-bottom:4px;">v260516-171336</div>
+  <div style="font-size:0.7rem;color:var(--text-muted);opacity:0.5;margin-bottom:4px;">v260516-171816</div>
   &copy; <span id="copyright-year">2026</span> K S Lo English. All Rights Reserved.
 </footer>
 
