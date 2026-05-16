@@ -846,11 +846,12 @@ function misspellWord(word) {
 
   // Strategy 6: Swap a consecutive pair of letters in the middle of the word.
   // Prioritise vowel pairs (e.g. "ea" → "ae", "ie" → "ei") then consonant pairs (e.g. "lt" → "tl").
-  // Both characters must be within the unprotected region (not at position 0, not in suffix).
+  // BOTH characters must be middle letters: i >= 1 AND i+1 <= w.length-2 (neither first nor last).
   if (results.size < 3) {
+    const s6Max = Math.min(pStart - 1, w.length - 2); // i+1 must not be the last letter
     // First pass: consecutive vowel pairs
-    for (let i = 1; i < pStart - 1 && results.size < 3; i++) {
-      if (isVowel(w[i]) && isVowel(w[i + 1]) && w[i] !== w[i + 1] && i + 1 < pStart) {
+    for (let i = 1; i < s6Max && results.size < 3; i++) {
+      if (isVowel(w[i]) && isVowel(w[i + 1]) && w[i] !== w[i + 1]) {
         const arr = w.split('');
         [arr[i], arr[i + 1]] = [arr[i + 1], arr[i]];
         const candidate = arr.join('');
@@ -858,8 +859,8 @@ function misspellWord(word) {
       }
     }
     // Second pass: consecutive consonant pairs
-    for (let i = 1; i < pStart - 1 && results.size < 3; i++) {
-      if (isConsonant(w[i]) && isConsonant(w[i + 1]) && w[i] !== w[i + 1] && i + 1 < pStart) {
+    for (let i = 1; i < s6Max && results.size < 3; i++) {
+      if (isConsonant(w[i]) && isConsonant(w[i + 1]) && w[i] !== w[i + 1]) {
         const arr = w.split('');
         [arr[i], arr[i + 1]] = [arr[i + 1], arr[i]];
         const candidate = arr.join('');
@@ -2030,7 +2031,7 @@ validateData();
 
 <!-- ========== FOOTER ========== -->
 <footer class="site-footer">
-  <div style="font-size:0.7rem;color:var(--text-muted);opacity:0.5;margin-bottom:4px;">v260516-210604</div>
+  <div style="font-size:0.7rem;color:var(--text-muted);opacity:0.5;margin-bottom:4px;">v260516-211127</div>
   &copy; <span id="copyright-year">2026</span> K S Lo English. All Rights Reserved.
 </footer>
 
