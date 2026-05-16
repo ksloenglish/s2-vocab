@@ -1584,8 +1584,17 @@ function handleFill(correctAnswer, revealDef) {
   } else {
     input.classList.add('wrong');
     feedback.classList.add('err');
-    // Underline the correct answer
-    feedback.innerHTML = `✗ The correct answer is: <u>${correctAnswer}</u>`;
+    feedback.innerHTML = `✗ Wrong!`;
+    // Replace the hint in the sentence prompt with the highlighted correct answer
+    const qText = document.querySelector('.q-text');
+    if (qText) {
+      const answerSpan = `<span style="color:#FFD700;font-weight:800;font-size:1.1em;text-decoration:underline;letter-spacing:0.03em">${correctAnswer}</span>`;
+      // q.hint contains the HTML of the hint (first-letter + underscores); replace it with the answer span
+      const currentQ = questions[currentQIndex];
+      if (currentQ && currentQ.hint) {
+        qText.innerHTML = qText.innerHTML.replace(currentQ.hint, answerSpan);
+      }
+    }
   }
 
   if (revealDef) {
@@ -1813,7 +1822,7 @@ selectLang('en');
 
 <!-- ========== FOOTER ========== -->
 <footer class="site-footer">
-  <div style="font-size:0.7rem;color:var(--text-muted);opacity:0.5;margin-bottom:4px;">v260516-164821</div>
+  <div style="font-size:0.7rem;color:var(--text-muted);opacity:0.5;margin-bottom:4px;">v260516-165220</div>
   &copy; <span id="copyright-year">2026</span> K S Lo English. All Rights Reserved.
 </footer>
 
