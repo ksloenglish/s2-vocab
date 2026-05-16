@@ -1551,12 +1551,32 @@ function makeQ_1B(item, fullPool) {
     opts = opts.map(o => typeof o === 'string' ? (o.charAt(0).toUpperCase() + o.slice(1)) : o);
   }
   const answer = sentenceStart ? (rawAnswer.charAt(0).toUpperCase() + rawAnswer.slice(1)) : rawAnswer;
-  const sentenceDisplay = item.sentence.replace('{BLANK}', '_____');
-  shuffle(opts);
 
-  // If the item has an sbSubstitute (a concrete noun replacing 'sb'), apply it to all options
-  // for display so they look consistent with the correct answer.
+  // ── sbSubstitute display mode ────────────────────────────────────────────
+  // If the item has an sbSubstitute AND 'sb' appears in the middle of the phrase
+  // (i.e. there are words both before and after 'sb' in item.item), use the
+  // "double-blank" display:
+  //   • Sentence prompt: replace {BLANK} with  _____ [sbSubstitute] _____
+  //     e.g. "Schools should _____ students _____ mental health."
+  //   • All options (answer + distractors): replace the sbSubstitute with "..."
+  //     e.g. "educate ... about", "etucate ... about"
+  // Otherwise fall back to the previous behaviour (single blank, noun appended).
   const sbSub = item.sbSubstitute || null;
+  const sbWords = item.item ? item.item.trim().toLowerCase().split(/\s+/) : [];
+  const sbIdx = sbWords.indexOf('sb');
+  // 'sb' is "in the middle" when it is neither the first nor the last word
+  const sbInMiddle = sbSub && sbIdx > 0 && sbIdx < sbWords.length - 1;
+
+  // Build sentence display
+  let sentenceDisplay;
+  if (sbInMiddle) {
+    // Double-blank: _____ [sbSubstitute] _____
+    sentenceDisplay = item.sentence.replace('{BLANK}', `_____ ${sbSub} _____`);
+  } else {
+    sentenceDisplay = item.sentence.replace('{BLANK}', '_____');
+  }
+
+  shuffle(opts);
 
   // Prepositions that can take a noun object when they end a phrase
   const PREP_ENDINGS = new Set(['about','above','across','after','against','along','among','around',
@@ -1565,24 +1585,32 @@ function makeQ_1B(item, fullPool) {
     'round','since','through','to','toward','towards','under','until','up','with','without']);
 
   function applyDistractorSbSub(phrase, sub) {
+    if (sbInMiddle) {
+      // Double-blank mode: replace the substitute noun with '...' in all options.
+      // The phrase was generated from sentenceForm (e.g. 'edacate students about'),
+      // so 'students' is already present — replace it with '...'.
+      const escapedSub = sub.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+      return phrase.replace(new RegExp('\\b' + escapedSub + '\\b', 'gi'), '...');
+    }
+    // Single-blank mode (sb at end of phrase, e.g. 'interact with sb')
     // If the phrase already contains 'sb', replace it with the substitute noun
     if (/\bsb\b/i.test(phrase)) return phrase.replace(/\bsb\b/gi, sub);
-    // If the phrase already contains the substitute noun (e.g. misspelling distractors
-    // generated from sentenceForm already have 'sb' replaced), do not append it again.
-    // Use a word-boundary check so 'students' does not match inside 'studentship' etc.
+    // If the phrase already contains the substitute noun, do not append it again.
     const escapedSub = sub.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
     if (new RegExp('\\b' + escapedSub + '\\b', 'i').test(phrase)) return phrase;
-    // Only append the noun if the phrase ends with a preposition (so the noun is its natural
-    // object). Single-word items and non-preposition phrases are left unchanged.
+    // Only append the noun if the phrase ends with a preposition.
     const lastWord = phrase.trim().split(/\s+/).pop().toLowerCase();
     if (PREP_ENDINGS.has(lastWord)) return phrase.trimEnd() + ' ' + sub;
     return phrase;
   }
 
-  // For display: replace sb/sth placeholders in non-answer options with neutral pronouns
-  // OR with the sbSubstitute if one is defined
+  // Build display options
   const displayOpts = opts.map(o => {
     const isAnswer = o.toLowerCase() === answer.toLowerCase();
+    if (sbInMiddle) {
+      // In double-blank mode, apply ellipsis substitution to ALL options including the answer
+      return italicise(applyDistractorSbSub(o, sbSub));
+    }
     if (isAnswer) return italicise(o);
     if (sbSub) return italicise(applyDistractorSbSub(o, sbSub));
     return italicise(neutralisePlaceholders(o));
@@ -2100,7 +2128,7 @@ validateData();
 
 <!-- ========== FOOTER ========== -->
 <footer class="site-footer">
-  <div style="font-size:0.7rem;color:var(--text-muted);opacity:0.5;margin-bottom:4px;">v260516-222716</div>
+  <div style="font-size:0.7rem;color:var(--text-muted);opacity:0.5;margin-bottom:4px;">v260516-233247</div>
   &copy; <span id="copyright-year">2026</span> K S Lo English. All Rights Reserved.
 </footer>
 
