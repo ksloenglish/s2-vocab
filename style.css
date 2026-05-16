@@ -24,9 +24,10 @@
   body { display: flex; flex-direction: column; min-height: 100vh; background: radial-gradient(ellipse at top, #1a1f3c 0%, #0d0f1a 70%); }
 
   /* ===== SITE HEADER BAR ===== */
+  /* 10. Enhanced topbar gradient */
   .site-topbar {
     width: 100%;
-    background: linear-gradient(135deg, #1a1040 0%, #0d0f1a 100%);
+    background: linear-gradient(135deg, #1a1040 0%, #1e1b4b 40%, #0d1a2a 100%);
     border-bottom: 1px solid var(--border);
     padding: 10px 20px;
     display: flex; align-items: center; justify-content: space-between;
@@ -48,8 +49,15 @@
   .site-footer { width: 100%; text-align: center; padding: 14px 16px; font-size: 0.78rem; color: var(--text-muted); border-top: 1px solid var(--border); background: var(--bg); flex-shrink: 0; margin-top: auto; }
 
   /* ===== SCREENS ===== */
-  .screen { display: none; flex-direction: column; align-items: center; justify-content: flex-start; flex: 1; padding: 28px 16px 36px; }
-  .screen.active { display: flex; }
+  /* 6. Screen fade transition — use opacity+visibility so CSS transitions work */
+  .screen {
+    display: flex; flex-direction: column; align-items: center; justify-content: flex-start;
+    flex: 1; padding: 28px 16px 36px;
+    opacity: 0; visibility: hidden; pointer-events: none;
+    position: absolute; width: 100%; min-height: calc(100vh - 64px - 44px);
+    transition: opacity 0.28s ease;
+  }
+  .screen.active { opacity: 1; visibility: visible; pointer-events: auto; position: relative; }
 
   /* ===== PAGE HEADER (title screen) ===== */
   .site-header { text-align: center; margin-bottom: 32px; }
@@ -106,6 +114,8 @@
     appearance: none;
     font-family: inherit;
   }
+  /* 2. Button press micro-interaction */
+  .opt-btn:active:not(:disabled) { transform: scale(0.96); }
   .opt-btn:hover:not(:disabled):not(.selected) { border-color: var(--primary-light); color: var(--text); background: rgba(91,76,237,0.12); }
   .opt-btn:focus { outline: none; }
   .opt-btn:focus:not(.selected) { border-color: var(--primary-light); }
@@ -153,8 +163,9 @@
   .btn-quit:hover { border-color: var(--danger); color: var(--danger); background: rgba(239,68,68,0.08); }
 
   /* ===== PROGRESS BAR ===== */
+  /* 4. Smooth progress bar transition */
   .progress-bar-wrap { width: 100%; max-width: 720px; height: 6px; background: var(--border); border-radius: 99px; margin-bottom: 18px; overflow: hidden; }
-  .progress-bar-fill { height: 100%; background: linear-gradient(90deg, var(--primary), var(--secondary)); border-radius: 99px; transition: width 0.4s; }
+  .progress-bar-fill { height: 100%; background: linear-gradient(90deg, var(--primary), var(--secondary)); border-radius: 99px; transition: width 0.55s cubic-bezier(0.4,0,0.2,1); }
 
   /* ===== QUESTION CARD ===== */
   .q-card {
@@ -178,7 +189,8 @@
   .badge-mcq { background: rgba(91,76,237,0.2); color: var(--primary-light); border: 1px solid rgba(91,76,237,0.3); }
   .badge-fill { background: rgba(6,182,212,0.2); color: var(--secondary); border: 1px solid rgba(6,182,212,0.3); }
   .badge-match { background: rgba(16,185,129,0.2); color: var(--success); border: 1px solid rgba(16,185,129,0.3); }
-  .q-text { font-size: clamp(1.15rem, 3vw, 1.4rem); font-weight: 700; line-height: 1.7; margin-bottom: 20px; color: #ffffff; letter-spacing: 0.01em; }
+  /* 7. Improved question text typography */
+  .q-text { font-size: clamp(1.18rem, 3.5vw, 1.45rem); font-weight: 700; line-height: 1.8; margin-bottom: 20px; color: #ffffff; letter-spacing: 0.01em; }
   .def-reveal { margin-top: 14px; padding: 12px 16px; background: rgba(16,185,129,0.1); border-left: 3px solid var(--success); border-radius: 8px; font-size: 0.9rem; color: #a7f3d0; display: none; }
   .def-reveal.show { display: block; }
 
@@ -190,6 +202,8 @@
     background: var(--card2); color: var(--text); font-size: 0.95rem; cursor: pointer;
     transition: all 0.18s; text-align: center; line-height: 1.45; font-weight: 500;
   }
+  /* 2. MCQ button press micro-interaction */
+  .mcq-opt:active:not(:disabled):not(.correct):not(.wrong) { transform: scale(0.97); }
   .mcq-opt:hover:not(:disabled):not(.correct):not(.wrong) { border-color: var(--primary-light); background: rgba(91,76,237,0.12); }
   .mcq-opt.correct { border-color: var(--success); background: rgba(16,185,129,0.18); color: #a7f3d0; }
   .mcq-opt.wrong { border-color: var(--danger); background: rgba(239,68,68,0.15); color: #fca5a5; }
@@ -274,9 +288,57 @@
   /* ===== DIVIDER ===== */
   .divider { height: 1px; background: var(--border); margin: 20px 0; }
 
+  /* ===== ANIMATIONS ===== */
+
+  /* 1. Question card entrance */
+  @keyframes cardEnter {
+    from { opacity: 0; transform: translateY(18px) scale(0.98); }
+    to   { opacity: 1; transform: translateY(0)   scale(1);    }
+  }
+  .q-card { animation: cardEnter 0.32s cubic-bezier(0.22,1,0.36,1) both; }
+
+  /* 3. Correct / wrong answer flash on MCQ buttons */
+  @keyframes correctFlash {
+    0%   { box-shadow: 0 0 0 0 rgba(16,185,129,0.7); }
+    50%  { box-shadow: 0 0 0 10px rgba(16,185,129,0); }
+    100% { box-shadow: none; }
+  }
+  @keyframes wrongFlash {
+    0%   { box-shadow: 0 0 0 0 rgba(239,68,68,0.7); }
+    50%  { box-shadow: 0 0 0 10px rgba(239,68,68,0); }
+    100% { box-shadow: none; }
+  }
+  .mcq-opt.correct { animation: correctFlash 0.45s ease-out forwards; }
+  .mcq-opt.wrong   { animation: wrongFlash  0.45s ease-out forwards; }
+
+  /* 5. Score counter pop */
+  @keyframes scorePop {
+    0%   { transform: scale(1); }
+    40%  { transform: scale(1.45); color: #fbbf24; }
+    100% { transform: scale(1); }
+  }
+  .hud-item.score .value.pop { animation: scorePop 0.38s cubic-bezier(0.34,1.56,0.64,1) both; }
+
+  /* 6. Screen fade transition */
+  .screen { opacity: 0; transition: opacity 0.28s ease; pointer-events: none; }
+  .screen.active { opacity: 1; pointer-events: auto; }
+
+  /* 9. Confetti (100% score) */
+  @keyframes confettiFall {
+    0%   { transform: translateY(-20px) rotate(0deg);   opacity: 1; }
+    100% { transform: translateY(110vh) rotate(720deg); opacity: 0; }
+  }
+  .confetti-piece {
+    position: fixed; top: -10px; width: 10px; height: 10px;
+    border-radius: 2px; pointer-events: none; z-index: 9999;
+    animation: confettiFall linear forwards;
+  }
+
   /* ===== RESPONSIVE ===== */
   @media(max-width:640px){
     .setting-section, .q-card, .results-card { padding: 18px 14px; }
     .hud { gap: 6px; }
     .hud-item { padding: 7px 10px; font-size: 0.78rem; }
+    /* 7. Larger mobile question text */
+    .q-text { font-size: 1.22rem; line-height: 1.85; }
   }

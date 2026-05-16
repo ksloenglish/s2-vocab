@@ -15,7 +15,16 @@ function startTimer() {
   const startTime = performance.now() - msElapsed;
   timerInterval = setInterval(() => {
     msElapsed = Math.floor(performance.now() - startTime);
-    document.getElementById('hud-timer').textContent = formatTime(msElapsed);
+    const timerEl = document.getElementById('hud-timer');
+    timerEl.textContent = formatTime(msElapsed);
+    // 8. Timer colour change: amber after 2 min, red after 4 min
+    if (msElapsed >= 240000) {
+      timerEl.style.color = 'var(--danger)';
+    } else if (msElapsed >= 120000) {
+      timerEl.style.color = 'var(--warning)';
+    } else {
+      timerEl.style.color = '';
+    }
   }, 50);
 }
 
@@ -27,8 +36,17 @@ function updateHUD() {
 }
 
 function showScreen(id) {
-  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
-  document.getElementById(id).classList.add('active');
+  // 6. Fade transition between screens
+  const current = document.querySelector('.screen.active');
+  const next = document.getElementById(id);
+  if (current && current !== next) {
+    current.classList.remove('active');
+    // Brief delay so fade-out starts before fade-in
+    setTimeout(() => next.classList.add('active'), 60);
+  } else {
+    document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+    next.classList.add('active');
+  }
 }
 
 function renderQuestion() {
@@ -79,7 +97,7 @@ function handleMCQ(btn, chosen, q) {
     }
     if (!q._wrongAttempt) {
       score++;
-      document.getElementById('hud-score').textContent = score;
+      popScore();
     }
     practisedItems.add(q.item.item);
     document.getElementById('btn-next').classList.add('show');
@@ -139,7 +157,7 @@ function handleFill(correctAnswer, revealDef, displayAnswer) {
     feedback.classList.add('ok');
     feedback.textContent = '✓ Correct!';
     score++;
-    document.getElementById('hud-score').textContent = score;
+    popScore();
     practisedItems.add(questions[currentQIndex].item.item);
   } else {
     input.classList.add('wrong');
@@ -259,7 +277,7 @@ function tryMatchPair() {
     if (Object.keys(matchState.matched).length === matchState.totalItems) {
       if (!matchState.anyMistake) {
         score++;
-        document.getElementById('hud-score').textContent = score;
+        popScore();
       }
       const noteEl = document.getElementById('match-score-note');
       if (matchState.anyMistake) {
@@ -305,6 +323,17 @@ function updateNextBtn() {
   btn.textContent = isLast ? 'Finish Exercise ✓' : 'Next Question →';
 }
 
+// ---- SCORE POP (item 5) ----
+function popScore() {
+  const el = document.getElementById('hud-score');
+  el.textContent = score;
+  el.classList.remove('pop');
+  // Force reflow to restart animation
+  void el.offsetWidth;
+  el.classList.add('pop');
+  el.addEventListener('animationend', () => el.classList.remove('pop'), { once: true });
+}
+
 // ---- QUIT ----
 function quitToTitle() {
   clearInterval(timerInterval);
@@ -331,6 +360,9 @@ function endExercise() {
   else remark = '💪 Don\'t give up! Review the words and try again.';
   document.getElementById('res-remark').textContent = remark;
 
+  // 9. Confetti for 100%
+  if (pct === 1) launchConfetti();
+
   const { allPhrases, allWords } = buildPool();
   const practisedPhrases = allPhrases.filter(p => practisedItems.has(p.item)).sort((a, b) => a.item.localeCompare(b.item));
   const practisedWords = allWords.filter(w => practisedItems.has(w.item)).sort((a, b) => a.item.localeCompare(b.item));
@@ -354,7 +386,27 @@ function endExercise() {
 }
 
 function playAgain() {
+  // Remove any leftover confetti pieces
+  document.querySelectorAll('.confetti-piece').forEach(el => el.remove());
   showScreen('screen-title');
+}
+
+// ---- CONFETTI (item 9) ----
+function launchConfetti() {
+  const colours = ['#a78bfa','#06b6d4','#f59e0b','#10b981','#f472b6','#60a5fa'];
+  for (let i = 0; i < 80; i++) {
+    const el = document.createElement('div');
+    el.className = 'confetti-piece';
+    el.style.left = Math.random() * 100 + 'vw';
+    el.style.background = colours[Math.floor(Math.random() * colours.length)];
+    el.style.width = (8 + Math.random() * 8) + 'px';
+    el.style.height = (8 + Math.random() * 8) + 'px';
+    el.style.borderRadius = Math.random() > 0.5 ? '50%' : '2px';
+    el.style.animationDuration = (2 + Math.random() * 2.5) + 's';
+    el.style.animationDelay = (Math.random() * 1.2) + 's';
+    document.body.appendChild(el);
+    el.addEventListener('animationend', () => el.remove());
+  }
 }
 
 // ============================================================
