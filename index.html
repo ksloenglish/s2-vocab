@@ -117,7 +117,9 @@
     appearance: none;
     font-family: inherit;
   }
-  .opt-btn:hover:not(:disabled) { border-color: var(--primary-light); color: var(--text); background: rgba(91,76,237,0.12); }
+  .opt-btn:hover:not(:disabled):not(.selected) { border-color: var(--primary-light); color: var(--text); background: rgba(91,76,237,0.12); }
+  .opt-btn:focus { outline: none; }
+  .opt-btn:focus:not(.selected) { border-color: var(--primary-light); }
   .opt-btn.selected {
     border-color: var(--primary) !important;
     background: linear-gradient(135deg, var(--primary), #7c3aed) !important;
