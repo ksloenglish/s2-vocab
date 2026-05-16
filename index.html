@@ -1472,6 +1472,7 @@ function showScreen(id) {
 }
 
 function renderQuestion() {
+  window.scrollTo({ top: 0, behavior: 'instant' });
   updateHUD();
   const q = questions[currentQIndex];
   const card = document.getElementById('q-card');
@@ -1811,7 +1812,7 @@ selectLang('en');
 
 <!-- ========== FOOTER ========== -->
 <footer class="site-footer">
-  <div style="font-size:0.7rem;color:var(--text-muted);opacity:0.5;margin-bottom:4px;">v260516-164108</div>
+  <div style="font-size:0.7rem;color:var(--text-muted);opacity:0.5;margin-bottom:4px;">v260516-164411</div>
   &copy; <span id="copyright-year">2026</span> K S Lo English. All Rights Reserved.
 </footer>
 
