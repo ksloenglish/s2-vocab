@@ -1020,7 +1020,16 @@ function renderUnitOptions() {
     btn.onclick = () => selectUnit(uid);
     group.appendChild(btn);
   });
-  if (available.length === 1) selectUnit(available[0]);
+  if (available.length === 1) {
+    selectUnit(available[0]);
+    // Disable the button so it cannot be toggled off on mobile
+    const singleBtn = group.querySelector('.opt-btn');
+    if (singleBtn) {
+      singleBtn.disabled = true;
+      singleBtn.style.opacity = '1';  // keep it visually fully selected
+      singleBtn.style.cursor = 'default';
+    }
+  }
 }
 
 function selectUnit(uid) {
