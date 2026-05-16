@@ -1314,23 +1314,12 @@ function makeQ_1B(item, fullPool) {
   const sbSub = item.sbSubstitute || null;
 
   function applyDistractorSbSub(phrase, sub) {
-    // If the phrase already contains 'sb' or 'sth', replace with sub
+    // If the phrase already contains 'sb', replace it with the substitute noun
     if (/\bsb\b/i.test(phrase)) return phrase.replace(/\bsb\b/gi, sub);
-    // Otherwise append sub: if phrase ends in a preposition, insert before it
-    const words = phrase.trimEnd().split(/\s+/);
-    const lastWord = words[words.length - 1].toLowerCase();
-    const PREPS = new Set(['about','above','across','after','against','along','among','around','at',
-      'before','behind','below','beneath','beside','between','beyond','by','despite','down',
-      'during','except','for','from','in','inside','into','near','of','off','on','onto','out',
-      'outside','over','past','since','through','till','to','toward','towards','under',
-      'underneath','until','up','upon','with','within','without']);
-    if (PREPS.has(lastWord) && words.length > 1) {
-      // Insert sub before the final preposition
-      words.splice(words.length - 1, 0, sub);
-    } else {
-      words.push(sub);
-    }
-    return words.join(' ');
+    // Otherwise always append the noun at the end.
+    // For verb+preposition phrases (e.g. 'struggle with', 'a majority of'),
+    // the noun is the object of the preposition, so it follows it naturally.
+    return phrase.trimEnd() + ' ' + sub;
   }
 
   // For display: replace sb/sth placeholders in non-answer options with neutral pronouns
@@ -1815,7 +1804,7 @@ selectLang('en');
 
 <!-- ========== FOOTER ========== -->
 <footer class="site-footer">
-  <div style="font-size:0.7rem;color:var(--text-muted);opacity:0.5;margin-bottom:4px;">v260516-162820</div>
+  <div style="font-size:0.7rem;color:var(--text-muted);opacity:0.5;margin-bottom:4px;">v260516-163033</div>
   &copy; <span id="copyright-year">2026</span> K S Lo English. All Rights Reserved.
 </footer>
 
