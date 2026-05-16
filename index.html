@@ -222,13 +222,13 @@
   /* ===== MATCHING ===== */
   .match-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
   @media(max-width:500px){ .match-grid { grid-template-columns: 1fr; } }
-  .match-col { display: flex; flex-direction: column; gap: 10px; }
+  .match-col { display: flex; flex-direction: column; gap: 12px; }
   .match-col-label { font-size: 0.75rem; font-weight: 800; text-transform: uppercase; letter-spacing: 0.08em; color: var(--text-muted); margin-bottom: 4px; }
   .match-item {
     padding: 12px 16px; border-radius: 12px; border: 2px solid var(--border);
     background: var(--card2); color: var(--text); font-size: 0.88rem; cursor: pointer;
     transition: all 0.18s; line-height: 1.45; min-height: 54px; display: flex; align-items: center;
-    margin-bottom: 0;
+    margin-bottom: 4px;
   }
   .match-item:hover:not(.matched):not(.wrong-flash) { border-color: var(--primary-light); background: rgba(91,76,237,0.1); }
   .match-item.selected { border-color: var(--primary); background: rgba(91,76,237,0.22); box-shadow: 0 0 10px rgba(91,76,237,0.3); }
@@ -647,37 +647,37 @@ const TERM_UNITS = {
 // ============================================================
 const SPELL_DISTRACTORS = {
   // Words
-  "suppress":       ["supress", "supresse", "supres"],
-  "incident":       ["incidant", "incedent", "inciddent"],
-  "assume":         ["asume", "assuma", "assoom"],
-  "unsatisfactory": ["unsatisfactary", "unsatisfectory", "unsatisfactori"],
-  "deny":           ["denie", "denny", "deni"],
-  "complicated":    ["complecated", "complicatted", "complicaited"],
-  "conflict":       ["conflikt", "confict", "conflickt"],
-  "inspiring":      ["inspring", "inspirring", "inspyring"],
-  "encounter":      ["encownter", "encunter", "encountir"],
-  "eventually":     ["eventualy", "eventully", "eventuelly"],
-  "circumstance":   ["circumstanse", "circumstaince", "circumstence"],
-  "resilience":     ["resillience", "resiliance", "resillance"],
-  "foster":         ["fosta", "fostar", "fostor"],
-  "vibe":           ["vybe", "vib", "vieb"],
+  "suppress":       ["supress", "supresss", "suppres"],
+  "incident":       ["incidant", "inciednt", "incidennt"],
+  "assume":         ["asume", "asusme", "assme"],
+  "unsatisfactory": ["unsatisfactary", "unsatifactory", "unsatisfactroy"],
+  "deny":           ["deni", "dnye", "deyn"],
+  "complicated":    ["complciated", "complicatde", "complicaetd"],
+  "conflict":       ["conficlt", "conlfict", "conflcit"],
+  "inspiring":      ["insipring", "inspriring", "inspirnig"],
+  "encounter":      ["encoutner", "enocunter", "encountre"],
+  "eventually":     ["eventualy", "evnetually", "eventaully"],
+  "circumstance":   ["circumstnace", "circumstaance", "circumstacne"],
+  "resilience":     ["resileince", "resileince", "resiliencce"],
+  "foster":         ["fostr", "fostre", "fsoter"],
+  "vibe":           ["vieb", "vbei", "vieb"],
   // Phrases – misspell the main content word only
-  "carry out":                   ["cary out", "carri out", "carry owt"],
-  "during times of adversity":   ["during times of adversety", "during times of adversaty", "during times of adversitty"],
-  "a majority of":               ["a majoreety of", "a majoriti of", "a majoreity of"],
-  "feel guilty about":           ["feel gilty about", "feel guiltty about", "feel guiltie about"],
-  "be in the mood to":           ["be in the mude to", "be in the moud to", "be in the moode to"],
-  "be in favour of":             ["be in favur of", "be in favoure of", "be in favore of"],
-  "face up to":                  ["fase up to", "faise up to", "faze up to"],
-  "educate sb about":            ["educait sb about", "educete sb about", "educatte sb about"],
-  "keep things in perspective":  ["keep things in perspektive", "keep things in perspectiv", "keep things in perspectave"],
-  "stay optimistic":             ["stay optomistic", "stay optimestik", "stay optimistik"],
-  "take sth in sb's stride":     ["take sth in sb's stried", "take sth in sb's stide", "take sth in sb's stryde"],
-  "play a part in":              ["play a pairt in", "play a prat in", "play a parte in"],
-  "struggle with":               ["strugle with", "struglle with", "strugle wiht"],
-  "offer relief from":           ["offer releif from", "offer releef from", "offer relef from"],
-  "be surrounded by":            ["be sorrounded by", "be surrownded by", "be surounded by"],
-  "interact with":               ["interract with", "intaract with", "interakt with"]
+  "carry out":                   ["cary out", "crayr out", "cayr out"],
+  "during times of adversity":   ["during times of adveristy", "during times of adversiyt", "during times of adverstiy"],
+  "a majority of":               ["a majorty of", "a majroity of", "a majoriyt of"],
+  "feel guilty about":           ["feel guitly about", "feel guiltly about", "feel guiltiy about"],
+  "be in the mood to":           ["be in the moo to", "be in the moodt o", "be in the moood to"],
+  "be in favour of":             ["be in favuor of", "be in faovur of", "be in favoru of"],
+  "face up to":                  ["fce up to", "faec up to", "face upt o"],
+  "educate sb about":            ["educaet sb about", "edicuate sb about", "educatre sb about"],
+  "keep things in perspective":  ["keep things in perspectiev", "keep things in persepctive", "keep things in perspectiev"],
+  "stay optimistic":             ["stay optmistic", "stay optimstic", "stay optimistci"],
+  "take sth in sb's stride":     ["take sth in sb's stirde", "take sth in sb's strdei", "take sth in sb's strdie"],
+  "play a part in":              ["play a prat in", "play a patr in", "play a aprt in"],
+  "struggle with":               ["strugle with", "sturggle with", "struglle with"],
+  "offer relief from":           ["offer releif from", "offer relef from", "offer relieff from"],
+  "be surrounded by":            ["be surrunded by", "be surrouned by", "be surrounedd by"],
+  "interact with":               ["ineract with", "intreact with", "interatc with"]
 };
 
 // ============================================================
@@ -869,12 +869,11 @@ function buildFullPool() {
 
 function makeQ_1A(item, fullPool) {
   const distractors = getDistractors(item, fullPool);
-  const sentenceStart = isSentenceStart(item.sentence);
+  // 1A prompt is a definition (no sentence), blank is not at sentence start
+  // Options are words/phrases – no capitalisation needed
   let opts = [item.item, ...distractors];
-  opts = maybeCapitalise(opts, item.item, sentenceStart);
-  const answer = sentenceStart ? (item.item.charAt(0).toUpperCase() + item.item.slice(1)) : item.item;
   shuffle(opts);
-  return { type: '1A', item, prompt: getDef(item), options: opts, answer };
+  return { type: '1A', item, prompt: getDef(item), options: opts, answer: item.item, noCapitalise: true };
 }
 
 function makeQ_1B(item, fullPool) {
@@ -895,7 +894,8 @@ function makeQ_1C(item, fullPool) {
   const defDistractors = getDefDistractors(item, fullPool);
   const correctDef = getDef(item);
   const opts = shuffle([correctDef, ...defDistractors.map(d => d.def)]);
-  return { type: '1C', item, prompt: item.item, options: opts, answer: correctDef };
+  // 1C shows a word/phrase as the prompt – no sentence, so no capitalisation needed
+  return { type: '1C', item, prompt: item.item, options: opts, answer: correctDef, noCapitalise: true };
 }
 
 function makeQ_Fill(item) {
@@ -1017,6 +1017,7 @@ function renderQuestion() {
 
   if (!q) { endExercise(); return; }
 
+  updateNextBtn();
   if (q.type === '1A' || q.type === '1B' || q.type === '1C') renderMCQ(q, card);
   else if (q.type === 'fill') renderFill(q, card);
   else if (q.type === 'match') renderMatch(q, card);
@@ -1025,6 +1026,7 @@ function renderQuestion() {
 // ---- MCQ ----
 function renderMCQ(q, card) {
   const badgeLabel = (q.type === '1A' || q.type === '1B') ? 'Choose the correct word / phrase' : 'Choose the correct definition';
+  // For 1C (definition questions), options are definitions – never capitalise them
   card.innerHTML = `
     <span class="q-type-badge badge-mcq">${badgeLabel}</span>
     <div class="q-text">${q.prompt}</div>
@@ -1042,6 +1044,7 @@ function renderMCQ(q, card) {
 }
 
 function handleMCQ(btn, chosen, q) {
+  // 1C options are definitions – they should not be capitalised
   const allBtns = document.querySelectorAll('.mcq-opt');
   if (chosen === q.answer) {
     btn.classList.add('correct');
@@ -1246,6 +1249,12 @@ function nextQuestion() {
   } else {
     renderQuestion();
   }
+}
+
+function updateNextBtn() {
+  const btn = document.getElementById('btn-next');
+  const isLast = (currentQIndex === questions.length - 1);
+  btn.textContent = isLast ? 'Finish Exercise ✓' : 'Next Question →';
 }
 
 // ---- QUIT ----
