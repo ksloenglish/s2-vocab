@@ -365,6 +365,7 @@ function quitToTitle() {
 function endExercise() {
   clearInterval(timerInterval);
   showScreen('screen-results');
+  window.scrollTo({ top: 0, behavior: 'instant' });
 
   const total = questions.length;
   const displayScore = Math.min(score, total);

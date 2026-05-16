@@ -1033,22 +1033,35 @@ function makeQ_Match(items) {
  * Matching questions are interleaved evenly among non-matching questions.
  */
 function generateQuestions(totalQ) {
+  // ── Stratified sampling: each selected unit contributes an equal share ──────
+  // 1. Determine per-unit quota (distribute remainder round-robin)
+  const unitIds = [...selectedUnits];
+  const numUnits = unitIds.length;
+  const baseQ = Math.floor(totalQ / numUnits);         // floor share per unit
+  const remainder = totalQ - baseQ * numUnits;         // leftover questions
+  const unitQuotas = {};                               // unitId → # questions
+  unitIds.forEach((uid, i) => { unitQuotas[uid] = baseQ + (i < remainder ? 1 : 0); });
+
+  // 2. For each unit, draw its quota of items (half phrases, half words, cycling if needed)
+  const allItems = [];
+  unitIds.forEach(uid => {
+    const q = unitQuotas[uid];
+    const phrases = shuffle(UNITS[uid].phrases.map(p => ({ ...p, unitId: uid })));
+    const words   = shuffle(UNITS[uid].words.map(w => ({ ...w, unitId: uid })));
+    const halfQ   = Math.floor(q / 2);
+    function cycleItems(arr, n) {
+      const result = [];
+      for (let i = 0; i < n; i++) result.push(arr[i % arr.length]);
+      return result;
+    }
+    allItems.push(...cycleItems(phrases, halfQ));
+    allItems.push(...cycleItems(words, q - halfQ));
+  });
+  shuffle(allItems);
+
+  // 3. Build full pool (for distractor generation — unchanged)
   const { allPhrases, allWords } = buildPool();
   const fullPool = [...allPhrases, ...allWords];
-  const halfQ = Math.floor(totalQ / 2);
-
-  shuffle(allPhrases);
-  shuffle(allWords);
-
-  function cycleItems(arr, n) {
-    const result = [];
-    for (let i = 0; i < n; i++) result.push(arr[i % arr.length]);
-    return result;
-  }
-
-  const phraseItems = cycleItems(allPhrases, halfQ);
-  const wordItems = cycleItems(allWords, totalQ - halfQ);
-  const allItems = shuffle([...phraseItems, ...wordItems]);
 
   // Build non-matching questions
   const nonMatchQs = [];
