@@ -299,7 +299,7 @@
 <!-- ========== TITLE SCREEN ========== -->
 <div id="screen-title" class="screen active">
   <div class="site-header">
-    <h1>Welcome!</h1>
+    <h1 id="title-greeting"></h1>
     <p>Choose your settings below to begin.</p>
   </div>
 
@@ -1545,6 +1545,19 @@ function playAgain() {
 // INIT
 // ============================================================
 selectLang('en');
+
+// Random title greeting
+(function() {
+  const greetings = [
+    'Ready for the challenge?',
+    'Challenge time!',
+    'Ready to begin?',
+    "Let's get started!",
+    'Set your challenge!'
+  ];
+  const el = document.getElementById('title-greeting');
+  if (el) el.textContent = greetings[Math.floor(Math.random() * greetings.length)];
+})();
 
 (function() {
   const el = document.getElementById('copyright-year');
