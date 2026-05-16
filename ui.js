@@ -392,14 +392,16 @@ function endExercise() {
     items.forEach(item => {
       const div = document.createElement('div');
       div.className = 'vocab-item';
-      // Unit dot: derive CSS class from unitId (e.g. "2nd-6" → "unit-6")
-      let dotHTML = '';
+      // Unit label pill: small coloured text badge showing e.g. "U5"
+      let labelHTML = '';
       if (item.unitId) {
         const m = item.unitId.match(/(\d+)$/);
         const cls = m ? 'unit-' + m[1] : '';
-        dotHTML = `<span class="vi-unit-dot ${cls}" title="${(UNITS[item.unitId] && UNITS[item.unitId].label) || item.unitId}"></span>`;
+        const fullLabel = (UNITS[item.unitId] && UNITS[item.unitId].label) || item.unitId;
+        const shortLabel = fullLabel.replace('Unit ', 'U'); // "Unit 5" → "U5"
+        labelHTML = `<span class="vi-unit-label ${cls}" title="${fullLabel}">${shortLabel}</span>`;
       }
-      div.innerHTML = `${dotHTML}<span class="vi-word">${italicise(item.item)}</span><span class="vi-def">${italicise(getDef(item))}</span>`;
+      div.innerHTML = `${labelHTML}<span class="vi-word">${italicise(item.item)}</span><span class="vi-def">${italicise(getDef(item))}</span>`;
       container.appendChild(div);
     });
   }

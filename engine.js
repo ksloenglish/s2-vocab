@@ -138,6 +138,11 @@ function misspellWord(word) {
         let addedThisPos = 0;
         for (const v of [...unused, ...used]) {
           if (results.size >= 3 || addedThisPos >= maxPerPosition) break;
+          // Reject same-vowel adjacency: 'aa', 'ee', 'oo', etc. are not common in English.
+          // 'ae', 'ea', 'oa', 'oe' etc. are fine and are NOT blocked.
+          const prevChar = i > 0 ? w[i - 1] : '';
+          const nextChar = i < w.length - 1 ? w[i + 1] : '';
+          if (v === prevChar || v === nextChar) continue; // would create e.g. 'aa', 'oo'
           const candidate = w.slice(0, i) + v + w.slice(i + 1);
           if (candidate !== w && looksReal(candidate) && !isValidWord(candidate) && !results.has(candidate)) {
             results.add(candidate);
@@ -523,7 +528,7 @@ function firstLetterHint(phrase) {
   return phrase.split(' ').map(w => {
     if (w === 'sb' || w === 'sth' || w === "sb's") return `<em>${w}</em>`;
     const first = w[0];
-    return `<span style="color:#FFD700;font-weight:700">${first}</span>${'_'.repeat(5)}`;
+    return `<span style="color:#FFD700;font-weight:700;font-family:'Georgia','Times New Roman',serif;font-style:normal">${first}</span>${'_'.repeat(5)}`;
   }).join(' ');
 }
 
