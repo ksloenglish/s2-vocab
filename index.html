@@ -899,18 +899,18 @@ function misspellPhrase(phrase) {
     return results.slice(0, 3);
   }
 
-  // There is at least one preposition: always produce EXACTLY 2 preposition-swapped distractors
-  // so the preposition variant never stands alone among the options.
+  // There is at least one preposition: produce EXACTLY 1 preposition-swapped distractor
+  // (limiting to 1 prevents all options from sharing the same stem, which looks repetitive).
   const prepResults = [];
   const usedPreps = new Set(words); // avoid replacements already in the phrase
 
-  // First, try to get 2 different replacements for the FIRST preposition slot
+  // Get 1 replacement for the FIRST preposition slot
   const pi0 = prepIndices[0];
   const origPrep0 = words[pi0];
   const pool0 = PREP_REPLACEMENTS.filter(p => p !== origPrep0 && !usedPreps.has(p));
   shuffle(pool0);
   for (const p of pool0) {
-    if (prepResults.length >= 2) break;
+    if (prepResults.length >= 1) break;
     const newWords = [...words];
     newWords[pi0] = p;
     const candidate = newWords.join(' ');
@@ -920,25 +920,8 @@ function misspellPhrase(phrase) {
     }
   }
 
-  // If the phrase has a second preposition and we still need more, use it
-  if (prepResults.length < 2 && prepIndices.length >= 2) {
-    const pi1 = prepIndices[1];
-    const origPrep1 = words[pi1];
-    const pool1 = PREP_REPLACEMENTS.filter(p => p !== origPrep1 && !usedPreps.has(p));
-    shuffle(pool1);
-    for (const p of pool1) {
-      if (prepResults.length >= 2) break;
-      const newWords = [...words];
-      newWords[pi1] = p;
-      const candidate = newWords.join(' ');
-      if (!prepResults.includes(candidate)) {
-        prepResults.push(candidate);
-        usedPreps.add(p);
-      }
-    }
-  }
-
-  // Third distractor: word misspelling (or another pool item if no misspelling available)
+  // Second distractor: word misspelling
+  // Third slot is left empty here — getDistractors/makeQ_1B will pad with a pool item
   const results = [...prepResults];
   if (wordMisspelling && !results.includes(wordMisspelling)) {
     results.push(wordMisspelling);
@@ -1362,6 +1345,34 @@ function makeQ_1B(item, fullPool) {
     if (o.toLowerCase() === rawAnswer.toLowerCase()) return o; // never strip the correct answer
     return stripLeadingBe(o);
   });
+  // Remove any distractor whose base form (pool item) is the same as the correct answer's base form.
+  // This prevents e.g. "carry out" appearing alongside "carried out" (the correct answer).
+  const correctBaseForm = item.item.toLowerCase();
+  opts = opts.filter(o => {
+    if (o.toLowerCase() === rawAnswer.toLowerCase()) return true; // always keep correct answer
+    return o.toLowerCase() !== correctBaseForm; // remove base form of correct answer
+  });
+  // Pad back to 4 if we removed something
+  // Use a simple exclusion: avoid the correct answer's base form and anything already in opts (by base form).
+  const optsBaseForms = new Set(opts.map(o => o.toLowerCase()));
+  while (opts.length < 4) {
+    const extra = fullPool.filter(p =>
+      p.item.toLowerCase() !== correctBaseForm &&
+      !optsBaseForms.has(p.item.toLowerCase())
+    );
+    if (extra.length === 0) break;
+    const picked = extra[Math.floor(Math.random() * extra.length)];
+    const conjugated = shouldConjugate(picked.item) ? conjugateFirstVerb(picked.item, targetTense) : picked.item;
+    // Only add if the conjugated form is not already present
+    if (!optsBaseForms.has(conjugated.toLowerCase())) {
+      opts.push(conjugated);
+      optsBaseForms.add(picked.item.toLowerCase());
+      optsBaseForms.add(conjugated.toLowerCase());
+    } else {
+      // Mark as seen to avoid infinite loop
+      optsBaseForms.add(picked.item.toLowerCase());
+    }
+  }
   opts = [...new Set(opts.map(o => o.toLowerCase()))].map(low => {
     return opts.find(o => o.toLowerCase() === low) || low;
   });
@@ -1885,7 +1896,7 @@ selectLang('en');
 
 <!-- ========== FOOTER ========== -->
 <footer class="site-footer">
-  <div style="font-size:0.7rem;color:var(--text-muted);opacity:0.5;margin-bottom:4px;">v260516-181235</div>
+  <div style="font-size:0.7rem;color:var(--text-muted);opacity:0.5;margin-bottom:4px;">v260516-111306</div>
   &copy; <span id="copyright-year">2026</span> K S Lo English. All Rights Reserved.
 </footer>
 
