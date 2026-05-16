@@ -2072,7 +2072,8 @@ function endExercise() {
 
   const pct = total > 0 ? displayScore / total : 0;
   let remark = '';
-  if (pct >= 0.9) remark = '🌟 Outstanding! You have mastered this unit!';
+  if (pct === 1) remark = '🏆 Perfect! A flawless performance — well done!';
+  else if (pct >= 0.9) remark = '🌟 Outstanding! You have mastered this unit!';
   else if (pct >= 0.75) remark = '🎉 Great work! Keep it up!';
   else if (pct >= 0.6) remark = '👍 Good effort! A little more practice will get you there.';
   else if (pct >= 0.4) remark = '📚 Keep practising — you are making progress!';
@@ -2131,7 +2132,7 @@ validateData();
 
 <!-- ========== FOOTER ========== -->
 <footer class="site-footer">
-  <div style="font-size:0.7rem;color:var(--text-muted);opacity:0.5;margin-bottom:4px;">v260516-235148</div>
+  <div style="font-size:0.7rem;color:var(--text-muted);opacity:0.5;margin-bottom:4px;">v260516-235804</div>
   &copy; <span id="copyright-year">2026</span> K S Lo English. All Rights Reserved.
 </footer>
 
