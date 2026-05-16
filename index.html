@@ -235,7 +235,9 @@
   .match-item.matched { border-color: var(--success); background: rgba(16,185,129,0.15); color: #a7f3d0; cursor: default; }
   .match-item.wrong-flash { border-color: var(--danger); background: rgba(239,68,68,0.15); animation: shake 0.35s; }
   @keyframes shake { 0%,100%{transform:translateX(0)} 25%{transform:translateX(-4px)} 75%{transform:translateX(4px)} }
-  .match-score-note { margin-top: 14px; font-size: 0.88rem; color: var(--success); font-weight: 600; }
+  .match-score-note { margin-top: 14px; font-size: 0.88rem; font-weight: 600; }
+  .match-score-note.ok { color: var(--success); }
+  .match-score-note.err { color: var(--danger); }
 
   /* ===== NEXT BUTTON ===== */
   .btn-next {
@@ -267,7 +269,7 @@
   .vocab-item { display: flex; gap: 10px; align-items: flex-start; padding: 10px 14px; background: var(--card2); border-radius: 10px; border: 1px solid var(--border); }
   .vocab-item .vi-word { font-weight: 700; color: var(--text); min-width: 140px; font-size: 0.9rem; }
   .vocab-item .vi-def { color: var(--text-muted); font-size: 0.88rem; line-height: 1.4; }
-  .btn-play-again { width: 100%; margin-top: 22px; padding: 15px; border-radius: var(--radius); border: none; background: linear-gradient(135deg, var(--primary), var(--secondary)); color: #fff; font-size: 1rem; font-weight: 700; cursor: pointer; transition: opacity 0.2s, transform 0.15s; box-shadow: 0 4px 20px rgba(91,76,237,0.4); text-transform: uppercase; letter-spacing: 0.04em; }
+  .btn-play-again { width: 100%; margin-top: 22px; padding: 15px; border-radius: var(--radius); border: none; background: linear-gradient(135deg, var(--primary), var(--secondary)); color: #fff; font-size: 1rem; font-weight: 700; cursor: pointer; transition: opacity 0.2s, transform 0.15s; text-transform: uppercase; letter-spacing: 0.04em; box-shadow: 0 4px 20px rgba(91,76,237,0.4); }
   .btn-play-again:hover { opacity: 0.88; transform: translateY(-1px); }
 
   /* ===== DIVIDER ===== */
@@ -428,74 +430,74 @@ const UNITS = {
       {
         item: "be in favour of",
         pos: "phrase",
-        defEn: "to support or approve of sth",
+        defEn: "to support or agree with sth",
         defZh: "贊同；支持",
-        sentence: "Participants {BLANK} statements that did not deny negative emotions.",
-        sentenceForm: "were in favour of"
+        sentence: "Are you {BLANK} the new policy?",
+        sentenceForm: "in favour of"
       },
       {
         item: "face up to",
         pos: "phrase",
-        defEn: "to accept that a difficult situation exists",
+        defEn: "to accept and deal with sth difficult or unpleasant",
         defZh: "接受；正視",
-        sentence: "My counsellor encouraged me to {BLANK} my problems instead of avoiding them.",
+        sentence: "You need to {BLANK} the fact that you are not going to pass without studying.",
         sentenceForm: "face up to"
       },
       {
         item: "educate sb about",
         pos: "phrase",
-        defEn: "to teach someone about sth",
-        defZh: "教育（某人）關於（某事）",
-        sentence: "The Counselling Department should {BLANK} students about ways to care for people experiencing negative emotions.",
-        sentenceForm: "educate"
+        defEn: "to teach sb about a particular subject",
+        defZh: "教導某人有關……",
+        sentence: "Schools should {BLANK} students {BLANK} mental health.",
+        sentenceForm: "educate sb about"
       },
       // TEXT 2
       {
         item: "keep things in perspective",
         pos: "phrase",
-        defEn: "to think about a situation or problem in a reasonable way",
-        defZh: "正確看待問題",
-        sentence: "What manga and anime characters experience in the stories may help us {BLANK}.",
+        defEn: "to think about a situation in a balanced way without exaggerating",
+        defZh: "保持正確的看法；不誇大其詞",
+        sentence: "It's important to {BLANK} and not panic over small setbacks.",
         sentenceForm: "keep things in perspective"
       },
       {
         item: "stay optimistic",
         pos: "phrase",
-        defEn: "to keep believing that good things will happen in the future",
+        defEn: "to remain hopeful and positive about the future",
         defZh: "保持樂觀",
-        sentence: "Manga and anime often teach us to {BLANK} as they tackle obstacles with determination.",
+        sentence: "Even when things are tough, try to {BLANK}.",
         sentenceForm: "stay optimistic"
       },
       {
         item: "take sth in sb's stride",
         pos: "phrase",
-        defEn: "to deal with a problem calmly and not allow it to influence what you are doing",
-        defZh: "從容處理；對……處之泰然",
-        sentence: "If the characters can crack a smile after a failure and {BLANK}, why can't we keep our chin up?",
-        sentenceForm: "take it in their stride"
+        defEn: "to deal with a problem calmly without letting it affect you",
+        defZh: "從容應對",
+        sentence: "She took the criticism in her stride and continued with her work.",
+        sentenceForm: "take sth in sb's stride"
       },
       {
         item: "play a part in",
         pos: "phrase",
-        defEn: "to help to achieve sth",
-        defZh: "（在……中）起作用",
-        sentence: "Manga and anime communities also {BLANK} building positivity among teenagers.",
+        defEn: "to be involved in or contribute to sth",
+        defZh: "在……中扮演角色；對……有貢獻",
+        sentence: "Exercise can {BLANK} improving your mental health.",
         sentenceForm: "play a part in"
       },
       {
         item: "struggle with",
         pos: "phrase",
-        defEn: "to fight against sb/sth in order to prevent a bad result",
-        defZh: "鬥爭；抗爭",
-        sentence: "Some teenagers, despite seeing friends at school every day, {BLANK} isolation and loneliness.",
+        defEn: "to have difficulty dealing with sth",
+        defZh: "努力應付；與……搏鬥",
+        sentence: "Many teenagers {BLANK} the pressure of exams.",
         sentenceForm: "struggle with"
       },
       {
         item: "offer relief from",
         pos: "phrase",
-        defEn: "to reduce a negative feeling",
-        defZh: "緩解（某負面情緒）",
-        sentence: "Manga and anime may {BLANK} everyday stress and loneliness.",
+        defEn: "to provide sth that reduces pain, stress, or difficulty",
+        defZh: "提供……的緩解",
+        sentence: "Listening to music can {BLANK} stress.",
         sentenceForm: "offer relief from"
       },
       {
@@ -641,71 +643,285 @@ const TERM_UNITS = {
 };
 
 // ============================================================
-// SPELLING DISTRACTORS  (used ONLY when distractor mode = 'spell')
+// ITALIC HELPER – wrap 'be', 'sb', 'sth', "sb's" in <em> tags
+// Applied to displayed text in prompts, options, definitions
 // ============================================================
-const SPELL_DISTRACTORS = {
-  // Words
-  "suppress":       ["supress", "supresss", "suppres"],
-  "incident":       ["incidant", "inciednt", "incidennt"],
-  "assume":         ["asume", "asusme", "assme"],
-  "unsatisfactory": ["unsatisfactary", "unsatifactory", "unsatisfactroy"],
-  "deny":           ["deni", "dnye", "deyn"],
-  "complicated":    ["complciated", "complicatde", "complicaetd"],
-  "conflict":       ["conficlt", "conlfict", "conflcit"],
-  "inspiring":      ["insipring", "inspriring", "inspirnig"],
-  "encounter":      ["encoutner", "enocunter", "encountre"],
-  "eventually":     ["eventualy", "evnetually", "eventaully"],
-  "circumstance":   ["circumstnace", "circumstaance", "circumstacne"],
-  "resilience":     ["resileince", "resileince", "resiliencce"],
-  "foster":         ["fostr", "fostre", "fsoter"],
-  "vibe":           ["vieb", "vbei", "vieb"],
-  // Phrases – misspell the main content word only
-  "carry out":                   ["cary out", "crayr out", "cayr out"],
-  "during times of adversity":   ["during times of adveristy", "during times of adversiyt", "during times of adverstiy"],
-  "a majority of":               ["a majorty of", "a majroity of", "a majoriyt of"],
-  "feel guilty about":           ["feel guitly about", "feel guiltly about", "feel guiltiy about"],
-  "be in the mood to":           ["be in the moo to", "be in the moodt o", "be in the moood to"],
-  "be in favour of":             ["be in favuor of", "be in faovur of", "be in favoru of"],
-  "face up to":                  ["fce up to", "faec up to", "face upt o"],
-  "educate sb about":            ["educaet sb about", "edicuate sb about", "educatre sb about"],
-  "keep things in perspective":  ["keep things in perspectiev", "keep things in persepctive", "keep things in perspectiev"],
-  "stay optimistic":             ["stay optmistic", "stay optimstic", "stay optimistci"],
-  "take sth in sb's stride":     ["take sth in sb's stirde", "take sth in sb's strdei", "take sth in sb's strdie"],
-  "play a part in":              ["play a prat in", "play a patr in", "play a aprt in"],
-  "struggle with":               ["strugle with", "sturggle with", "struglle with"],
-  "offer relief from":           ["offer releif from", "offer relef from", "offer relieff from"],
-  "be surrounded by":            ["be surrunded by", "be surrouned by", "be surrounedd by"],
-  "interact with":               ["ineract with", "intreact with", "interatc with"]
-};
+function italicise(text) {
+  if (!text) return text;
+  // Replace standalone be, sb, sth, sb's with italic versions
+  return text.replace(/\b(be|sb(?:'s)?|sth)\b/g, '<em>$1</em>');
+}
 
 // ============================================================
-// DISTRACTOR LOGIC
-// Randomly choose EITHER (a) other items from the pool
-//                     OR  (b) misspelled versions of the target
-// Never mix both in the same question.
+// ALGORITHMIC DISTRACTOR GENERATION
 // ============================================================
+
+const VOWELS = 'aeiou';
+const VOWEL_SET = new Set(VOWELS);
+
+// Prepositions list for phrase distractor strategy 1
+const PREPOSITIONS = ['about','above','across','after','against','along','among','around','at','before',
+  'behind','below','beneath','beside','between','beyond','by','despite','down','during',
+  'except','for','from','in','inside','into','near','of','off','on','onto','out','outside',
+  'over','past','since','through','throughout','till','to','toward','towards','under',
+  'underneath','until','up','upon','with','within','without'];
+
+// Consonants grouped by similarity (for consonant-swap strategy)
+const SIMILAR_CONSONANTS = [
+  ['c','k','q'],
+  ['s','z'],
+  ['s','c'],  // soft-c
+  ['f','ph'],
+  ['j','g'],  // soft-g
+  ['t','d'],
+  ['b','p'],
+  ['m','n'],
+  ['l','r'],
+  ['v','w'],
+  ['x','ks'],
+];
+
+function isVowel(ch) { return VOWEL_SET.has(ch.toLowerCase()); }
+function isConsonant(ch) { return /[a-z]/i.test(ch) && !isVowel(ch); }
+
+// Letters that can plausibly be doubled in English
+const DOUBLING_CANDIDATES = new Set(['l','s','t','e','o','n','r','f','g','p']);
+
+/**
+ * Generate up to 3 unique misspellings of a single word.
+ * Strategies applied in order of preference; each distractor uses exactly one strategy.
+ */
+// Words that the distractor algorithm might accidentally produce as valid English spellings.
+// These are filtered out so no distractor is ever a real word.
+const VALID_WORD_BLOCKLIST = new Set([
+  // suppress variants
+  'subpress',
+  // deny variants
+  'duny','demy',
+  // foster variants
+  'faster','fester','fister','fooster',
+  // carry variants
+  'curry','cary',
+  // mood variants (phrase content word)
+  'moed','moud','moot',
+  // face variants (phrase content word)
+  'fice','fake',
+  // educate variants
+  'educatee',
+  // stride variants
+  'strade','strode',
+  // struggle variants
+  'straggle','striggle',
+  // favour variants (American English)
+  'favor',
+  // honour, colour, etc. – American spellings of British words in the data
+  'honor','colour','color','labour','labor','neighbour','neighbor',
+  // other plausible accidental valid words from consonant/vowel strategies
+  'incite','insident','incidet','incedent','assame','assime','compicated',
+  'conflect','conflick','inspering','encountar','eventully','circumstance',
+  'resillience','vibe'
+]);
+
+function isValidWord(w) {
+  return VALID_WORD_BLOCKLIST.has(w.toLowerCase());
+}
+
+function misspellWord(word) {
+  const results = new Set();
+  const w = word.toLowerCase();
+
+  // Strategy 1: Replace a vowel (not at position 0) with a different vowel
+  for (let i = 1; i < w.length && results.size < 3; i++) {
+    if (isVowel(w[i])) {
+      for (const v of VOWELS) {
+        if (v !== w[i]) {
+          const candidate = w.slice(0, i) + v + w.slice(i + 1);
+          if (candidate !== w && looksReal(candidate) && !isValidWord(candidate)) { results.add(candidate); break; }
+        }
+      }
+    }
+  }
+
+  // Strategy 2: Swap positions of two vowels (not at position 0), skip if only one vowel
+  if (results.size < 3) {
+    const vowelPositions = [];
+    for (let i = 1; i < w.length; i++) { if (isVowel(w[i])) vowelPositions.push(i); }
+    if (vowelPositions.length >= 2) {
+      for (let a = 0; a < vowelPositions.length - 1 && results.size < 3; a++) {
+        for (let b = a + 1; b < vowelPositions.length && results.size < 3; b++) {
+          const pi = vowelPositions[a], pj = vowelPositions[b];
+          const arr = w.split('');
+          [arr[pi], arr[pj]] = [arr[pj], arr[pi]];
+          const candidate = arr.join('');
+          if (candidate !== w && !results.has(candidate)) results.add(candidate);
+        }
+      }
+    }
+  }
+
+  // Strategy 3: Replace a consonant with a similar-sounding one
+  if (results.size < 3) {
+    for (let i = 0; i < w.length && results.size < 3; i++) {
+      const ch = w[i];
+      if (!isConsonant(ch)) continue;
+      for (const group of SIMILAR_CONSONANTS) {
+        if (group.includes(ch)) {
+          for (const alt of group) {
+            if (alt !== ch) {
+              const candidate = w.slice(0, i) + alt + w.slice(i + 1);
+              if (candidate !== w && !results.has(candidate) && looksReal(candidate) && !isValidWord(candidate)) {
+                results.add(candidate);
+                break;
+              }
+            }
+          }
+          break;
+        }
+      }
+    }
+  }
+
+  // Strategy 4: Remove one letter from a double consonant
+  if (results.size < 3) {
+    for (let i = 1; i < w.length && results.size < 3; i++) {
+      if (isConsonant(w[i]) && w[i] === w[i - 1]) {
+        const candidate = w.slice(0, i) + w.slice(i + 1);
+        if (candidate !== w && !results.has(candidate)) results.add(candidate);
+      }
+    }
+  }
+
+  // Strategy 5: Double a plausible letter
+  if (results.size < 3) {
+    for (let i = 1; i < w.length && results.size < 3; i++) {
+      const ch = w[i].toLowerCase();
+      if (DOUBLING_CANDIDATES.has(ch)) {
+        const candidate = w.slice(0, i) + ch + w.slice(i);
+        if (candidate !== w && !results.has(candidate)) results.add(candidate);
+      }
+    }
+  }
+
+  return [...results].slice(0, 3);
+}
+
+// Basic plausibility filter: reject strings with 3+ consecutive consonants (unusual in English)
+function looksReal(s) {
+  let consRun = 0;
+  for (const ch of s) {
+    if (isConsonant(ch)) { consRun++; if (consRun >= 4) return false; }
+    else consRun = 0;
+  }
+  return true;
+}
+
+/**
+ * Generate up to 3 misspellings of a phrase.
+ * Strategy 1: Replace a preposition with a wrong one (one distractor per preposition, up to 2).
+ * Strategy 2: Misspell the main content word (the longest non-preposition, non-function word).
+ */
+function misspellPhrase(phrase) {
+  const results = [];
+  const words = phrase.toLowerCase().split(' ');
+
+  // Find prepositions in the phrase
+  const prepIndices = words.map((w, i) => PREPOSITIONS.includes(w) ? i : -1).filter(i => i >= 0);
+
+  // Strategy 1: swap each preposition with a wrong one (up to 2 distractors)
+  const usedPreps = new Set();
+  for (const pi of prepIndices) {
+    if (results.length >= 2) break;
+    const origPrep = words[pi];
+    // Pick a replacement preposition that isn't already in the phrase
+    const replacements = ['on','in','at','by','for','with','from','about','over','under','into','onto','off','through','against','across','along','behind','beyond','past','since','till','toward','within','without']
+      .filter(p => p !== origPrep && !words.includes(p) && !usedPreps.has(p));
+    if (replacements.length > 0) {
+      const newPrep = replacements[Math.floor(Math.random() * Math.min(3, replacements.length))];
+      usedPreps.add(newPrep);
+      const newWords = [...words];
+      newWords[pi] = newPrep;
+      results.push(newWords.join(' '));
+    }
+  }
+
+  // Strategy 2: misspell the main content word (longest non-function word)
+  if (results.length < 3) {
+    const functionWords = new Set(['a','an','the','be','is','are','was','were','been','being',
+      'have','has','had','do','does','did','will','would','shall','should','may','might',
+      'must','can','could','to','of','in','on','at','by','for','with','from','about',
+      'up','out','off','sb',"sb's",'sth','and','or','but','not','no','so','yet','both',
+      'each','few','more','most','other','some','such','than','that','these','those',
+      'when','where','which','while','who','whom','whose','how','if','though','although',
+      'because','since','until','unless','after','before','as','like','times','during']);
+    const contentWords = words.map((w, i) => ({ w, i }))
+      .filter(({ w }) => !functionWords.has(w) && w.length > 3)
+      .sort((a, b) => b.w.length - a.w.length);
+
+    if (contentWords.length > 0) {
+      const { w: mainWord, i: mainIdx } = contentWords[0];
+      const misspellings = misspellWord(mainWord);
+      for (const ms of misspellings) {
+        if (results.length >= 3) break;
+        const newWords = [...words];
+        newWords[mainIdx] = ms;
+        const candidate = newWords.join(' ');
+        if (!results.includes(candidate)) results.push(candidate);
+      }
+    }
+  }
+
+  return results.slice(0, 3);
+}
+
+/**
+ * Main distractor function.
+ * Randomly chooses EITHER (a) other items from the pool OR (b) algorithmic misspellings.
+ * Guarantees all 4 options (target + 3 distractors) are unique.
+ */
 function getDistractors(item, pool) {
-  const hasSpell = SPELL_DISTRACTORS[item.item] && SPELL_DISTRACTORS[item.item].length >= 3;
-  // 50/50 chance between spell and other-items, but only if spell variants exist
+  const isPhrase = item.pos === 'phrase';
+  const misspellings = isPhrase ? misspellPhrase(item.item) : misspellWord(item.item);
+  const hasSpell = misspellings.length >= 2;
+
   const useSpell = hasSpell && Math.random() < 0.5;
 
   if (useSpell) {
-    // Mode (b): 3 misspelled versions
-    const variants = SPELL_DISTRACTORS[item.item].slice();
-    shuffle(variants);
-    return variants.slice(0, 3);
+    // Mode (b): algorithmic misspellings – ensure uniqueness vs target
+    const unique = misspellings.filter(m => m.toLowerCase() !== item.item.toLowerCase());
+    // Pad with pool items if not enough
+    if (unique.length < 3) {
+      const others = pool.filter(p => p.item.toLowerCase() !== item.item.toLowerCase());
+      shuffle(others);
+      for (const o of others) {
+        if (unique.length >= 3) break;
+        if (!unique.includes(o.item)) unique.push(o.item);
+      }
+    }
+    return unique.slice(0, 3);
   } else {
-    // Mode (a): 3 other items from the FULL pool (words + phrases mixed)
-    const others = pool.filter(p => p.item !== item.item);
+    // Mode (a): other items from the FULL pool (words + phrases mixed)
+    const others = pool.filter(p => p.item.toLowerCase() !== item.item.toLowerCase());
     shuffle(others);
-    return others.slice(0, 3).map(p => p.item);
+    const chosen = [];
+    for (const o of others) {
+      if (chosen.length >= 3) break;
+      if (!chosen.includes(o.item)) chosen.push(o.item);
+    }
+    return chosen;
   }
 }
 
 function getDefDistractors(item, pool) {
-  const others = pool.filter(p => p.item !== item.item);
+  const correctDef = getDef(item);
+  const others = pool.filter(p => p.item !== item.item && getDef(p) !== correctDef);
   shuffle(others);
-  return others.slice(0, 3).map(p => ({ item: p.item, def: currentLang === 'en' ? p.defEn : p.defZh }));
+  const chosen = [];
+  for (const o of others) {
+    if (chosen.length >= 3) break;
+    const d = getDef(o);
+    if (!chosen.find(c => c.def === d)) chosen.push({ item: o.item, def: d });
+  }
+  return chosen;
 }
 
 // ============================================================
@@ -719,7 +935,7 @@ let questions = [];
 let currentQIndex = 0;
 let score = 0;
 let timerInterval = null;
-let msElapsed = 0;       // milliseconds
+let msElapsed = 0;
 let practisedItems = new Set();
 let matchState = {};
 
@@ -738,32 +954,22 @@ function formatTime(ms) {
   const totalSec = Math.floor(ms / 1000);
   const m = Math.floor(totalSec / 60);
   const s = totalSec % 60;
-  const cs = Math.floor((ms % 1000) / 10); // centiseconds
+  const cs = Math.floor((ms % 1000) / 10);
   return `${m.toString().padStart(2,'0')}:${s.toString().padStart(2,'0')}.${cs.toString().padStart(2,'0')}`;
 }
 
-// Build a fill-in-the-blank hint: bold first letter, underscores for rest
-// e.g. "carry out" → "<b>c</b>____ <b>o</b>__"
+// Build fill-in-the-blank hint: bold first letter, underscores for rest
+// sb, sth, sb's are shown in italic but not blanked
 function firstLetterHint(phrase) {
   return phrase.split(' ').map(w => {
-    if (w === 'sb' || w === 'sth' || w === "sb's") return w;
+    if (w === 'sb' || w === 'sth' || w === "sb's") return `<em>${w}</em>`;
     const first = w[0];
     const rest = '_'.repeat(Math.max(3, w.length - 1));
-    return `<b>${first}</b>${rest}`;
+    return `<strong>${first}</strong>${rest}`;
   }).join(' ');
 }
 
-// Capitalise all options if the answer starts at the beginning of a sentence
-function maybeCapitalise(opts, answer, isSentenceStart) {
-  if (!isSentenceStart) return opts;
-  return opts.map(o => {
-    if (typeof o !== 'string') return o;
-    return o.charAt(0).toUpperCase() + o.slice(1);
-  });
-}
-
 function isSentenceStart(sentence) {
-  // True if the blank is at the very beginning of the sentence
   return sentence.trimStart().startsWith('{BLANK}');
 }
 
@@ -803,7 +1009,6 @@ function renderUnitOptions() {
     allBtn.onclick = () => selectUnit('all');
     group.appendChild(allBtn);
   }
-  // Individual units
   available.forEach(uid => {
     const u = UNITS[uid];
     const btn = document.createElement('button');
@@ -813,10 +1018,7 @@ function renderUnitOptions() {
     btn.onclick = () => selectUnit(uid);
     group.appendChild(btn);
   });
-  // Auto-select if only one unit
-  if (available.length === 1) {
-    selectUnit(available[0]);
-  }
+  if (available.length === 1) selectUnit(available[0]);
 }
 
 function selectUnit(uid) {
@@ -845,12 +1047,7 @@ function checkStartReady() {
 // QUESTION GENERATION
 // ============================================================
 function buildPool() {
-  let unitIds = [];
-  if (selectedUnit === 'all') {
-    unitIds = TERM_UNITS[selectedTerm];
-  } else {
-    unitIds = [selectedUnit];
-  }
+  let unitIds = selectedUnit === 'all' ? TERM_UNITS[selectedTerm] : [selectedUnit];
   let allPhrases = [], allWords = [];
   unitIds.forEach(uid => {
     allPhrases = allPhrases.concat(UNITS[uid].phrases.map(p => ({ ...p, unitId: uid })));
@@ -859,7 +1056,6 @@ function buildPool() {
   return { allPhrases, allWords };
 }
 
-// Full combined pool for distractor purposes (words + phrases together)
 function buildFullPool() {
   const { allPhrases, allWords } = buildPool();
   return [...allPhrases, ...allWords];
@@ -867,11 +1063,18 @@ function buildFullPool() {
 
 function makeQ_1A(item, fullPool) {
   const distractors = getDistractors(item, fullPool);
-  // 1A prompt is a definition (no sentence), blank is not at sentence start
-  // Options are words/phrases – no capitalisation needed
   let opts = [item.item, ...distractors];
+  // Ensure all 4 options are unique
+  opts = [...new Set(opts)];
+  while (opts.length < 4) {
+    const extra = fullPool.filter(p => !opts.includes(p.item));
+    if (extra.length === 0) break;
+    opts.push(extra[Math.floor(Math.random() * extra.length)].item);
+  }
   shuffle(opts);
-  return { type: '1A', item, prompt: getDef(item), options: opts, answer: item.item, noCapitalise: true };
+  // Apply italic to be/sb/sth in options
+  const displayOpts = opts.map(o => italicise(o));
+  return { type: '1A', item, prompt: italicise(getDef(item)), options: opts, displayOptions: displayOpts, answer: item.item, noCapitalise: true };
 }
 
 function makeQ_1B(item, fullPool) {
@@ -879,21 +1082,35 @@ function makeQ_1B(item, fullPool) {
   const sentenceStart = isSentenceStart(item.sentence);
   const rawAnswer = item.sentenceForm || item.item;
   let opts = [rawAnswer, ...distractors];
+  opts = [...new Set(opts)];
+  while (opts.length < 4) {
+    const extra = fullPool.filter(p => !opts.map(o => o.toLowerCase()).includes(p.item.toLowerCase()));
+    if (extra.length === 0) break;
+    opts.push(extra[Math.floor(Math.random() * extra.length)].item);
+  }
   if (sentenceStart) {
     opts = opts.map(o => typeof o === 'string' ? (o.charAt(0).toUpperCase() + o.slice(1)) : o);
   }
   const answer = sentenceStart ? (rawAnswer.charAt(0).toUpperCase() + rawAnswer.slice(1)) : rawAnswer;
   const sentenceDisplay = item.sentence.replace('{BLANK}', '________');
   shuffle(opts);
-  return { type: '1B', item, prompt: sentenceDisplay, options: opts, answer, revealDef: getDef(item) };
+  const displayOpts = opts.map(o => italicise(o));
+  return { type: '1B', item, prompt: italicise(sentenceDisplay), options: opts, displayOptions: displayOpts, answer, revealDef: italicise(getDef(item)) };
 }
 
 function makeQ_1C(item, fullPool) {
   const defDistractors = getDefDistractors(item, fullPool);
   const correctDef = getDef(item);
-  const opts = shuffle([correctDef, ...defDistractors.map(d => d.def)]);
-  // 1C shows a word/phrase as the prompt – no sentence, so no capitalisation needed
-  return { type: '1C', item, prompt: item.item, options: opts, answer: correctDef, noCapitalise: true };
+  let opts = [correctDef, ...defDistractors.map(d => d.def)];
+  opts = [...new Set(opts)];
+  while (opts.length < 4) {
+    const extra = fullPool.filter(p => p.item !== item.item && !opts.includes(getDef(p)));
+    if (extra.length === 0) break;
+    opts.push(getDef(extra[Math.floor(Math.random() * extra.length)]));
+  }
+  shuffle(opts);
+  const displayOpts = opts.map(o => italicise(o));
+  return { type: '1C', item, prompt: italicise(item.item), options: opts, displayOptions: displayOpts, answer: correctDef, noCapitalise: true };
 }
 
 function makeQ_Fill(item) {
@@ -903,10 +1120,10 @@ function makeQ_Fill(item) {
   return {
     type: 'fill',
     item,
-    prompt: sentenceDisplay,
+    prompt: italicise(sentenceDisplay),
     hint,
     answer: rawAnswer.toLowerCase(),
-    revealDef: getDef(item)
+    revealDef: italicise(getDef(item))
   };
 }
 
@@ -921,6 +1138,10 @@ function makeQ_Match(items) {
   };
 }
 
+/**
+ * Generate questions with guaranteed no two matching questions adjacent.
+ * Matching questions are interleaved evenly among non-matching questions.
+ */
 function generateQuestions(totalQ) {
   const { allPhrases, allWords } = buildPool();
   const fullPool = [...allPhrases, ...allWords];
@@ -939,35 +1160,43 @@ function generateQuestions(totalQ) {
   const wordItems = cycleItems(allWords, totalQ - halfQ);
   const allItems = shuffle([...phraseItems, ...wordItems]);
 
-  const qs = [];
-  let matchBuffer = [];
-  let typeIndex = 0;
+  // Build non-matching questions
+  const nonMatchQs = [];
   const types = ['1A', '1B', '1C', 'fill'];
-
-  for (let i = 0; i < allItems.length; i++) {
-    const item = allItems[i];
-
-    if (matchBuffer.length === 5) {
-      qs.push(makeQ_Match([...matchBuffer]));
-      matchBuffer = [];
-    }
-
+  let typeIndex = 0;
+  for (const item of allItems) {
     const t = types[typeIndex % types.length];
     typeIndex++;
-
-    if (t === '1A') qs.push(makeQ_1A(item, fullPool));
-    else if (t === '1B') qs.push(makeQ_1B(item, fullPool));
-    else if (t === '1C') qs.push(makeQ_1C(item, fullPool));
-    else if (t === 'fill') qs.push(makeQ_Fill(item));
-
-    matchBuffer.push(item);
+    if (t === '1A') nonMatchQs.push(makeQ_1A(item, fullPool));
+    else if (t === '1B') nonMatchQs.push(makeQ_1B(item, fullPool));
+    else if (t === '1C') nonMatchQs.push(makeQ_1C(item, fullPool));
+    else nonMatchQs.push(makeQ_Fill(item));
   }
-  if (matchBuffer.length >= 2) {
-    qs.push(makeQ_Match(matchBuffer));
-  }
+  shuffle(nonMatchQs);
 
-  shuffle(qs);
-  return qs.slice(0, totalQ);
+  // Build matching questions (one per 5 items)
+  const matchQs = [];
+  const matchItems = shuffle([...allItems]);
+  for (let i = 0; i + 1 < matchItems.length; i += 5) {
+    const batch = matchItems.slice(i, i + 5);
+    if (batch.length >= 2) matchQs.push(makeQ_Match(batch));
+  }
+  shuffle(matchQs);
+
+  // Interleave: insert one matching question after every ~5 non-matching questions
+  const combined = [];
+  const step = matchQs.length > 0 ? Math.max(1, Math.floor(nonMatchQs.length / matchQs.length)) : nonMatchQs.length;
+  let mIdx = 0;
+  for (let i = 0; i < nonMatchQs.length; i++) {
+    combined.push(nonMatchQs[i]);
+    if (mIdx < matchQs.length && (i + 1) % step === 0) {
+      combined.push(matchQs[mIdx++]);
+    }
+  }
+  // Append any remaining matching questions at the end
+  while (mIdx < matchQs.length) combined.push(matchQs[mIdx++]);
+
+  return combined.slice(0, totalQ);
 }
 
 // ============================================================
@@ -991,7 +1220,7 @@ function startTimer() {
   timerInterval = setInterval(() => {
     msElapsed = Math.floor(performance.now() - startTime);
     document.getElementById('hud-timer').textContent = formatTime(msElapsed);
-  }, 50); // update every 50ms for smooth centiseconds
+  }, 50);
 }
 
 function updateHUD() {
@@ -1024,7 +1253,6 @@ function renderQuestion() {
 // ---- MCQ ----
 function renderMCQ(q, card) {
   const badgeLabel = (q.type === '1A' || q.type === '1B') ? 'Choose the correct word / phrase' : 'Choose the correct definition';
-  // For 1C (definition questions), options are definitions – never capitalise them
   card.innerHTML = `
     <span class="q-type-badge badge-mcq">${badgeLabel}</span>
     <div class="q-text">${q.prompt}</div>
@@ -1032,24 +1260,24 @@ function renderMCQ(q, card) {
     <div class="def-reveal" id="def-reveal"></div>
   `;
   const optsDiv = document.getElementById('mcq-opts');
-  q.options.forEach(opt => {
+  const displayOpts = q.displayOptions || q.options.map(o => italicise(o));
+  q.options.forEach((opt, idx) => {
     const btn = document.createElement('button');
     btn.className = 'mcq-opt';
-    btn.textContent = opt;
+    btn.innerHTML = displayOpts[idx];
     btn.onclick = () => handleMCQ(btn, opt, q);
     optsDiv.appendChild(btn);
   });
 }
 
 function handleMCQ(btn, chosen, q) {
-  // 1C options are definitions – they should not be capitalised
   const allBtns = document.querySelectorAll('.mcq-opt');
   if (chosen === q.answer) {
     btn.classList.add('correct');
     allBtns.forEach(b => b.disabled = true);
     if (q.revealDef) {
       const rev = document.getElementById('def-reveal');
-      rev.textContent = '📖 ' + q.revealDef;
+      rev.innerHTML = '📖 ' + q.revealDef;
       rev.classList.add('show');
     }
     if (!q._wrongAttempt) {
@@ -1110,12 +1338,13 @@ function handleFill(correctAnswer, revealDef) {
   } else {
     input.classList.add('wrong');
     feedback.classList.add('err');
-    feedback.textContent = `✗ The correct answer is: ${correctAnswer}`;
+    // Underline the correct answer
+    feedback.innerHTML = `✗ The correct answer is: <u>${correctAnswer}</u>`;
   }
 
   if (revealDef) {
     const rev = document.getElementById('def-reveal');
-    rev.textContent = '📖 ' + revealDef;
+    rev.innerHTML = '📖 ' + revealDef;
     rev.classList.add('show');
   }
 
@@ -1129,7 +1358,7 @@ function renderMatch(q, card) {
     selectedWord: null,
     selectedDef: null,
     matched: {},
-    anyMistake: false,   // true if ANY wrong pair was made in this question
+    anyMistake: false,
     totalItems: q.items.length
   };
 
@@ -1167,7 +1396,7 @@ function renderMatchItems() {
       div.className = 'match-item' + (matchState.selectedWord === item.item ? ' selected' : '');
       div.onclick = () => selectMatchWord(item.item);
     }
-    div.textContent = item.item;
+    div.innerHTML = italicise(item.item);
     wordsDiv.appendChild(div);
   });
 
@@ -1180,7 +1409,7 @@ function renderMatchItems() {
       div.className = 'match-item' + (matchState.selectedDef === def ? ' selected' : '');
       div.onclick = () => selectMatchDef(def);
     }
-    div.textContent = def;
+    div.innerHTML = italicise(def);
     defsDiv.appendChild(div);
   });
 }
@@ -1213,13 +1442,18 @@ function tryMatchPair() {
     if (matchedItem) practisedItems.add(matchedItem.item);
     renderMatchItems();
     if (Object.keys(matchState.matched).length === matchState.totalItems) {
-      // All matched – award 1 point only if no mistakes were made
       if (!matchState.anyMistake) {
         score++;
         document.getElementById('hud-score').textContent = score;
       }
-      document.getElementById('match-score-note').textContent =
-        matchState.anyMistake ? '✗ Mistakes were made – no point awarded.' : '✓ All matched! +1 point';
+      const noteEl = document.getElementById('match-score-note');
+      if (matchState.anyMistake) {
+        noteEl.textContent = '✗ Mistakes were made – no point awarded.';
+        noteEl.className = 'match-score-note err';
+      } else {
+        noteEl.textContent = '✓ All matched! +1 point';
+        noteEl.className = 'match-score-note ok';
+      }
       document.getElementById('btn-next').classList.add('show');
     }
   } else {
@@ -1232,7 +1466,8 @@ function tryMatchPair() {
 
 function flashWrong(word, def) {
   document.querySelectorAll('.match-item').forEach(el => {
-    if (el.textContent === word || el.textContent === def) {
+    const plainText = el.textContent;
+    if (plainText === word || plainText === def) {
       el.classList.add('wrong-flash');
       setTimeout(() => { el.classList.remove('wrong-flash'); renderMatchItems(); }, 500);
     }
@@ -1267,7 +1502,6 @@ function endExercise() {
   showScreen('screen-results');
 
   const total = questions.length;
-  // Score is already accumulated correctly; cap at total just in case
   const displayScore = Math.min(score, total);
   document.getElementById('res-score').textContent = `${displayScore} / ${total}`;
   document.getElementById('res-time').textContent = formatTime(msElapsed);
@@ -1295,7 +1529,7 @@ function endExercise() {
     items.forEach(item => {
       const div = document.createElement('div');
       div.className = 'vocab-item';
-      div.innerHTML = `<span class="vi-word">${item.item}</span><span class="vi-def">${getDef(item)}</span>`;
+      div.innerHTML = `<span class="vi-word">${italicise(item.item)}</span><span class="vi-def">${italicise(getDef(item))}</span>`;
       container.appendChild(div);
     });
   }
