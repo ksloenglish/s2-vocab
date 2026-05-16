@@ -1186,6 +1186,15 @@ function fcSyncHeight() {
 /**
  * Render the current card (both front and back faces) and update counter/buttons.
  */
+// Italicise Oxford-style placeholders: sb, sth, sb's, be
+function fcItalicisePlaceholders(text) {
+  if (!text) return '';
+  // Escape HTML first (for textContent-style fields that now use innerHTML)
+  const escaped = text.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+  // Replace whole-word occurrences of sb, sth, sb's, be with <em> tags
+  return escaped.replace(/\b(sb's|sb|sth|be)\b/g, '<em>$1</em>');
+}
+
 function fcRender() {
   const card = fcDeck[fcIndex];
   const unitClass = card.unitId.replace('2nd-', 'unit-');
@@ -1198,15 +1207,15 @@ function fcRender() {
   badge.className = 'fc-unit-badge ' + unitClass;
 
   document.getElementById('fc-pos').textContent = card.pos || '';
-  document.getElementById('fc-item').textContent = card.item || '';
+  document.getElementById('fc-item').innerHTML = fcItalicisePlaceholders(card.item || '');
 
   // Back face
   const badgeBack = document.getElementById('fc-unit-badge-back');
   badgeBack.textContent = unitLabel;
   badgeBack.className = 'fc-unit-badge ' + unitClass;
 
-  document.getElementById('fc-item-reminder').textContent = card.item || '';
-  document.getElementById('fc-def').textContent = def || '';
+  document.getElementById('fc-item-reminder').innerHTML = fcItalicisePlaceholders(card.item || '');
+  document.getElementById('fc-def').innerHTML = fcItalicisePlaceholders(def || '');
 
   // Sample sentence — replace {BLANK} tokens with highlighted sentenceForm parts.
   // sentenceForm may be slash-separated (e.g. "consult / for") for split-blank phrases
