@@ -852,10 +852,13 @@ function looksReal(s) {
 function misspellPhrase(phrase) {
   const words = phrase.toLowerCase().split(' ');
 
-  // Replacement prepositions pool
-  const PREP_REPLACEMENTS = ['on','in','at','by','for','with','from','about','over','under',
-    'into','onto','off','through','against','across','along','behind','beyond','past',
-    'since','till','toward','within','without'];
+  // Replacement prepositions pool — simple, high-frequency single-word prepositions that students know.
+  // Multi-word prepositions (e.g. 'away from', 'out of') are excluded to avoid awkward constructions.
+  // Same-initial-letter prepositions are preferred (sorted to the front per origPrep below).
+  const PREP_REPLACEMENTS_BASE = ['about','above','across','after','against','along','among',
+    'around','before','behind','below','beside','between','beyond',
+    'by','down','for','from','in','inside','into','near','of','off','on','onto',
+    'outside','over','past','round','since','through','to','under','up','with','without'];
 
   // Find prepositions in the phrase
   const prepIndices = words.map((w, i) => PREPOSITIONS.includes(w) ? i : -1).filter(i => i >= 0);
@@ -904,14 +907,23 @@ function misspellPhrase(phrase) {
   const prepResults = [];
   const usedPreps = new Set(words); // avoid replacements already in the phrase
 
-  // Get 1 replacement for the FIRST preposition slot
+  // Get 1 replacement for the FIRST preposition slot.
+  // Priority: same-initial-letter prepositions first (e.g. 'about' preferred over 'till' for 'at').
   const pi0 = prepIndices[0];
   const origPrep0 = words[pi0];
-  const pool0 = PREP_REPLACEMENTS.filter(p => p !== origPrep0 && !usedPreps.has(p));
-  shuffle(pool0);
+  const sameInitial = PREP_REPLACEMENTS_BASE.filter(p =>
+    p !== origPrep0 && !usedPreps.has(p) && p[0] === origPrep0[0]
+  );
+  const otherPreps = PREP_REPLACEMENTS_BASE.filter(p =>
+    p !== origPrep0 && !usedPreps.has(p) && p[0] !== origPrep0[0]
+  );
+  shuffle(sameInitial);
+  shuffle(otherPreps);
+  const pool0 = [...sameInitial, ...otherPreps];
   for (const p of pool0) {
     if (prepResults.length >= 1) break;
     const newWords = [...words];
+    // Handle multi-word prepositions (e.g. 'away from', 'out of') by replacing the single prep token
     newWords[pi0] = p;
     const candidate = newWords.join(' ');
     if (!prepResults.includes(candidate)) {
@@ -1285,16 +1297,16 @@ function makeQ_1B(item, fullPool) {
 
   // Detect tense from the correct answer (sentenceForm)
   const rawAnswer = item.sentenceForm || item.item;
-  let targetTense = detectTense(rawAnswer);
+  const targetTense = detectTense(rawAnswer);
   // If the sentence has a "to be" auxiliary immediately before {BLANK}
-  // (e.g. "was {BLANK} by"), two things must happen:
-  //   1. targetTense is overridden to 'base' so distractors are not re-conjugated.
-  //   2. Any distractor phrase that starts with 'be' must have that 'be' stripped,
-  //      because the auxiliary in the sentence already supplies it.
-  //      e.g. "be in favour of" → "in favour of" (sentence: "was _____ by")
+  // (e.g. "was {BLANK} by"), any distractor phrase that starts with 'be' must have that 'be' stripped,
+  // because the auxiliary in the sentence already supplies it.
+  //   e.g. "be in favour of" → "in favour of" (sentence: "was _____ by")
+  // NOTE: We do NOT override targetTense here — pool-item distractors should still be conjugated
+  // to match the sentence tense (e.g. past) so they don't accidentally fit the sentence in a
+  // different tense. Misspelling distractors are already in the right form (generated from sentenceForm).
   const BE_AUX_BEFORE_BLANK = /\b(is|are|was|were|has been|have been|had been|will be|be|being)\s+\{BLANK\}/i;
   const auxBeforeBlank = BE_AUX_BEFORE_BLANK.test(item.sentence);
-  if (auxBeforeBlank) targetTense = 'base';
   // Strip leading 'be' from a phrase when the sentence already has a 'to be' auxiliary before the blank.
   function stripLeadingBe(phrase) {
     if (!auxBeforeBlank) return phrase;
@@ -1320,7 +1332,13 @@ function makeQ_1B(item, fullPool) {
     if (p === 'v') return true;
     if (p === 'phrase') {
       const firstWord = itemText.trim().toLowerCase().split(/\s+/)[0];
-      return !ARTICLES.has(firstWord); // skip noun phrases starting with articles
+      // Skip noun phrases starting with articles (e.g. 'a majority of' → 'aed majority of')
+      if (ARTICLES.has(firstWord)) return false;
+      // Skip 'be'-led phrases when used as distractors — conjugating 'be surrounded by' to past
+      // gives 'was surrounded by', a full passive that could accidentally fit many sentences.
+      // The phrase will appear in its base form ('be surrounded by') as a distractor instead.
+      if (firstWord === 'be') return false;
+      return true;
     }
     return false;
   }
@@ -1513,6 +1531,20 @@ function generateQuestions(totalQ) {
 // ============================================================
 // EXERCISE FLOW
 // ============================================================
+// Data validation: warn if any be-phrase item has a sentence where 'be' appears before {BLANK}
+// AND the sentenceForm also starts with 'be' — which would cause a double-be in the sentence.
+function validateData() {
+  const BE_AUX_BEFORE = /\b(is|are|was|were|has been|have been|had been|will be|be|being)\s+\{BLANK\}/i;
+  Object.values(UNITS).forEach(unit => {
+    [...(unit.phrases||[]), ...(unit.words||[])].forEach(item => {
+      if (!item.sentence) return;
+      if (BE_AUX_BEFORE.test(item.sentence) && /^be\s/i.test(item.sentenceForm || item.item)) {
+        console.warn('[DATA] Double-be risk: item "' + item.item + '" has aux-before-blank sentence but sentenceForm starts with "be":', item.sentence);
+      }
+    });
+  });
+}
+
 function startExercise() {
   questions = generateQuestions(selectedQ);
   currentQIndex = 0;
@@ -1874,7 +1906,7 @@ function playAgain() {
 // INIT
 // ============================================================
 selectLang('en');
-
+validateData();
 // Random title greeting
 (function() {
   const greetings = [
@@ -1896,7 +1928,7 @@ selectLang('en');
 
 <!-- ========== FOOTER ========== -->
 <footer class="site-footer">
-  <div style="font-size:0.7rem;color:var(--text-muted);opacity:0.5;margin-bottom:4px;">v260516-111306</div>
+  <div style="font-size:0.7rem;color:var(--text-muted);opacity:0.5;margin-bottom:4px;">v260516-112930</div>
   &copy; <span id="copyright-year">2026</span> K S Lo English. All Rights Reserved.
 </footer>
 
