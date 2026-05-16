@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, interactive-widget=resizes-content">
 <title>S2 Vocab Revision – K S Lo English</title>
 <meta name="description" content="S2 Vocab Revision – Interactive vocabulary exercise for S2 students at HKMA K S Lo College.">
 <meta property="og:title" content="S2 Vocab Revision – K S Lo English">
@@ -1546,6 +1546,14 @@ function renderFill(q, card) {
   input.addEventListener('keydown', e => {
     if (e.key === 'Enter') document.getElementById('btn-submit-fill').click();
   });
+  // On mobile, scroll the question card into view when keyboard opens
+  // Use a short delay to let the keyboard animation start first
+  input.addEventListener('focus', () => {
+    setTimeout(() => {
+      const card = document.getElementById('q-card');
+      if (card) card.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }, 200);
+  });
   input.focus();
 }
 
@@ -1804,7 +1812,7 @@ selectLang('en');
 
 <!-- ========== FOOTER ========== -->
 <footer class="site-footer">
-  <div style="font-size:0.7rem;color:var(--text-muted);opacity:0.5;margin-bottom:4px;">v260516-163033</div>
+  <div style="font-size:0.7rem;color:var(--text-muted);opacity:0.5;margin-bottom:4px;">v260516-163413</div>
   &copy; <span id="copyright-year">2026</span> K S Lo English. All Rights Reserved.
 </footer>
 
