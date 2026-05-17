@@ -1002,13 +1002,14 @@ function makeQ_1B(item, fullPool) {
       return italicise(applyDistractorSbSub(o, sbSub));
     }
     if (isSplitBlank) {
-      // Split-blank mode: replace ' / ' with ' ... ' in options that are themselves split-blank
-      // e.g. 'maintain / balance' → 'maintain ... balance'
+      // Split-blank mode: the answer contains ' ... ' so distractors must also show ' ... '
+      // where applicable, to avoid giving away the answer by format alone.
       if (o.includes(' / ')) return italicise(o.replace(/ \/ /g, ' ... '));
-      // If the phrase already contains ' ... ' in the data (e.g. 'keep ... in captivity'), use as-is
+      // If the phrase already contains ' ... ' in the data, use as-is
       if (o.includes(' ... ')) return italicise(o);
-      // Plain phrase distractors (e.g. 'keep in captivity', 'leave no trace of') are shown as-is.
-      // Do NOT insert ' ... ' into them — they have no split structure.
+      // Plain phrase distractors that contain sth/sb: replace with ' ... ' for visual consistency
+      if (/\bsth\b|\bsb\b/i.test(o)) return italicise(o.replace(/\bsth\b/gi, '...').replace(/\bsb\b/gi, '...'));
+      // Truly plain phrases (no object slot): shown as-is
       return italicise(neutralisePlaceholders(o));
     }
     if (isAnswer) return italicise(o);
