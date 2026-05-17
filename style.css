@@ -334,6 +334,7 @@
   .results-meta-item .lbl { font-size: 0.75rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.06em; margin-top: 2px; }
   .vocab-review { margin-top: 20px; }
   .vocab-review h3 { font-size: 0.85rem; font-weight: 800; text-transform: uppercase; letter-spacing: 0.08em; color: var(--primary-light); margin-bottom: 12px; padding-bottom: 6px; border-bottom: 1px solid var(--border); }
+  .vocab-count { font-size: 0.8rem; font-weight: 700; color: var(--text-muted); margin-left: 6px; }
   .vocab-list { display: flex; flex-direction: column; gap: 8px; max-height: 320px; overflow-y: auto; padding-right: 4px; }
   .vocab-list::-webkit-scrollbar { width: 5px; }
   .vocab-list::-webkit-scrollbar-track { background: var(--card2); border-radius: 99px; }
