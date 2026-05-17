@@ -183,7 +183,7 @@
     background: var(--card); border: 1px solid var(--border); border-radius: var(--radius);
     padding: 20px 24px 26px;
     width: 100%; max-width: 720px; box-shadow: var(--shadow);
-    position: relative; overflow: hidden; text-align: center;
+    position: relative; overflow: visible; text-align: center;
   }
   /* Header row: type badge on left, unit badge on right — never overlaps */
   .q-card-header {
@@ -195,6 +195,7 @@
   .q-card::before {
     content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px;
     background: linear-gradient(90deg, var(--primary), var(--secondary));
+    border-radius: var(--radius) var(--radius) 0 0; /* clip gradient bar to card corners without overflow:hidden */
   }
   .q-type-badge {
     display: inline-block; font-size: 0.72rem; font-weight: 800; text-transform: uppercase;

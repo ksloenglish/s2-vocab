@@ -1277,32 +1277,46 @@ function generateQuestions(totalQ) {
   const { allPhrases, allWords } = buildPool();
   const fullPool = [...allPhrases, ...allWords];
 
-  // Build non-matching questions.
-  // fill2 is NOT a fixed rotation slot — instead, any fill-type question for an item with a
-  // split-blank sentenceForm (contains ' / ' AND sentence has two {BLANK} tokens) is automatically
-  // promoted to fill2. This ensures split-blank items always get the two-input question type.
+  // Build non-matching questions with GUARANTEED even type distribution.
+  // Strategy: separate items into two pools — words (can be anagram) and phrases (cannot).
+  // Assign types using a quota system so each type appears roughly equally.
+  // fill2 items are always promoted regardless of their assigned type slot.
   const nonMatchQs = [];
-  const types = ['1A', '1B', '1C', 'fill', 'anagram'];
-  let typeIndex = 0;
+  const fill2Items = [];
+  const regularItems = [];
   for (const item of allItems) {
-    // Split-blank items (sentenceForm with ' / ' AND two {BLANK} tokens) ALWAYS get fill2,
-    // regardless of the rotation slot. This overrides the rotation for these items.
     const _sf = item.sentenceForm || item.item;
     const _blankCount = (item.sentence || '').split('{BLANK}').length - 1;
-    if (_sf.includes(' / ') && _blankCount >= 2) {
-      nonMatchQs.push(makeQ_Fill2(item, fullPool));
-      typeIndex++; // still advance rotation so other items are unaffected
-      continue;
-    }
-    const t = types[typeIndex % types.length];
-    typeIndex++;
+    if (_sf.includes(' / ') && _blankCount >= 2) fill2Items.push(item);
+    else regularItems.push(item);
+  }
+  // Add all fill2 items first
+  fill2Items.forEach(item => nonMatchQs.push(makeQ_Fill2(item, fullPool)));
+
+  // For regular items, assign types using a balanced round-robin over a shuffled type sequence.
+  // Types available to ALL items (phrases fall back from anagram → fill):
+  const BASE_TYPES = ['1A', '1B', '1C', 'fill', 'anagram'];
+  const n = regularItems.length;
+  // Build a type assignment array of length n with as even a distribution as possible.
+  // Each type gets floor(n/5) slots; remainder slots are distributed one-by-one.
+  const typeAssignments = [];
+  const perType = Math.floor(n / BASE_TYPES.length);
+  const typeRemainder = n - perType * BASE_TYPES.length;
+  BASE_TYPES.forEach((t, i) => {
+    const count = perType + (i < typeRemainder ? 1 : 0);
+    for (let j = 0; j < count; j++) typeAssignments.push(t);
+  });
+  shuffle(typeAssignments); // randomise the order so types are spread across the exercise
+  regularItems.forEach((item, idx) => {
+    let t = typeAssignments[idx] || '1B';
+    // Phrases cannot be anagrams — fall back to fill
+    if (t === 'anagram' && item.pos === 'phrase') t = 'fill';
     if (t === '1A') nonMatchQs.push(makeQ_1A(item, fullPool));
     else if (t === '1B') nonMatchQs.push(makeQ_1B(item, fullPool));
     else if (t === '1C') nonMatchQs.push(makeQ_1C(item, fullPool));
-    else if (t === 'anagram' && item.pos !== 'phrase') nonMatchQs.push(makeQ_Anagram(item));
-    else if (t === 'anagram' && item.pos === 'phrase') nonMatchQs.push(makeQ_Fill(item, fullPool));
+    else if (t === 'anagram') nonMatchQs.push(makeQ_Anagram(item));
     else nonMatchQs.push(makeQ_Fill(item, fullPool));
-  }
+  });
   shuffle(nonMatchQs);
 
   // Build matching questions using items NOT already used in regular questions.
