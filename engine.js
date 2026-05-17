@@ -562,18 +562,18 @@ function getDef(item) {
  * e.g. "phrase" → "phr.", "adj" → "adj.", "n" → "n.", etc.
  */
 function getPosLabel(item) {
-  const map = { phrase: 'phr.', n: 'n.', v: 'v.', adj: 'adj.', adv: 'adv.' };
+  const map = { phrase: 'phr', n: 'n', v: 'v', adj: 'adj', adv: 'adv' };
   return map[item.pos] || item.pos || '';
 }
 
 /**
- * Return the definition with the part-of-speech label appended in parentheses.
- * e.g. "殘忍的 (adj.)"
+ * Return the definition with the part-of-speech label appended in italicised parentheses.
+ * e.g. "殘忍的 <em>(adj)</em>"
  */
 function getDefWithPos(item) {
   const def = getDef(item);
   const pos = getPosLabel(item);
-  return pos ? `${def} (${pos})` : def;
+  return pos ? `${def} <em>(${pos})</em>` : def;
 }
 
 // ============================================================
