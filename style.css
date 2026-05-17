@@ -895,7 +895,8 @@
   gap: 4px;
   margin-top: 10px;
   width: 100%;
-  overflow: hidden;           /* never overflow the card */
+  overflow: visible;          /* allow tile shadows/borders to show fully */
+  padding-bottom: 4px;         /* prevent bottom border/shadow clipping */
 }
 /* Reveal tiles shrink to fit available width automatically */
 .anagram-correct-row .anagram-tile {
