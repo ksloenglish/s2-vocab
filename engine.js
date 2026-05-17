@@ -467,11 +467,26 @@ function getDistractors(item, pool) {
   shuffle(others);
   const seenLower = new Set([item.item.toLowerCase(), baseFormLower]);
   const chosen = [];
-  for (const o of others) {
-    if (chosen.length >= 3) break;
-    if (!seenLower.has(o.item.toLowerCase())) {
-      seenLower.add(o.item.toLowerCase());
-      chosen.push(o.item);
+  // When the target is a phrase, prefer other phrases as distractors so the options
+  // are all of the same type (phrase vs word). Fall back to words if not enough phrases.
+  if (isPhrase) {
+    const phraseOthers = others.filter(p => p.pos === 'phrase');
+    const wordOthers = others.filter(p => p.pos !== 'phrase');
+    const ordered = [...phraseOthers, ...wordOthers]; // phrases first, words as fallback
+    for (const o of ordered) {
+      if (chosen.length >= 3) break;
+      if (!seenLower.has(o.item.toLowerCase())) {
+        seenLower.add(o.item.toLowerCase());
+        chosen.push(o.item);
+      }
+    }
+  } else {
+    for (const o of others) {
+      if (chosen.length >= 3) break;
+      if (!seenLower.has(o.item.toLowerCase())) {
+        seenLower.add(o.item.toLowerCase());
+        chosen.push(o.item);
+      }
     }
   }
   return { items: chosen, isMisspellMode: false };
@@ -989,7 +1004,25 @@ function makeQ_1B(item, fullPool) {
     if (isSplitBlank) {
       // Split-blank mode: replace ' / ' with ' ... ' in all options for readability
       // e.g. 'maintain / balance' → 'maintain ... balance'
-      return italicise(o.replace(/ \/ /g, ' ... '));
+      if (o.includes(' / ')) return italicise(o.replace(/ \/ /g, ' ... '));
+      // If the phrase already contains ' ... ' (e.g. 'keep ... in captivity'), use as-is
+      if (o.includes(' ... ')) return italicise(o);
+      // For plain phrase distractors, insert ' ... ' after the first CONTENT word
+      // (skip leading articles a/an/the and placeholder words be/sb/sth).
+      // This prevents 'a ... majority of' (wrong) and 'be ... surrounded by' (ok).
+      const SKIP_FIRST = new Set(['a','an','the']);
+      const words = o.trim().split(/\s+/);
+      // Find the index of the first content word (not an article)
+      let insertAfter = 0;
+      while (insertAfter < words.length - 1 && SKIP_FIRST.has(words[insertAfter].toLowerCase())) {
+        insertAfter++;
+      }
+      if (words.length >= 2 && insertAfter < words.length - 1) {
+        const before = words.slice(0, insertAfter + 1).join(' ');
+        const after = words.slice(insertAfter + 1).join(' ');
+        return italicise(before + ' ... ' + after);
+      }
+      return italicise(o);
     }
     if (isAnswer) return italicise(o);
     if (sbSub) return italicise(applyDistractorSbSub(o, sbSub));
