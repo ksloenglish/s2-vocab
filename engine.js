@@ -32,7 +32,7 @@ const SIMILAR_CONSONANTS = [
   ['f','ph','v'],     // f / ph / v
   ['j','g'],          // soft-g
   ['g','k'],          // hard-g / k
-  ['s','x'],          // s / x
+  ['s','x','z'],      // s / x / z
   ['t','d'],
   ['b','p'],
   ['m','n'],
