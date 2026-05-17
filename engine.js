@@ -1065,7 +1065,10 @@ function makeQ_1C(item, fullPool) {
   }
   shuffle(opts);
   const displayOpts = opts.map(o => italicise(o));
-  return { type: '1C', item, prompt: italicise(item.item), options: opts, displayOptions: displayOpts, answer: correctDef, noCapitalise: true };
+  // Prompt is the word + pos label (e.g. "reputable (adj)"); options are plain definitions
+  const posLabel = getPosLabel(item);
+  const promptText = posLabel ? `${italicise(item.item)} <em>(${posLabel})</em>` : italicise(item.item);
+  return { type: '1C', item, prompt: promptText, options: opts, displayOptions: displayOpts, answer: correctDef, noCapitalise: true };
 }
 
 function makeQ_Fill(item, fullPool) {
