@@ -277,6 +277,20 @@
   .fill-feedback.ok { color: var(--success); }
   .fill-feedback.err { color: var(--danger); }
 
+  /* ===== FILL2 (SPLIT BLANK) ===== */
+  .fill2-num {
+    font-size: 0.6em; color: var(--text-muted);
+    vertical-align: super; margin-right: 3px;
+  }
+  .fill2-inputs { display: flex; flex-direction: column; gap: 12px; margin-top: 16px; }
+  .fill2-row { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+  .fill2-row-label {
+    min-width: 60px; font-size: 0.78rem; font-weight: 800; text-transform: uppercase;
+    letter-spacing: 0.08em; color: var(--text-muted); flex-shrink: 0;
+  }
+  .fill2-inputs .fill-input { flex: 1; min-width: 160px; }
+  .fill2-inputs .btn-submit { margin-top: 6px; align-self: center; }
+
   /* ===== MATCHING ===== */
   .match-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
   @media(max-width:500px){ .match-grid { gap: 8px; } .match-item { padding: 9px 10px; font-size: 0.8rem; min-height: 44px; } }

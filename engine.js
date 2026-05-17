@@ -1115,6 +1115,42 @@ function makeQ_Fill(item, fullPool) {
   };
 }
 
+function makeQ_Fill2(item, fullPool) {
+  // Split-blank fill question: numbered underlines in sentence, two labelled inputs below.
+  // Both answers must be correct to score a point.
+  const rawSF = item.sentenceForm || item.item;
+  if (!rawSF.includes(' / ')) return makeQ_Fill(item, fullPool);
+  if (!item.sentence || (item.sentence.match(/\{BLANK\}/g) || []).length < 2) return makeQ_1B(item, fullPool);
+
+  const parts = rawSF.split(' / ').map(p => p.trim()); // ['keep', 'in captivity']
+  const sentenceStart = isSentenceStart(item.sentence);
+
+  // Build hint strings for each part (used in the input labels below the sentence)
+  const hints = parts.map((part, idx) => {
+    const display = (idx === 0 && sentenceStart)
+      ? part.charAt(0).toUpperCase() + part.slice(1)
+      : part;
+    return firstLetterHint(display);
+  });
+
+  // Replace {BLANK} tokens with circled-number + first-letter hints inline in the sentence
+  let sentenceDisplay = item.sentence;
+  sentenceDisplay = sentenceDisplay.replace('{BLANK}',
+    `<span class="fill2-num">①</span>${hints[0]}`);
+  sentenceDisplay = sentenceDisplay.replace('{BLANK}',
+    `<span class="fill2-num">②</span>${hints[1]}`);
+
+  return {
+    type: 'fill2',
+    item,
+    prompt: italicise(sentenceDisplay),
+    hints,
+    answers: parts.map(p => p.toLowerCase()),
+    displayAnswer: rawSF.replace(' / ', ' ... '),
+    revealDef: italicise(getDef(item))
+  };
+}
+
 function makeQ_Match(items) {
   const selected = items.slice(0, 5);
   const defs = shuffle(selected.map(i => getDef(i)));
@@ -1169,7 +1205,7 @@ function generateQuestions(totalQ) {
 
   // Build non-matching questions
   const nonMatchQs = [];
-  const types = ['1A', '1B', '1C', 'fill'];
+  const types = ['1A', '1B', '1C', 'fill', 'fill2'];
   let typeIndex = 0;
   for (const item of allItems) {
     const t = types[typeIndex % types.length];
@@ -1177,6 +1213,7 @@ function generateQuestions(totalQ) {
     if (t === '1A') nonMatchQs.push(makeQ_1A(item, fullPool));
     else if (t === '1B') nonMatchQs.push(makeQ_1B(item, fullPool));
     else if (t === '1C') nonMatchQs.push(makeQ_1C(item, fullPool));
+    else if (t === 'fill2') nonMatchQs.push(makeQ_Fill2(item, fullPool));
     else nonMatchQs.push(makeQ_Fill(item, fullPool));
   }
   shuffle(nonMatchQs);

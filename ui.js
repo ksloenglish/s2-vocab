@@ -54,6 +54,7 @@ function renderQuestion() {
   updateNextBtn();
   if (q.type === '1A' || q.type === '1B' || q.type === '1C') renderMCQ(q, card);
   else if (q.type === 'fill') renderFill(q, card);
+  else if (q.type === 'fill2') renderFill2(q, card);
   else if (q.type === 'match') renderMatch(q, card);
 }
 
@@ -121,6 +122,84 @@ function handleMCQ(btn, chosen, q) {
     btn.disabled = true;
     q._wrongAttempt = true;
   }
+}
+
+// ---- FILL IN THE BLANK (SPLIT / DOUBLE) ----
+function renderFill2(q, card) {
+  card.innerHTML = `
+    <div class="q-card-header">
+      <span class="q-type-badge badge-fill">Fill in the Blanks</span>
+      ${unitBadgeHTML(q.item && q.item.unitId)}
+    </div>
+    <div class="q-text">${q.prompt}</div>
+    <div class="fill2-inputs">
+      <div class="fill2-row">
+        <span class="fill2-row-label">Blank 1</span>
+        <input type="text" class="fill-input" id="fill2-1" placeholder="" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" />
+      </div>
+      <div class="fill2-row">
+        <span class="fill2-row-label">Blank 2</span>
+        <input type="text" class="fill-input" id="fill2-2" placeholder="" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" />
+      </div>
+      <button class="btn-submit" id="btn-submit-fill2" onclick="handleFill2()">Submit</button>
+    </div>
+    <div class="fill-feedback" id="fill-feedback"></div>
+    <div class="def-reveal" id="def-reveal"></div>
+  `;
+  const i1 = document.getElementById('fill2-1');
+  const i2 = document.getElementById('fill2-2');
+  if (i1) {
+    i1.addEventListener('keydown', e => { if (e.key === 'Enter') { i2 ? i2.focus() : document.getElementById('btn-submit-fill2').click(); } });
+    i1.focus();
+  }
+  if (i2) {
+    i2.addEventListener('keydown', e => { if (e.key === 'Enter') document.getElementById('btn-submit-fill2').click(); });
+  }
+}
+
+function handleFill2() {
+  const q = questions[currentQIndex];
+  const i1 = document.getElementById('fill2-1');
+  const i2 = document.getElementById('fill2-2');
+  const feedback = document.getElementById('fill-feedback');
+  const submitBtn = document.getElementById('btn-submit-fill2');
+  if (!i1 || !i2 || !q) return;
+
+  const v1 = i1.value.trim().toLowerCase();
+  const v2 = i2.value.trim().toLowerCase();
+  const [a1, a2] = q.answers;
+
+  submitBtn.disabled = true;
+  i1.disabled = true;
+  i2.disabled = true;
+
+  const isCorrect = v1 === a1 && v2 === a2;
+  feedback.classList.add('show');
+
+  if (isCorrect) {
+    i1.classList.add('correct');
+    i2.classList.add('correct');
+    feedback.classList.add('ok');
+    feedback.textContent = '✓ Correct!';
+    score++;
+    popScore();
+    practisedItems.add(q.item.item);
+  } else {
+    if (v1 !== a1) i1.classList.add('wrong');
+    else i1.classList.add('correct');
+    if (v2 !== a2) i2.classList.add('wrong');
+    else i2.classList.add('correct');
+    feedback.classList.add('err');
+    feedback.innerHTML = `✗ Wrong! Answer: <span style="color:#FFD700;font-weight:800">${q.displayAnswer}</span>`;
+  }
+
+  if (q.revealDef) {
+    const rev = document.getElementById('def-reveal');
+    rev.innerHTML = '📖 ' + q.revealDef;
+    rev.classList.add('show');
+  }
+
+  document.getElementById('btn-next').classList.add('show');
 }
 
 // ---- FILL IN THE BLANK ----
