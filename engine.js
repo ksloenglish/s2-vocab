@@ -1216,21 +1216,21 @@ function generateQuestions(totalQ) {
   const types = ['1A', '1B', '1C', 'fill'];
   let typeIndex = 0;
   for (const item of allItems) {
+    // Split-blank items (sentenceForm with ' / ' AND two {BLANK} tokens) ALWAYS get fill2,
+    // regardless of the rotation slot. This overrides the rotation for these items.
+    const _sf = item.sentenceForm || item.item;
+    const _blankCount = (item.sentence || '').split('{BLANK}').length - 1;
+    if (_sf.includes(' / ') && _blankCount >= 2) {
+      nonMatchQs.push(makeQ_Fill2(item, fullPool));
+      typeIndex++; // still advance rotation so other items are unaffected
+      continue;
+    }
     const t = types[typeIndex % types.length];
     typeIndex++;
     if (t === '1A') nonMatchQs.push(makeQ_1A(item, fullPool));
     else if (t === '1B') nonMatchQs.push(makeQ_1B(item, fullPool));
     else if (t === '1C') nonMatchQs.push(makeQ_1C(item, fullPool));
-    else {
-      // Auto-promote to fill2 if item has a split-blank sentenceForm with two {BLANK} tokens
-      const sf = item.sentenceForm || item.item;
-      const blankCount = (item.sentence || '').split('{BLANK}').length - 1;
-      if (sf.includes(' / ') && blankCount >= 2) {
-        nonMatchQs.push(makeQ_Fill2(item, fullPool));
-      } else {
-        nonMatchQs.push(makeQ_Fill(item, fullPool));
-      }
-    }
+    else nonMatchQs.push(makeQ_Fill(item, fullPool));
   }
   shuffle(nonMatchQs);
 

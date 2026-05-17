@@ -190,7 +190,16 @@ function handleFill2() {
     if (v2 !== a2) i2.classList.add('wrong');
     else i2.classList.add('correct');
     feedback.classList.add('err');
-    feedback.innerHTML = `✗ Wrong! Answer: <span style="color:#FFD700;font-weight:800">${q.displayAnswer}</span>`;
+    feedback.innerHTML = `✗ Wrong!`;
+    // Replace each hint inline in the sentence with the highlighted correct answer
+    const qText = document.querySelector('.q-text');
+    if (qText && q.hints) {
+      const ansStyle = 'color:#FFD700;font-weight:800;font-size:1.1em;text-decoration:underline;letter-spacing:0.03em';
+      let html = qText.innerHTML;
+      if (q.hints[0]) html = html.replace(q.hints[0], `<span style="${ansStyle}">${q.answers[0]}</span>`);
+      if (q.hints[1]) html = html.replace(q.hints[1], `<span style="${ansStyle}">${q.answers[1]}</span>`);
+      qText.innerHTML = html;
+    }
   }
 
   if (q.revealDef) {
