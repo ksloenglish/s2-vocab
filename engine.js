@@ -1208,9 +1208,12 @@ function generateQuestions(totalQ) {
   const { allPhrases, allWords } = buildPool();
   const fullPool = [...allPhrases, ...allWords];
 
-  // Build non-matching questions
+  // Build non-matching questions.
+  // fill2 is NOT a fixed rotation slot — instead, any fill-type question for an item with a
+  // split-blank sentenceForm (contains ' / ' AND sentence has two {BLANK} tokens) is automatically
+  // promoted to fill2. This ensures split-blank items always get the two-input question type.
   const nonMatchQs = [];
-  const types = ['1A', '1B', '1C', 'fill', 'fill2'];
+  const types = ['1A', '1B', '1C', 'fill'];
   let typeIndex = 0;
   for (const item of allItems) {
     const t = types[typeIndex % types.length];
@@ -1218,8 +1221,16 @@ function generateQuestions(totalQ) {
     if (t === '1A') nonMatchQs.push(makeQ_1A(item, fullPool));
     else if (t === '1B') nonMatchQs.push(makeQ_1B(item, fullPool));
     else if (t === '1C') nonMatchQs.push(makeQ_1C(item, fullPool));
-    else if (t === 'fill2') nonMatchQs.push(makeQ_Fill2(item, fullPool));
-    else nonMatchQs.push(makeQ_Fill(item, fullPool));
+    else {
+      // Auto-promote to fill2 if item has a split-blank sentenceForm with two {BLANK} tokens
+      const sf = item.sentenceForm || item.item;
+      const blankCount = (item.sentence || '').split('{BLANK}').length - 1;
+      if (sf.includes(' / ') && blankCount >= 2) {
+        nonMatchQs.push(makeQ_Fill2(item, fullPool));
+      } else {
+        nonMatchQs.push(makeQ_Fill(item, fullPool));
+      }
+    }
   }
   shuffle(nonMatchQs);
 
