@@ -846,9 +846,20 @@ function makeQ_1B(item, fullPool) {
   // Noun phrases starting with an article (a, an, the) must NOT be conjugated
   // — e.g. "a majority of" would otherwise become "aed majority of".
   const ARTICLES = new Set(['a','an','the']);
+  // Modal verbs and auxiliaries that must NEVER be conjugated.
+  // These are defective verbs — they have no -ing, -ed, or -s forms.
+  // Conjugating them produces non-words like 'woulded', 'coulding', 'mights'.
+  const MODALS = new Set(['would','could','should','might','must','shall','will','may','can',
+    'ought','need','dare','used']);
+
   function shouldConjugate(itemText) {
     const p = poolPosMap[itemText.toLowerCase()];
-    if (p === 'v') return true;
+    // Single-word items: only conjugate if pos is 'v' AND the word is not a modal/auxiliary.
+    if (p === 'v') {
+      const firstWord = itemText.trim().toLowerCase().split(/\s+/)[0];
+      if (MODALS.has(firstWord)) return false; // never conjugate modals
+      return true;
+    }
     if (p === 'phrase') {
       const firstWord = itemText.trim().toLowerCase().split(/\s+/)[0];
       // Skip noun phrases starting with articles (e.g. 'a majority of' → 'aed majority of')
@@ -857,6 +868,9 @@ function makeQ_1B(item, fullPool) {
       // gives 'was surrounded by', a full passive that could accidentally fit many sentences.
       // The phrase will appear in its base form ('be surrounded by') as a distractor instead.
       if (firstWord === 'be') return false;
+      // Skip modal-led phrases (e.g. 'would rather', 'could do with') — modals are defective
+      // and have no -ing/-ed/-s forms; conjugating them produces 'woulded rather', etc.
+      if (MODALS.has(firstWord)) return false;
       // Skip preposition-led phrases (e.g. 'during times of adversity', 'in favour of', 'face up to')
       // — conjugating a preposition gives nonsense like 'duringed times of adversity'.
       if (PREPOSITIONS.includes(firstWord)) return false;
