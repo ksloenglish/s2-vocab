@@ -1040,6 +1040,20 @@ function makeQ_Fill(item, fullPool) {
   // fall back to the multiple-choice sentence question instead.
   const _rawAns = item.sentenceForm || item.item;
   if (_rawAns.includes(' / ')) return makeQ_1B(item, fullPool);
+
+  // Implicit split detection: if sentenceForm has fewer words than item (ignoring
+  // 'be' conjugation and article stripping), the phrase is split across the blank —
+  // some words appear outside {BLANK} in the sentence text. Fall back to MCQ.
+  // Example: item='figure out', sentenceForm='figure / out' (already caught above),
+  // but also catches any future case where sentenceForm word count < item word count.
+  const _itemWords = item.item.replace(/\.\.\./g, '').trim().split(/\s+/).filter(Boolean);
+  const _sfWords   = _rawAns.replace(/\.\.\./g, '').trim().split(/\s+/).filter(Boolean);
+  // Normalise: strip leading be-forms and articles from both sides for comparison
+  const _BE = new Set(['be','is','are','was','were','am','been']);
+  const _stripLeading = arr => (_BE.has(arr[0]?.toLowerCase()) || arr[0]?.toLowerCase() === 'a' || arr[0]?.toLowerCase() === 'an') ? arr.slice(1) : arr;
+  const _itemCore = _stripLeading(_itemWords);
+  const _sfCore   = _stripLeading(_sfWords);
+  if (_sfCore.length < _itemCore.length) return makeQ_1B(item, fullPool);
   const rawAnswer = item.sentenceForm || item.item;
   const sentenceStart = isSentenceStart(item.sentence);
 

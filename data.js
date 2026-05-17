@@ -61,7 +61,7 @@ const UNITS = {
         defEn: "to find the solution to a problem after a lot of thought",
         defZh: "想出",
         sentence: "It was very smart of this creature to {BLANK} this all out, wasn't it?",
-        sentenceForm: "figure"
+        sentenceForm: "figure / out"
       },
       {
         item: "keep ... in captivity",
