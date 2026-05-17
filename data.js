@@ -601,7 +601,8 @@ const UNITS = {
         defEn: "to deal with a problem calmly without letting it affect you",
         defZh: "從容應對",
         sentence: "She {BLANK} and continued with her work.",
-        sentenceForm: "took the criticism in her stride"
+        sentenceForm: "took / in her stride",
+        sbSubstitute: "her"
       },
       {
         item: "play a part in",
