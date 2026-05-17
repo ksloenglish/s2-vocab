@@ -1110,8 +1110,11 @@ function makeQ_Fill(item, fullPool) {
     hint: fullHintDisplay,
     answer: acceptedAnswer,
     answerFull: acceptedFull,
+    // displayAnswer is what the student was supposed to TYPE.
+    // When a be-prefix is present (e.g. 'are'), it is already shown as plain text in the sentence,
+    // so the reveal must show only hintAnswer (e.g. 'specifically designed to'), not the full phrase.
     displayAnswer: prefixText
-      ? prefixText.trim() + ' ' + hintAnswer
+      ? (sentenceStart ? hintAnswer.charAt(0).toUpperCase() + hintAnswer.slice(1) : hintAnswer)
       : (sentenceStart ? rawAnswer.charAt(0).toUpperCase() + rawAnswer.slice(1) : rawAnswer),
     revealDef: italicise(getDef(item))
   };
