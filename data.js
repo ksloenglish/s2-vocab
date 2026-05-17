@@ -600,9 +600,9 @@ const UNITS = {
         pos: "phrase",
         defEn: "to deal with a problem calmly without letting it affect you",
         defZh: "從容應對",
-        sentence: "She took the criticism {BLANK} and continued with her work.",
-        sentenceForm: "in her stride",
-        sbSubstitute: "her"
+        sentence: "She {BLANK} and continued with her work.",
+        sentenceForm: "took the criticism in her stride",
+        sbSubstitute: "the criticism"
       },
       {
         item: "play a part in",

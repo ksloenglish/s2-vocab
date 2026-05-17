@@ -979,7 +979,7 @@ function makeQ_1B(item, fullPool) {
   // Otherwise fall back to the previous behaviour (single blank, noun appended).
   const sbSub = item.sbSubstitute || null;
   const sbWords = item.item ? item.item.trim().toLowerCase().split(/\s+/) : [];
-  const sbIdx = sbWords.indexOf('sb');
+  const sbIdx = sbWords.findIndex(w => w === 'sb' || w === "sb's");
   // 'sb' is "in the middle" when it is neither the first nor the last word
   const sbInMiddle = sbSub && sbIdx > 0 && sbIdx < sbWords.length - 1;
 
