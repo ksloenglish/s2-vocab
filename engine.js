@@ -950,8 +950,8 @@ function makeQ_1B(item, fullPool) {
   // 'sb' is "in the middle" when it is neither the first nor the last word
   const sbInMiddle = sbSub && sbIdx > 0 && sbIdx < sbWords.length - 1;
 
-  // Detect split-blank phrases: sentenceForm contains ' / ' (e.g. 'maintain / balance')
-  // These have two {BLANK} tokens in the sentence with intervening words between them.
+  // Detect split-blank phrases: sentenceForm contains ' / ' (e.g. 'maintain / balance').
+  // These phrases must also have two {BLANK} tokens in the sentence — ensure data is correct.
   const isSplitBlank = rawAnswer.includes(' / ');
 
   // Build sentence display

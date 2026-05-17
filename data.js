@@ -60,7 +60,7 @@ const UNITS = {
         pos: "phrase",
         defEn: "to find the solution to a problem after a lot of thought",
         defZh: "想出",
-        sentence: "It was very smart of this creature to {BLANK} this all out, wasn't it?",
+        sentence: "It was very smart of this creature to {BLANK} this all {BLANK}, wasn't it?",
         sentenceForm: "figure / out"
       },
       {
