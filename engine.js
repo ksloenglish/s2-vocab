@@ -1303,7 +1303,9 @@ function generateQuestions(totalQ) {
   shuffle(nonMatchQs);
 
   // Build matching questions using items NOT already used in regular questions.
-  // This prevents the same item from appearing in both a regular question AND a matching question.
+  // IMPORTANT: Never fall back to already-used items — doing so causes the same vocabulary
+  // item to appear in both a regular question AND a matching question in the same session.
+  // If there are not enough unused items to form even one batch of 2, skip matching entirely.
   const usedItemKeys = new Set(allItems.map(i => i.item));
   const unusedItems = [];
   unitIds.forEach(uid => {
@@ -1312,13 +1314,10 @@ function generateQuestions(totalQ) {
     });
   });
   shuffle(unusedItems);
-  // If there aren't enough unused items to fill a matching batch, fall back to used items
-  const matchPool = unusedItems.length >= 2
-    ? [...unusedItems, ...shuffle([...allItems])]  // prefer unused, then used as fallback
-    : shuffle([...allItems]);
   const matchQs = [];
-  for (let i = 0; i + 1 < matchPool.length && matchQs.length < Math.ceil(allItems.length / 5); i += 5) {
-    const batch = matchPool.slice(i, Math.min(i + 5, matchPool.length));
+  // Only build matching questions from unused items; never reuse items from regular questions
+  for (let i = 0; i + 1 < unusedItems.length && matchQs.length < Math.ceil(allItems.length / 5); i += 5) {
+    const batch = unusedItems.slice(i, Math.min(i + 5, unusedItems.length));
     if (batch.length >= 2) matchQs.push(makeQ_Match(batch));
   }
   shuffle(matchQs);
