@@ -27,17 +27,17 @@ const PREPOSITIONS = ['about','above','across','after','against','along','among'
 
 // Consonants grouped by similarity (for consonant-swap strategy)
 const SIMILAR_CONSONANTS = [
-  ['c','k','q'],
-  ['s','z'],
-  ['s','c'],  // soft-c
-  ['f','ph'],
-  ['j','g'],  // soft-g
+  ['c','k','q'],      // hard-c / k / q
+  ['c','s','z'],      // c, s, z (includes soft-c)
+  ['f','ph','v'],     // f / ph / v
+  ['j','g'],          // soft-g
+  ['g','k'],          // hard-g / k
+  ['s','x'],          // s / x
   ['t','d'],
   ['b','p'],
   ['m','n'],
   ['l','r'],
   ['v','w'],
-  ['x','ks'],
 ];
 
 function isVowel(ch) { return VOWEL_SET.has(ch.toLowerCase()); }
@@ -163,7 +163,10 @@ function misspellWord(word) {
     for (let i = 1; i < pEnd && results.size < 3; i++) {
       const ch = w[i];
       if (!isConsonant(ch)) continue;
+      // A letter may appear in multiple groups (e.g. 'c' in c/k/q AND c/s/z).
+      // Iterate ALL matching groups so every valid similar-consonant swap is tried.
       for (const group of SIMILAR_CONSONANTS) {
+        if (results.size >= 3) break;
         if (group.includes(ch)) {
           let addedThisPos = 0;
           for (const alt of group) {
@@ -176,7 +179,6 @@ function misspellWord(word) {
               }
             }
           }
-          break;
         }
       }
     }
