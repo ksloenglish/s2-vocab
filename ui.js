@@ -133,7 +133,7 @@ function renderFill(q, card) {
     <div class="q-text">${q.prompt}</div>
     <div class="fill-wrap">
       <input type="text" class="fill-input" id="fill-input" placeholder="Type your answer…" autocomplete="off" autocorrect="off" spellcheck="false" />
-      <button class="btn-submit" id="btn-submit-fill" onclick="handleFill('${escapeForAttr(q.answer)}', '${escapeForAttr(q.revealDef)}', '${escapeForAttr(q.displayAnswer || q.answer)}')">Submit</button>
+      <button class="btn-submit" id="btn-submit-fill" onclick="handleFill('${escapeForAttr(q.answer)}', '${escapeForAttr(q.revealDef)}', '${escapeForAttr(q.displayAnswer || q.answer)}', '${escapeForAttr(q.answerFull || '')}')">Submit</button>
     </div>
     <div class="fill-feedback" id="fill-feedback"></div>
     <div class="def-reveal" id="def-reveal"></div>
@@ -157,7 +157,7 @@ function escapeForAttr(str) {
   return (str || '').replace(/\\/g, '\\\\').replace(/'/g, "\\'").replace(/"/g, '&quot;');
 }
 
-function handleFill(correctAnswer, revealDef, displayAnswer) {
+function handleFill(correctAnswer, revealDef, displayAnswer, answerFull) {
   if (!displayAnswer) displayAnswer = correctAnswer;
   const input = document.getElementById('fill-input');
   const feedback = document.getElementById('fill-feedback');
@@ -167,7 +167,9 @@ function handleFill(correctAnswer, revealDef, displayAnswer) {
   submitBtn.disabled = true;
   input.disabled = true;
 
-  const isCorrect = userAnswer === correctAnswer.toLowerCase();
+  // Accept either the stripped answer (e.g. 'exposed to') or the full phrase (e.g. 'be exposed to')
+  const isCorrect = userAnswer === correctAnswer.toLowerCase()
+    || (answerFull && userAnswer === answerFull.toLowerCase());
   feedback.classList.add('show');
 
   if (isCorrect) {

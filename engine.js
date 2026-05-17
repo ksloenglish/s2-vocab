@@ -1022,22 +1022,59 @@ function makeQ_Fill(item, fullPool) {
   if (_rawAns.includes(' / ')) return makeQ_1B(item, fullPool);
   const rawAnswer = item.sentenceForm || item.item;
   const sentenceStart = isSentenceStart(item.sentence);
-  // Capitalise the answer for display when the blank starts the sentence
-  const displayAnswer = sentenceStart
-    ? rawAnswer.charAt(0).toUpperCase() + rawAnswer.slice(1)
-    : rawAnswer;
-  const hint = firstLetterHint(displayAnswer);
-  // For split-blank phrases (sentenceForm contains ' / '), replace the first {BLANK} with
-  // the hint and any remaining {BLANK} tokens with _____ so none appear literally.
-  let sentenceDisplay = item.sentence.replace('{BLANK}', hint);
+
+  // ── Strip leading 'be' or indefinite article (a/an) from the hint ──────────
+  // These words are provided as plain text in the sentence so the student only
+  // needs to type the remaining content words.
+  const rawWords = rawAnswer.trim().split(/\s+/);
+  const firstWord = rawWords[0].toLowerCase();
+  let prefixText = '';   // plain-text prefix to inject before the hint
+  let hintAnswer = rawAnswer; // the portion the student must type
+
+  if (firstWord === 'be' && rawWords.length > 1) {
+    // be-led phrase: provide 'be' in the sentence, student types the rest
+    prefixText = 'be ';
+    hintAnswer = rawWords.slice(1).join(' ');
+  } else if ((firstWord === 'a' || firstWord === 'an') && rawWords.length > 1) {
+    // article-led phrase: provide 'a'/'an' in the sentence, student types the rest
+    prefixText = rawWords[0] + ' '; // preserve original capitalisation from rawAnswer
+    hintAnswer = rawWords.slice(1).join(' ');
+  }
+
+  // Capitalise prefix and first hint letter when blank is at sentence start
+  if (sentenceStart && prefixText) {
+    prefixText = prefixText.charAt(0).toUpperCase() + prefixText.slice(1);
+  }
+
+  // Capitalise the hint answer when at sentence start AND there is no prefix
+  const displayHintAnswer = (sentenceStart && !prefixText)
+    ? hintAnswer.charAt(0).toUpperCase() + hintAnswer.slice(1)
+    : hintAnswer;
+
+  const hint = (prefixText ? '' : '') + firstLetterHint(displayHintAnswer);
+  const fullHintDisplay = prefixText
+    ? `<span style="font-weight:700">${prefixText}</span>${firstLetterHint(displayHintAnswer)}`
+    : firstLetterHint(displayHintAnswer);
+
+  // Build sentence display: replace {BLANK} with the full hint (prefix + letter hints)
+  let sentenceDisplay = item.sentence.replace('{BLANK}', fullHintDisplay);
   sentenceDisplay = sentenceDisplay.replace(/\{BLANK\}/g, '_____');
+
+  // The answer the student must type is the hintAnswer (without the stripped prefix).
+  // Also accept the full rawAnswer as correct (in case student types the whole phrase).
+  const acceptedAnswer = hintAnswer.toLowerCase();
+  const acceptedFull = rawAnswer.toLowerCase();
+
   return {
     type: 'fill',
     item,
     prompt: italicise(sentenceDisplay),
-    hint,
-    answer: rawAnswer.toLowerCase(),
-    displayAnswer,
+    hint: fullHintDisplay,
+    answer: acceptedAnswer,
+    answerFull: acceptedFull,
+    displayAnswer: prefixText
+      ? prefixText.trim() + ' ' + hintAnswer
+      : (sentenceStart ? rawAnswer.charAt(0).toUpperCase() + rawAnswer.slice(1) : rawAnswer),
     revealDef: italicise(getDef(item))
   };
 }
