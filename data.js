@@ -77,8 +77,8 @@ const UNITS = {
         pos: "phrase",
         defEn: "to avoid doing sth you want to do that might be bad for you",
         defZh: "抗拒誘惑",
-        sentence: "These animals are cute and it's tempting to offer them food when they approach you. However, this temptation must be {BLANK}.",
-        sentenceForm: "resisted"
+        sentence: "These animals are cute and it's tempting to offer them food when they approach you. However, this {BLANK} must be {BLANK}.",
+        sentenceForm: "temptation / resisted"
       },
       {
         item: "cause nuisances",
