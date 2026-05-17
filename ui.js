@@ -191,7 +191,7 @@ function handleFill2() {
     if (v2 !== a2) i2.classList.add('wrong');
     else i2.classList.add('correct');
     feedback.classList.add('err');
-    feedback.innerHTML = `✗ Wrong!`;
+    feedback.innerHTML = `✗ Incorrect!`;
     // Replace each hint inline in the sentence with the highlighted correct answer
     const qText = document.querySelector('.q-text');
     if (qText && q.hints) {
@@ -271,7 +271,7 @@ function handleFill(correctAnswer, revealDef, displayAnswer, answerFull) {
   } else {
     input.classList.add('wrong');
     feedback.classList.add('err');
-    feedback.innerHTML = `✗ Wrong!`;
+    feedback.innerHTML = `✗ Incorrect!`;
     // Replace the hint in the sentence prompt with the highlighted correct answer
     const qText = document.querySelector('.q-text');
     if (qText) {
@@ -436,7 +436,7 @@ function handleAnagramSubmit() {
     // ── Wrong (partial or incorrect answer) ──────────────────────────────────
     tiles.forEach(t => t.classList.add('tile-wrong'));
     feedback.classList.add('err');
-    feedback.textContent = '✗ Wrong! The correct answer is:';
+    feedback.textContent = '✗ Incorrect! The correct answer is:';
     q._wrongAttempt = true;
     // Show correct answer as a row of green tiles below the feedback
     const correctRow = document.createElement('div');
