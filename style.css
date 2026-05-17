@@ -801,8 +801,14 @@
 }
 /* xxs: ≥14 letters — answer field only; rack still wraps at xs size */
 .anagram-answer .anagram-tile.placed.anagram-tile-font-xxs {
-  width: clamp(16px, 5vw, 24px); height: clamp(20px, 6vw, 30px);
-  font-size: clamp(0.45rem, 1.6vw, 0.75rem); padding: 0; border-radius: 4px;
+  width: clamp(14px, 4.2vw, 22px); height: clamp(18px, 5.5vw, 28px);
+  font-size: clamp(0.4rem, 1.4vw, 0.7rem); padding: 0; border-radius: 3px;
+  border-width: 1px; box-shadow: 0 2px 0 #2563eb, 0 2px 4px rgba(37,99,235,0.2);
+}
+/* Reduce answer container padding for xxs words so tiles have maximum width */
+.anagram-answer:has(.anagram-tile-font-xxs) {
+  padding: 6px 6px;
+  gap: clamp(2px, 0.8vw, 4px);
 }
 
 /* Tile in the answer field */
