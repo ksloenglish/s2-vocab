@@ -1013,7 +1013,10 @@ function makeQ_1B(item, fullPool) {
     }
     if (isAnswer) return italicise(o);
     if (sbSub) return italicise(applyDistractorSbSub(o, sbSub));
-    return italicise(neutralisePlaceholders(o));
+    // Non-split-blank question: if a distractor contains ' ... ' (e.g. 'keep ... in captivity'),
+    // strip the ' ... ' so it reads as a plain phrase (e.g. 'keep in captivity').
+    const plainO = o.replace(/ \.\.\. /g, ' ');
+    return italicise(neutralisePlaceholders(plainO));
   });
   return { type: '1B', item, prompt: italicise(sentenceDisplay), options: opts, displayOptions: displayOpts, answer, revealDef: italicise(getDef(item)), isMisspellMode };
 }
