@@ -387,6 +387,27 @@
     .q-text { font-size: 1.22rem; line-height: 1.85; }
   }
 
+  /* ===== DESKTOP (≥1024px): wider container + larger text ===== */
+  @media(min-width:1024px){
+    /* Widen all constrained elements from 720px to 900px */
+    .hud, .progress-bar-wrap, .q-card, .btn-next, .results-card { max-width: 900px; }
+    /* Larger question text */
+    .q-text { font-size: 1.55rem; line-height: 1.85; }
+    /* Larger MCQ option buttons */
+    .mcq-opt { font-size: 1.05rem; padding: 16px 22px; }
+    /* Larger fill-in input and submit */
+    .fill-input { font-size: 1.1rem; padding: 15px 18px; }
+    .btn-submit { font-size: 1.05rem; padding: 15px 28px; }
+    /* Larger matching items */
+    .match-item { font-size: 1rem; padding: 14px 18px; }
+    /* Larger next/play-again buttons */
+    .btn-next, .btn-play-again { font-size: 1.1rem; padding: 17px; }
+    /* Larger results vocab list */
+    .vocab-item .vi-word { font-size: 1rem; }
+    .vocab-item .vi-def  { font-size: 0.97rem; }
+    .vocab-list { max-height: 420px; }
+  }
+
 
 /* ===== FLASHCARD SCREEN ===== */
 
