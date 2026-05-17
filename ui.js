@@ -315,8 +315,8 @@ function renderAnagram(q, card) {
       ${unitBadgeHTML(q.item && q.item.unitId)}
     </div>
     <div class="q-text anagram-prompt">${q.prompt}</div>
-    <div class="anagram-rack" id="anagram-rack"></div>
     <div class="anagram-answer" id="anagram-answer"></div>
+    <div class="anagram-rack" id="anagram-rack"></div>
     <div class="anagram-btns">
       <button class="btn-submit" id="btn-anagram-submit" onclick="handleAnagramSubmit()" disabled>Submit</button>
     </div>
