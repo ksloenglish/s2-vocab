@@ -1143,7 +1143,7 @@ function makeQ_Fill(item, fullPool) {
     type: 'fill',
     item,
     prompt: italicise(sentenceDisplay),
-    hint: fullHintDisplay,
+    hint: italicise(fullHintDisplay),  // must match DOM innerHTML (italicise applied to prompt)
     answer: acceptedAnswer,
     answerFull: acceptedFull,
     // displayAnswer is what the student was supposed to TYPE.
