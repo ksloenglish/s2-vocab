@@ -557,6 +557,25 @@ function getDef(item) {
   return currentLang === 'en' ? item.defEn : item.defZh;
 }
 
+/**
+ * Return a short part-of-speech label for display next to a definition.
+ * e.g. "phrase" → "phr.", "adj" → "adj.", "n" → "n.", etc.
+ */
+function getPosLabel(item) {
+  const map = { phrase: 'phr.', n: 'n.', v: 'v.', adj: 'adj.', adv: 'adv.' };
+  return map[item.pos] || item.pos || '';
+}
+
+/**
+ * Return the definition with the part-of-speech label appended in parentheses.
+ * e.g. "殘忍的 (adj.)"
+ */
+function getDefWithPos(item) {
+  const def = getDef(item);
+  const pos = getPosLabel(item);
+  return pos ? `${def} (${pos})` : def;
+}
+
 // ============================================================
 // TITLE SCREEN LOGIC
 // ============================================================
@@ -680,7 +699,7 @@ function makeQ_1A(item, fullPool) {
   shuffle(opts);
   // Apply italic to be/sb/sth in options
   const displayOpts = opts.map(o => italicise(o));
-  return { type: '1A', item, prompt: italicise(getDef(item)), options: opts, displayOptions: displayOpts, answer: item.item, noCapitalise: true };
+  return { type: '1A', item, prompt: italicise(getDefWithPos(item)), options: opts, displayOptions: displayOpts, answer: item.item, noCapitalise: true };
 }
 
 /**
@@ -1031,7 +1050,7 @@ function makeQ_1B(item, fullPool) {
     if (sbSub) return italicise(applyDistractorSbSub(o, sbSub));
     return italicise(neutralisePlaceholders(o));
   });
-  return { type: '1B', item, prompt: italicise(sentenceDisplay), options: opts, displayOptions: displayOpts, answer, revealDef: italicise(getDef(item)), isMisspellMode };
+  return { type: '1B', item, prompt: italicise(sentenceDisplay), options: opts, displayOptions: displayOpts, answer, revealDef: italicise(getDefWithPos(item)), isMisspellMode };
 }
 
 function makeQ_1C(item, fullPool) {
@@ -1196,10 +1215,10 @@ function makeQ_Anagram(item) {
   return {
     type: 'anagram',
     item,
-    prompt: italicise(getDef(item)),
+    prompt: italicise(getDefWithPos(item)),
     letters,          // shuffled array of single-character strings
     answer: word,     // lowercase correct spelling
-    revealDef: italicise(getDef(item))
+    revealDef: italicise(getDefWithPos(item))
   };
 }
 
