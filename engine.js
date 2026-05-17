@@ -1317,7 +1317,21 @@ function generateQuestions(totalQ) {
     });
   });
   shuffle(unusedItems);
-  const shuffledUsed = shuffle([...allItems]); // used items, as fallback once unused are exhausted
+  // Deduplicate allItems by item key before using them as the Pass 2 pool.
+  // allItems may contain duplicate item objects when the quota exceeds the available
+  // items for a unit (the drawItems function cycles via i % arr.length). Without
+  // deduplication, the same vocabulary item appears twice in the shuffledUsed array,
+  // and a single 5-item batch drawn from it can contain the same word twice —
+  // causing duplicate buttons in the matching question and a broken completion check
+  // (Object.keys(matched).length never reaches totalItems because both buttons share
+  // the same item key).
+  const seenUsed = new Set();
+  const dedupedUsed = allItems.filter(i => {
+    if (seenUsed.has(i.item)) return false;
+    seenUsed.add(i.item);
+    return true;
+  });
+  const shuffledUsed = shuffle([...dedupedUsed]); // used items, as fallback once unused are exhausted
   // Build matching batches: exhaust unused items first, then fall back to used items.
   // NEVER mix unused and used items within the same batch — each batch is drawn from one
   // contiguous block of a single pool (unused first, then used).
