@@ -888,10 +888,23 @@
 /* Correct-answer reveal row (shown below wrong tiles on wrong submission) */
 .anagram-correct-row {
   display: flex;
-  flex-wrap: wrap;
+  flex-wrap: nowrap;          /* never wrap onto a second line */
   justify-content: center;
-  gap: 6px;
+  align-items: center;
+  gap: 4px;
   margin-top: 10px;
+  width: 100%;
+  overflow: hidden;           /* never overflow the card */
+}
+/* Reveal tiles shrink to fit available width automatically */
+.anagram-correct-row .anagram-tile {
+  flex-shrink: 1;             /* allow tiles to shrink */
+  min-width: 0;               /* allow shrinking below intrinsic width */
+  width: clamp(24px, calc((100% - 4px * 14) / 15), 46px);
+  height: clamp(28px, 8vw, 52px);
+  font-size: clamp(0.7rem, 2.8vw, 1.5rem);
+  padding: 0;
+  border-radius: 6px;
 }
 /* Prevent pointer events on reveal tiles — they are display-only */
 .tile-answer-reveal {
@@ -900,5 +913,10 @@
   animation: tileDropIn 0.22s ease both;
 }
 @media (min-width: 1024px) {
-  .anagram-correct-row { gap: 8px; margin-top: 12px; }
+  .anagram-correct-row { gap: 6px; margin-top: 12px; }
+  .anagram-correct-row .anagram-tile {
+    width: clamp(28px, calc((100% - 6px * 14) / 15), 54px);
+    height: clamp(32px, 5vw, 60px);
+    font-size: clamp(0.8rem, 1.8vw, 1.6rem);
+  }
 }
