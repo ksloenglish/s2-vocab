@@ -417,6 +417,11 @@ function endExercise() {
   }
   renderVocabList(practisedPhrases, 'vocab-phrases-list');
   renderVocabList(practisedWords, 'vocab-words-list');
+  // Reset scroll position of each list container to the top
+  ['vocab-phrases-list', 'vocab-words-list'].forEach(id => {
+    const el = document.getElementById(id);
+    if (el) el.scrollTop = 0;
+  });
 }
 
 function playAgain() {
