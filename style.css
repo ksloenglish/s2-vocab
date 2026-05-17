@@ -756,10 +756,7 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  flex-shrink: 1;
   min-width: 0;
-  width: 46px;
-  height: 52px;
   border-radius: 8px;
   background: linear-gradient(160deg, #f5e6c8 0%, #e8d5a3 100%);
   color: #2d1a00;
@@ -772,7 +769,6 @@
   -webkit-tap-highlight-color: transparent;
   transition: transform 0.12s, box-shadow 0.12s, background 0.15s;
   position: relative;
-  flex-shrink: 0;
 }
 .anagram-tile:active {
   transform: translateY(2px);
@@ -780,8 +776,8 @@
 }
 
 /* Font size tiers — controlled by JS class */
-/* md: ≤8 letters  — fixed 46px tiles */
-.anagram-tile-font-md { font-size: clamp(1.1rem, 4vw, 1.5rem); }
+/* md: ≤8 letters — clamp so tiles don't overflow on narrow mobile screens */
+.anagram-tile-font-md { font-size: clamp(1rem, 4vw, 1.5rem); width: clamp(36px, 11vw, 46px); height: clamp(40px, 12.5vw, 52px); }
 /* sm: 9–11 letters — comfortable tap size; rack wraps to 2 rows if needed */
 .anagram-tile-font-sm { font-size: clamp(0.9rem, 3.5vw, 1.3rem); width: clamp(36px, 10vw, 44px); height: clamp(40px, 11vw, 50px); }
 /* xs: 12–13 letters — slightly smaller but still tappable; rack wraps */
