@@ -1104,20 +1104,26 @@ function generateQuestions(totalQ) {
   const unitQuotas = {};                               // unitId → # questions
   unitIds.forEach((uid, i) => { unitQuotas[uid] = baseQ + (i < remainder ? 1 : 0); });
 
-  // 2. For each unit, draw its quota of items (half phrases, half words, cycling if needed)
+  // 2. For each unit, draw its quota of items (half phrases, half words).
+  //    Items are drawn WITHOUT repetition up to the unit's total item count.
+  //    Repetition only occurs if the requested quota exceeds the available items.
   const allItems = [];
+  // Also collect ALL items per unit so unused items can be used for matching questions.
+  const allUnitItems = {}; // unitId → full shuffled item list
   unitIds.forEach(uid => {
     const q = unitQuotas[uid];
     const phrases = shuffle(UNITS[uid].phrases.map(p => ({ ...p, unitId: uid })));
     const words   = shuffle(UNITS[uid].words.map(w => ({ ...w, unitId: uid })));
-    const halfQ   = Math.floor(q / 2);
-    function cycleItems(arr, n) {
+    allUnitItems[uid] = [...phrases, ...words]; // full pool for this unit
+    const halfQ = Math.floor(q / 2);
+    // Draw without repetition; only cycle if quota exceeds available items
+    function drawItems(arr, n) {
       const result = [];
       for (let i = 0; i < n; i++) result.push(arr[i % arr.length]);
       return result;
     }
-    allItems.push(...cycleItems(phrases, halfQ));
-    allItems.push(...cycleItems(words, q - halfQ));
+    allItems.push(...drawItems(phrases, halfQ));
+    allItems.push(...drawItems(words, q - halfQ));
   });
   shuffle(allItems);
 
@@ -1139,11 +1145,23 @@ function generateQuestions(totalQ) {
   }
   shuffle(nonMatchQs);
 
-  // Build matching questions (one per 5 items)
+  // Build matching questions using items NOT already used in regular questions.
+  // This prevents the same item from appearing in both a regular question AND a matching question.
+  const usedItemKeys = new Set(allItems.map(i => i.item));
+  const unusedItems = [];
+  unitIds.forEach(uid => {
+    allUnitItems[uid].forEach(i => {
+      if (!usedItemKeys.has(i.item)) unusedItems.push(i);
+    });
+  });
+  shuffle(unusedItems);
+  // If there aren't enough unused items to fill a matching batch, fall back to used items
+  const matchPool = unusedItems.length >= 2
+    ? [...unusedItems, ...shuffle([...allItems])]  // prefer unused, then used as fallback
+    : shuffle([...allItems]);
   const matchQs = [];
-  const matchItems = shuffle([...allItems]);
-  for (let i = 0; i + 1 < matchItems.length; i += 5) {
-    const batch = matchItems.slice(i, i + 5);
+  for (let i = 0; i + 1 < matchPool.length && matchQs.length < Math.ceil(allItems.length / 5); i += 5) {
+    const batch = matchPool.slice(i, Math.min(i + 5, matchPool.length));
     if (batch.length >= 2) matchQs.push(makeQ_Match(batch));
   }
   shuffle(matchQs);
