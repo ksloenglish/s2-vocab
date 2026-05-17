@@ -64,7 +64,7 @@ const UNITS = {
         sentenceForm: "figure / out"
       },
       {
-        item: "keep ... in captivity",
+        item: "keep sth in captivity",
         pos: "phrase",
         defEn: "to hold an animal or person in a controlled environment",
         defZh: "囚禁",
