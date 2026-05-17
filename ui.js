@@ -410,7 +410,8 @@ function endExercise() {
         const shortLabel = fullLabel.replace('Unit ', 'U'); // "Unit 5" → "U5"
         labelHTML = `<span class="vi-unit-label ${cls}" title="${fullLabel}">${shortLabel}</span>`;
       }
-      const posHTML = item.pos ? `<span class="vi-pos">${item.pos}</span>` : '';
+      const posDisplay = item.pos === 'phrase' ? 'phr' : (item.pos || '');
+      const posHTML = posDisplay ? `<span class="vi-pos">${posDisplay}</span>` : '';
       div.innerHTML = `${labelHTML}<span class="vi-word">${italicise(item.item)}</span>${posHTML}<span class="vi-def">${italicise(getDef(item))}</span>`;
       container.appendChild(div);
     });

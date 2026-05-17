@@ -1315,7 +1315,9 @@ function fcRender() {
   badge.textContent = unitLabel;
   badge.className = 'fc-unit-badge ' + unitClass;
 
-  document.getElementById('fc-pos').textContent = card.pos || '';
+  // Display 'phr' instead of 'phrase' for brevity
+  const posLabel = p => p === 'phrase' ? 'phr' : (p || '');
+  document.getElementById('fc-pos').textContent = posLabel(card.pos);
   document.getElementById('fc-item').innerHTML = fcItalicisePlaceholders(card.item || '');
 
   // Back face
