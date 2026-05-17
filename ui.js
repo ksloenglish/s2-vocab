@@ -301,9 +301,12 @@ function handleFill(correctAnswer, revealDef, displayAnswer, answerFull) {
  */
 function renderAnagram(q, card) {
   // Determine scalable font size: shrink for long words
+  // Rack tiles: md (≤8), sm (9–11), xs (12–13), xxs (≥14)
+  // Answer-field placed tiles use the same class but CSS overrides shrink them further
   const wordLen = q.answer.length;
   let tileFontClass = 'anagram-tile-font-md'; // default
-  if (wordLen >= 12) tileFontClass = 'anagram-tile-font-xs';
+  if (wordLen >= 14) tileFontClass = 'anagram-tile-font-xxs';
+  else if (wordLen >= 12) tileFontClass = 'anagram-tile-font-xs';
   else if (wordLen >= 9) tileFontClass = 'anagram-tile-font-sm';
 
   card.innerHTML = `
@@ -440,7 +443,8 @@ function handleAnagramSubmit() {
     correctRow.className = 'anagram-correct-row';
     const wordLen = q.answer.length;
     let tileFontClass = 'anagram-tile-font-md';
-    if (wordLen >= 12) tileFontClass = 'anagram-tile-font-xs';
+    if (wordLen >= 14) tileFontClass = 'anagram-tile-font-xxs';
+    else if (wordLen >= 12) tileFontClass = 'anagram-tile-font-xs';
     else if (wordLen >= 9) tileFontClass = 'anagram-tile-font-sm';
     q.answer.split('').forEach(letter => {
       const t = document.createElement('div');

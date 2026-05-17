@@ -740,11 +740,12 @@
 }
 
 /* ── Rack ── */
+/* Rack wraps onto a second row when tiles don't fit — keeps tiles large enough to tap */
 .anagram-rack {
   display: flex;
-  flex-wrap: nowrap;
+  flex-wrap: wrap;
   justify-content: center;
-  gap: clamp(3px, 1.2vw, 7px);
+  gap: clamp(4px, 1.5vw, 8px);
   padding: 10px 8px;
   min-height: 60px;
   margin-bottom: 18px;
@@ -781,10 +782,28 @@
 /* Font size tiers — controlled by JS class */
 /* md: ≤8 letters  — fixed 46px tiles */
 .anagram-tile-font-md { font-size: clamp(1.1rem, 4vw, 1.5rem); }
-/* sm: 9–11 letters — tiles shrink to fit viewport width */
-.anagram-tile-font-sm { font-size: clamp(0.75rem, 2.8vw, 1.2rem); width: clamp(28px, 8.5vw, 40px); height: clamp(32px, 9.5vw, 46px); }
-/* xs: ≥12 letters — tiles shrink further */
-.anagram-tile-font-xs { font-size: clamp(0.6rem, 2.2vw, 1rem);   width: clamp(24px, 7vw, 34px);   height: clamp(28px, 8vw, 40px);  border-radius: 6px; }
+/* sm: 9–11 letters — comfortable tap size; rack wraps to 2 rows if needed */
+.anagram-tile-font-sm { font-size: clamp(0.9rem, 3.5vw, 1.3rem); width: clamp(36px, 10vw, 44px); height: clamp(40px, 11vw, 50px); }
+/* xs: 12–13 letters — slightly smaller but still tappable; rack wraps */
+.anagram-tile-font-xs { font-size: clamp(0.8rem, 3vw, 1.1rem);   width: clamp(32px, 9vw, 40px);   height: clamp(36px, 10vw, 46px);  border-radius: 6px; }
+/* xxs: ≥14 letters — rack uses same size as xs (wraps to 2 rows); answer field gets its own smaller override */
+.anagram-tile-font-xxs { font-size: clamp(0.8rem, 3vw, 1.1rem);  width: clamp(32px, 9vw, 40px);   height: clamp(36px, 10vw, 46px);  border-radius: 6px; }
+
+/* ── Answer-field tile overrides (placed tiles don't need to be tapped — shrink aggressively) ── */
+/* The answer field stays flex-wrap:nowrap so the word always reads on one line.                  */
+.anagram-answer .anagram-tile.placed.anagram-tile-font-sm {
+  width: clamp(22px, 6.5vw, 32px); height: clamp(26px, 7.5vw, 38px);
+  font-size: clamp(0.6rem, 2.2vw, 0.95rem); padding: 0;
+}
+.anagram-answer .anagram-tile.placed.anagram-tile-font-xs {
+  width: clamp(18px, 5.5vw, 28px); height: clamp(22px, 6.5vw, 34px);
+  font-size: clamp(0.5rem, 1.8vw, 0.85rem); padding: 0; border-radius: 4px;
+}
+/* xxs: ≥14 letters — answer field only; rack still wraps at xs size */
+.anagram-answer .anagram-tile.placed.anagram-tile-font-xxs {
+  width: clamp(16px, 5vw, 24px); height: clamp(20px, 6vw, 30px);
+  font-size: clamp(0.45rem, 1.6vw, 0.75rem); padding: 0; border-radius: 4px;
+}
 
 /* Tile in the answer field */
 .anagram-tile.placed {
@@ -856,8 +875,12 @@
   .anagram-tile-font-sm { font-size: 1.3rem; width: 48px; height: 54px; }
   .anagram-tile-font-xs { font-size: 1.1rem; width: 42px; height: 48px; }
   .anagram-answer { min-height: 76px; gap: 8px; }
-  .anagram-rack   { gap: 9px; }
+  .anagram-rack   { gap: 9px; flex-wrap: nowrap; } /* desktop has enough width — no wrapping needed */
   .btn-giveup { font-size: 1.05rem; padding: 15px 28px; }
+  /* On desktop, placed tiles in answer field can be larger since viewport is wide */
+  .anagram-answer .anagram-tile.placed.anagram-tile-font-sm { width: 38px; height: 44px; font-size: 1.1rem; padding: 0; }
+  .anagram-answer .anagram-tile.placed.anagram-tile-font-xs { width: 32px; height: 38px; font-size: 0.95rem; padding: 0; }
+  .anagram-answer .anagram-tile.placed.anagram-tile-font-xxs { width: 28px; height: 34px; font-size: 0.85rem; padding: 0; }
 }
 
 /* Correct-answer reveal row (shown below wrong tiles on wrong submission) */
