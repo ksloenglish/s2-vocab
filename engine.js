@@ -1064,9 +1064,11 @@ function makeQ_Fill(item, fullPool) {
   let prefixText = '';   // plain-text prefix to inject before the hint
   let hintAnswer = rawAnswer; // the portion the student must type
 
-  if (firstWord === 'be' && rawWords.length > 1) {
-    // be-led phrase: provide 'be' in the sentence, student types the rest
-    prefixText = 'be ';
+  const BE_FORMS = new Set(['be','is','are','was','were','am','been']);
+  if (BE_FORMS.has(firstWord) && rawWords.length > 1) {
+    // be-led phrase (including conjugated forms): provide the 'be' verb in the sentence,
+    // student types only the rest (e.g. 'was befriended by' → prefix 'was', hint 'befriended by')
+    prefixText = firstWord + ' ';
     hintAnswer = rawWords.slice(1).join(' ');
   } else if ((firstWord === 'a' || firstWord === 'an') && rawWords.length > 1) {
     // article-led phrase: provide 'a'/'an' in the sentence, student types the rest
