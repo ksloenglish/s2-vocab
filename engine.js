@@ -1314,10 +1314,20 @@ function generateQuestions(totalQ) {
     });
   });
   shuffle(unusedItems);
+  const shuffledUsed = shuffle([...allItems]); // used items, as fallback once unused are exhausted
+  // Build matching batches: exhaust unused items first, then fall back to used items.
+  // NEVER mix unused and used items within the same batch — each batch is drawn from one
+  // contiguous block of a single pool (unused first, then used).
   const matchQs = [];
-  // Only build matching questions from unused items; never reuse items from regular questions
-  for (let i = 0; i + 1 < unusedItems.length && matchQs.length < Math.ceil(allItems.length / 5); i += 5) {
+  const maxMatchQs = Math.ceil(allItems.length / 5);
+  // Pass 1: batches from unused items only
+  for (let i = 0; i + 1 < unusedItems.length && matchQs.length < maxMatchQs; i += 5) {
     const batch = unusedItems.slice(i, Math.min(i + 5, unusedItems.length));
+    if (batch.length >= 2) matchQs.push(makeQ_Match(batch));
+  }
+  // Pass 2: if more matching questions are needed, draw from used items (no mixing)
+  for (let i = 0; i + 1 < shuffledUsed.length && matchQs.length < maxMatchQs; i += 5) {
+    const batch = shuffledUsed.slice(i, Math.min(i + 5, shuffledUsed.length));
     if (batch.length >= 2) matchQs.push(makeQ_Match(batch));
   }
   shuffle(matchQs);
