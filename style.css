@@ -391,6 +391,10 @@
   @media(min-width:1024px){
     /* Widen all constrained elements from 720px to 900px */
     .hud, .progress-bar-wrap, .q-card, .btn-next, .results-card { max-width: 900px; }
+    /* Widen title page setting sections and action buttons to match */
+    .setting-section, .btn-start, .btn-action-row { max-width: 900px; }
+    /* Taller question card to reduce empty space below on desktop */
+    .q-card { min-height: 420px; display: flex; flex-direction: column; justify-content: center; }
     /* Larger question text */
     .q-text { font-size: 1.55rem; line-height: 1.85; }
     /* Larger MCQ option buttons */
