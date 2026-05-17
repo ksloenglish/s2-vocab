@@ -781,10 +781,10 @@
 .anagram-tile-font-md { font-size: clamp(1rem, 4vw, 1.5rem); width: clamp(36px, 11vw, 46px); height: clamp(40px, 12.5vw, 52px); }
 /* sm: 9–11 letters — comfortable tap size; rack wraps to 2 rows if needed */
 .anagram-tile-font-sm { font-size: clamp(0.9rem, 3.5vw, 1.3rem); width: clamp(36px, 10vw, 44px); height: clamp(40px, 11vw, 50px); }
-/* xs: 12–13 letters — slightly smaller but still tappable; rack wraps */
-.anagram-tile-font-xs { font-size: clamp(0.8rem, 3vw, 1.1rem);   width: clamp(32px, 9vw, 40px);   height: clamp(36px, 10vw, 46px);  border-radius: 6px; }
+/* xs: 12–13 letters — larger tiles; rack wraps to 2 rows */
+.anagram-tile-font-xs { font-size: clamp(1rem, 4vw, 1.4rem);     width: clamp(36px, 11vw, 46px);  height: clamp(40px, 12vw, 52px);  border-radius: 7px; }
 /* xxs: ≥14 letters — rack uses same size as xs (wraps to 2 rows); answer field gets its own smaller override */
-.anagram-tile-font-xxs { font-size: clamp(0.8rem, 3vw, 1.1rem);  width: clamp(32px, 9vw, 40px);   height: clamp(36px, 10vw, 46px);  border-radius: 6px; }
+.anagram-tile-font-xxs { font-size: clamp(1rem, 4vw, 1.4rem);    width: clamp(36px, 11vw, 46px);  height: clamp(40px, 12vw, 52px);  border-radius: 7px; }
 
 /* ── Answer-field tile overrides (placed tiles don't need to be tapped — shrink aggressively) ── */
 /* The answer field stays flex-wrap:nowrap so the word always reads on one line.                  */
