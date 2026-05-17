@@ -192,6 +192,7 @@ function handleFill2() {
     else i2.classList.add('correct');
     feedback.classList.add('err');
     feedback.innerHTML = `✗ Incorrect!`;
+    practisedItems.add(q.item.item);
     // Replace each hint inline in the sentence with the highlighted correct answer
     const qText = document.querySelector('.q-text');
     if (qText && q.hints) {
@@ -272,6 +273,7 @@ function handleFill(correctAnswer, revealDef, displayAnswer, answerFull) {
     input.classList.add('wrong');
     feedback.classList.add('err');
     feedback.innerHTML = `✗ Incorrect!`;
+    practisedItems.add(questions[currentQIndex].item.item);
     // Replace the hint in the sentence prompt with the highlighted correct answer
     const qText = document.querySelector('.q-text');
     if (qText) {
@@ -425,9 +427,10 @@ function handleAnagramSubmit() {
         answerEl.appendChild(tile);
         if (i === correctLetters.length - 1) {
           setTimeout(() => {
-            feedback.classList.add('err');
-            feedback.textContent = '✗ No point awarded.';
-            document.getElementById('btn-next').classList.add('show');
+    feedback.classList.add('err');
+    feedback.textContent = '✗ No point awarded.';
+    practisedItems.add(q.item.item);
+    document.getElementById('btn-next').classList.add('show');
           }, 200);
         }
       }, i * 160);
@@ -437,6 +440,7 @@ function handleAnagramSubmit() {
     tiles.forEach(t => t.classList.add('tile-wrong'));
     feedback.classList.add('err');
     feedback.textContent = '✗ Incorrect! The correct answer is:';
+    practisedItems.add(q.item.item);
     q._wrongAttempt = true;
     // Show correct answer as a row of green tiles below the feedback
     const correctRow = document.createElement('div');
