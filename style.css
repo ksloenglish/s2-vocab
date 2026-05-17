@@ -721,10 +721,10 @@
 /* ── Answer field ── */
 .anagram-answer {
   display: flex;
-  flex-wrap: wrap;
+  flex-wrap: nowrap;
   justify-content: center;
   align-items: center;
-  gap: 6px;
+  gap: clamp(3px, 1.2vw, 6px);
   min-height: 64px;
   padding: 10px 12px;
   border-radius: 14px;
@@ -741,9 +741,9 @@
 /* ── Rack ── */
 .anagram-rack {
   display: flex;
-  flex-wrap: wrap;
+  flex-wrap: nowrap;
   justify-content: center;
-  gap: 7px;
+  gap: clamp(3px, 1.2vw, 7px);
   padding: 10px 8px;
   min-height: 60px;
   margin-bottom: 18px;
@@ -754,6 +754,8 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
+  flex-shrink: 1;
+  min-width: 0;
   width: 46px;
   height: 52px;
   border-radius: 8px;
@@ -776,9 +778,12 @@
 }
 
 /* Font size tiers — controlled by JS class */
+/* md: ≤8 letters  — fixed 46px tiles */
 .anagram-tile-font-md { font-size: clamp(1.1rem, 4vw, 1.5rem); }
-.anagram-tile-font-sm { font-size: clamp(0.9rem, 3.2vw, 1.2rem); width: 40px; height: 46px; }
-.anagram-tile-font-xs { font-size: clamp(0.75rem, 2.8vw, 1rem);  width: 34px; height: 40px; border-radius: 6px; }
+/* sm: 9–11 letters — tiles shrink to fit viewport width */
+.anagram-tile-font-sm { font-size: clamp(0.75rem, 2.8vw, 1.2rem); width: clamp(28px, 8.5vw, 40px); height: clamp(32px, 9.5vw, 46px); }
+/* xs: ≥12 letters — tiles shrink further */
+.anagram-tile-font-xs { font-size: clamp(0.6rem, 2.2vw, 1rem);   width: clamp(24px, 7vw, 34px);   height: clamp(28px, 8vw, 40px);  border-radius: 6px; }
 
 /* Tile in the answer field */
 .anagram-tile.placed {
