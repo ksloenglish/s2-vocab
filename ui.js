@@ -315,7 +315,7 @@ function renderAnagram(q, card) {
     <div class="anagram-answer" id="anagram-answer"></div>
     <div class="anagram-rack" id="anagram-rack"></div>
     <div class="anagram-btns">
-      <button class="btn-submit" id="btn-anagram-submit" onclick="handleAnagramSubmit()">Submit</button>
+      <button class="btn-submit" id="btn-anagram-submit" onclick="handleAnagramSubmit()" disabled>Submit</button>
     </div>
     <div class="fill-feedback" id="anagram-feedback"></div>
   `;
@@ -338,6 +338,15 @@ function renderAnagram(q, card) {
 }
 
 /**
+ * Enable Submit only when every tile has been placed in the answer field.
+ */
+function updateAnagramSubmitBtn(totalTiles) {
+  const placed = document.getElementById('anagram-answer').querySelectorAll('.anagram-tile').length;
+  const btn = document.getElementById('btn-anagram-submit');
+  if (btn) btn.disabled = (placed < totalTiles);
+}
+
+/**
  * Move a rack tile up to the answer field.
  */
 function anagramRackTileClick(tile, q) {
@@ -347,6 +356,7 @@ function anagramRackTileClick(tile, q) {
   // Remove click handler from rack behaviour; add return handler
   tile.onclick = () => anagramAnswerTileClick(tile, q);
   document.getElementById('anagram-answer').appendChild(tile);
+  updateAnagramSubmitBtn(q.letters.length);
 }
 
 /**
@@ -357,6 +367,7 @@ function anagramAnswerTileClick(tile, q) {
   tile.classList.remove('placed');
   tile.onclick = () => anagramRackTileClick(tile, q);
   document.getElementById('anagram-rack').appendChild(tile);
+  updateAnagramSubmitBtn(q.letters.length);
 }
 
 /**
