@@ -56,6 +56,7 @@ function renderQuestion() {
   else if (q.type === 'fill') renderFill(q, card);
   else if (q.type === 'fill2') renderFill2(q, card);
   else if (q.type === 'match') renderMatch(q, card);
+  else if (q.type === 'anagram') renderAnagram(q, card);
 }
 
 // ---- UNIT BADGE HELPER ----
@@ -290,6 +291,189 @@ function handleFill(correctAnswer, revealDef, displayAnswer, answerFull) {
   }
 
   document.getElementById('btn-next').classList.add('show');
+}
+
+// ---- ANAGRAM ----
+/**
+ * Render an anagram question.
+ * The student sees the definition as a prompt, then a rack of shuffled letter tiles.
+ * Tapping a rack tile moves it to the answer field; tapping an answer tile returns it.
+ */
+function renderAnagram(q, card) {
+  // Determine scalable font size: shrink for long words
+  const wordLen = q.answer.length;
+  let tileFontClass = 'anagram-tile-font-md'; // default
+  if (wordLen >= 12) tileFontClass = 'anagram-tile-font-xs';
+  else if (wordLen >= 9) tileFontClass = 'anagram-tile-font-sm';
+
+  card.innerHTML = `
+    <div class="q-card-header">
+      <span class="q-type-badge badge-anagram">Anagram</span>
+      ${unitBadgeHTML(q.item && q.item.unitId)}
+    </div>
+    <div class="q-text anagram-prompt">${q.prompt}</div>
+    <div class="anagram-answer" id="anagram-answer"></div>
+    <div class="anagram-rack" id="anagram-rack"></div>
+    <div class="anagram-btns">
+      <button class="btn-submit" id="btn-anagram-submit" onclick="handleAnagramSubmit()">Submit</button>
+      <button class="btn-giveup" id="btn-anagram-giveup" onclick="handleAnagramGiveUp()">Give Up</button>
+    </div>
+    <div class="fill-feedback" id="anagram-feedback"></div>
+  `;
+
+  // Build rack tiles
+  const rack = document.getElementById('anagram-rack');
+  const answer = document.getElementById('anagram-answer');
+
+  // Each tile gets a unique id so we can track it across rack ↔ answer
+  q.letters.forEach((letter, idx) => {
+    const tile = document.createElement('div');
+    tile.className = `anagram-tile ${tileFontClass}`;
+    tile.id = `atile-${idx}`;
+    tile.dataset.letter = letter;
+    tile.dataset.idx = idx;
+    tile.textContent = letter.toUpperCase();
+    tile.onclick = () => anagramRackTileClick(tile, q);
+    rack.appendChild(tile);
+  });
+}
+
+/**
+ * Move a rack tile up to the answer field.
+ */
+function anagramRackTileClick(tile, q) {
+  if (tile.dataset.placed === 'true') return;
+  tile.dataset.placed = 'true';
+  tile.classList.add('placed');
+  // Remove click handler from rack behaviour; add return handler
+  tile.onclick = () => anagramAnswerTileClick(tile, q);
+  document.getElementById('anagram-answer').appendChild(tile);
+}
+
+/**
+ * Return an answer-field tile back to the rack.
+ */
+function anagramAnswerTileClick(tile, q) {
+  tile.dataset.placed = 'false';
+  tile.classList.remove('placed');
+  tile.onclick = () => anagramRackTileClick(tile, q);
+  document.getElementById('anagram-rack').appendChild(tile);
+}
+
+/**
+ * Check the student's answer against the correct word.
+ */
+function handleAnagramSubmit() {
+  const q = questions[currentQIndex];
+  const answerEl = document.getElementById('anagram-answer');
+  const feedback = document.getElementById('anagram-feedback');
+  if (!answerEl || !q) return;
+
+  const tiles = answerEl.querySelectorAll('.anagram-tile');
+  const typed = Array.from(tiles).map(t => t.dataset.letter).join('');
+
+  // Disable buttons
+  document.getElementById('btn-anagram-submit').disabled = true;
+  document.getElementById('btn-anagram-giveup').disabled = true;
+  // Disable tile interaction
+  answerEl.querySelectorAll('.anagram-tile').forEach(t => { t.onclick = null; });
+  document.getElementById('anagram-rack').querySelectorAll('.anagram-tile').forEach(t => { t.onclick = null; });
+
+  feedback.classList.add('show');
+
+  if (typed === q.answer) {
+    tiles.forEach(t => t.classList.add('tile-correct'));
+    feedback.classList.add('ok');
+    feedback.textContent = '✓ Correct!';
+    if (!q._wrongAttempt) {
+      score++;
+      popScore();
+    }
+    practisedItems.add(q.item.item);
+  } else {
+    tiles.forEach(t => t.classList.add('tile-wrong'));
+    feedback.classList.add('err');
+    feedback.textContent = '✗ Wrong! The correct answer is:';
+    q._wrongAttempt = true;
+
+    // Show correct answer as a row of green tiles below the feedback
+    const correctRow = document.createElement('div');
+    correctRow.className = 'anagram-correct-row';
+    const wordLen = q.answer.length;
+    let tileFontClass = 'anagram-tile-font-md';
+    if (wordLen >= 12) tileFontClass = 'anagram-tile-font-xs';
+    else if (wordLen >= 9) tileFontClass = 'anagram-tile-font-sm';
+    q.answer.split('').forEach(letter => {
+      const t = document.createElement('div');
+      t.className = `anagram-tile ${tileFontClass} tile-correct tile-answer-reveal`;
+      t.textContent = letter.toUpperCase();
+      correctRow.appendChild(t);
+    });
+    feedback.insertAdjacentElement('afterend', correctRow);
+  }
+
+  document.getElementById('btn-next').classList.add('show');
+}
+
+/**
+ * Give up: clear the answer field and spell out the correct answer tile-by-tile.
+ */
+function handleAnagramGiveUp() {
+  const q = questions[currentQIndex];
+  if (!q) return;
+
+  q._wrongAttempt = true;
+
+  // Disable buttons immediately
+  document.getElementById('btn-anagram-submit').disabled = true;
+  document.getElementById('btn-anagram-giveup').disabled = true;
+
+  // Disable all tile interaction
+  document.querySelectorAll('.anagram-tile').forEach(t => { t.onclick = null; });
+
+  // Move all placed tiles back to rack (silently, no animation)
+  const answerEl = document.getElementById('anagram-answer');
+  const rackEl = document.getElementById('anagram-rack');
+  answerEl.querySelectorAll('.anagram-tile').forEach(t => {
+    t.dataset.placed = 'false';
+    t.classList.remove('placed', 'tile-correct', 'tile-wrong');
+    rackEl.appendChild(t);
+  });
+
+  // Spell out the correct answer letter-by-letter with a staggered delay
+  const correctLetters = q.answer.split('');
+  const allRackTiles = Array.from(rackEl.querySelectorAll('.anagram-tile'));
+
+  // Build a map: letter → array of tile elements still in rack
+  const letterMap = {};
+  allRackTiles.forEach(t => {
+    const l = t.dataset.letter;
+    if (!letterMap[l]) letterMap[l] = [];
+    letterMap[l].push(t);
+  });
+
+  correctLetters.forEach((letter, i) => {
+    setTimeout(() => {
+      const available = letterMap[letter];
+      if (!available || available.length === 0) return;
+      const tile = available.shift();
+      tile.dataset.placed = 'true';
+      tile.classList.add('placed', 'tile-giveup');
+      answerEl.appendChild(tile);
+
+      // After last tile, show feedback and Next button
+      if (i === correctLetters.length - 1) {
+        setTimeout(() => {
+          const feedback = document.getElementById('anagram-feedback');
+          if (feedback) {
+            feedback.classList.add('show', 'err');
+            feedback.textContent = '✗ No point awarded.';
+          }
+          document.getElementById('btn-next').classList.add('show');
+        }, 200);
+      }
+    }, i * 160);
+  });
 }
 
 // ---- MATCHING ----

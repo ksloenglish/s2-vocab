@@ -700,3 +700,174 @@
 }
 .fc-slide-right .fc-card-inner { animation: fcSlideInRight 0.28s ease; }
 .fc-slide-left  .fc-card-inner { animation: fcSlideInLeft  0.28s ease; }
+
+/* ===== ANAGRAM QUESTION ===== */
+
+/* Badge colour — amber/orange to distinguish from other types */
+.badge-anagram {
+  background: rgba(245,158,11,0.18);
+  color: #fbbf24;
+  border: 1px solid rgba(245,158,11,0.35);
+}
+
+/* Prompt (definition) — slightly larger, centred */
+.anagram-prompt {
+  text-align: center;
+  font-size: 1.25rem;
+  line-height: 1.7;
+  margin-bottom: 18px;
+}
+
+/* ── Answer field ── */
+.anagram-answer {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+  gap: 6px;
+  min-height: 64px;
+  padding: 10px 12px;
+  border-radius: 14px;
+  border: 2px dashed var(--border);
+  background: rgba(255,255,255,0.03);
+  margin-bottom: 14px;
+  transition: border-color 0.18s;
+}
+.anagram-answer:not(:empty) {
+  border-style: solid;
+  border-color: var(--primary-light);
+}
+
+/* ── Rack ── */
+.anagram-rack {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 7px;
+  padding: 10px 8px;
+  min-height: 60px;
+  margin-bottom: 18px;
+}
+
+/* ── Scrabble-style tile ── */
+.anagram-tile {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 46px;
+  height: 52px;
+  border-radius: 8px;
+  background: linear-gradient(160deg, #f5e6c8 0%, #e8d5a3 100%);
+  color: #2d1a00;
+  font-weight: 900;
+  letter-spacing: 0.02em;
+  border: 2px solid #c8a96e;
+  box-shadow: 0 3px 0 #9a7a40, 0 4px 8px rgba(0,0,0,0.35);
+  cursor: pointer;
+  user-select: none;
+  -webkit-tap-highlight-color: transparent;
+  transition: transform 0.12s, box-shadow 0.12s, background 0.15s;
+  position: relative;
+  flex-shrink: 0;
+}
+.anagram-tile:active {
+  transform: translateY(2px);
+  box-shadow: 0 1px 0 #9a7a40, 0 2px 4px rgba(0,0,0,0.3);
+}
+
+/* Font size tiers — controlled by JS class */
+.anagram-tile-font-md { font-size: clamp(1.1rem, 4vw, 1.5rem); }
+.anagram-tile-font-sm { font-size: clamp(0.9rem, 3.2vw, 1.2rem); width: 40px; height: 46px; }
+.anagram-tile-font-xs { font-size: clamp(0.75rem, 2.8vw, 1rem);  width: 34px; height: 40px; border-radius: 6px; }
+
+/* Tile in the answer field */
+.anagram-tile.placed {
+  background: linear-gradient(160deg, #dbeafe 0%, #bfdbfe 100%);
+  border-color: #60a5fa;
+  box-shadow: 0 3px 0 #2563eb, 0 4px 8px rgba(37,99,235,0.25);
+  color: #1e3a5f;
+}
+
+/* Correct answer feedback */
+.anagram-tile.tile-correct {
+  background: linear-gradient(160deg, #d1fae5 0%, #a7f3d0 100%);
+  border-color: var(--success);
+  box-shadow: 0 3px 0 #059669, 0 4px 8px rgba(16,185,129,0.3);
+  color: #064e3b;
+}
+
+/* Wrong answer feedback */
+.anagram-tile.tile-wrong {
+  background: linear-gradient(160deg, #fee2e2 0%, #fecaca 100%);
+  border-color: var(--danger);
+  box-shadow: 0 3px 0 #b91c1c, 0 4px 8px rgba(239,68,68,0.3);
+  color: #7f1d1d;
+}
+
+/* Give-up tiles (spelled out automatically) */
+.anagram-tile.tile-giveup {
+  background: linear-gradient(160deg, #fef3c7 0%, #fde68a 100%);
+  border-color: var(--accent);
+  box-shadow: 0 3px 0 #b45309, 0 4px 8px rgba(245,158,11,0.3);
+  color: #451a03;
+  animation: tileDropIn 0.22s ease both;
+}
+@keyframes tileDropIn {
+  from { opacity: 0; transform: translateY(-18px) scale(0.8); }
+  to   { opacity: 1; transform: translateY(0)    scale(1);   }
+}
+
+/* ── Button row ── */
+.anagram-btns {
+  display: flex;
+  gap: 12px;
+  justify-content: center;
+  margin-bottom: 6px;
+  flex-wrap: wrap;
+}
+
+/* Give Up button — secondary style */
+.btn-giveup {
+  padding: 13px 24px;
+  border-radius: 12px;
+  border: 2px solid rgba(239,68,68,0.4);
+  background: rgba(239,68,68,0.1);
+  color: #fca5a5;
+  font-size: 0.95rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: opacity 0.18s, transform 0.15s;
+  font-family: inherit;
+  -webkit-tap-highlight-color: transparent;
+}
+.btn-giveup:hover:not(:disabled) { opacity: 0.85; transform: translateY(-1px); }
+.btn-giveup:disabled { opacity: 0.35; cursor: default; }
+
+/* ── Desktop enhancements ── */
+@media (min-width: 1024px) {
+  .anagram-prompt { font-size: 1.55rem; }
+  .anagram-tile-font-md { font-size: 1.6rem; width: 54px; height: 60px; }
+  .anagram-tile-font-sm { font-size: 1.3rem; width: 48px; height: 54px; }
+  .anagram-tile-font-xs { font-size: 1.1rem; width: 42px; height: 48px; }
+  .anagram-answer { min-height: 76px; gap: 8px; }
+  .anagram-rack   { gap: 9px; }
+  .btn-giveup { font-size: 1.05rem; padding: 15px 28px; }
+}
+
+/* Correct-answer reveal row (shown below wrong tiles on wrong submission) */
+.anagram-correct-row {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 6px;
+  margin-top: 10px;
+}
+/* Prevent pointer events on reveal tiles — they are display-only */
+.tile-answer-reveal {
+  cursor: default;
+  pointer-events: none;
+  animation: tileDropIn 0.22s ease both;
+}
+@media (min-width: 1024px) {
+  .anagram-correct-row { gap: 8px; margin-top: 12px; }
+}

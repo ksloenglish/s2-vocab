@@ -1156,6 +1156,39 @@ function makeQ_Fill2(item, fullPool) {
   };
 }
 
+// ============================================================
+// ANAGRAM QUESTION BUILDER
+// ============================================================
+/**
+ * Build an anagram question for a single-word item.
+ * The student is shown the definition and must arrange shuffled letter tiles
+ * to spell the word.
+ * @param {object} item - vocabulary item (must be a word, not a phrase)
+ * @returns {object} question object with type 'anagram'
+ */
+function makeQ_Anagram(item) {
+  const word = item.item.toLowerCase();
+  // Shuffle the letters using Fisher-Yates
+  const letters = word.split('');
+  for (let i = letters.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [letters[i], letters[j]] = [letters[j], letters[i]];
+  }
+  // Avoid accidentally producing the correct order — reshuffle once if needed
+  if (letters.join('') === word && letters.length > 1) {
+    const j = Math.floor(Math.random() * (letters.length - 1)) + 1;
+    [letters[0], letters[j]] = [letters[j], letters[0]];
+  }
+  return {
+    type: 'anagram',
+    item,
+    prompt: italicise(getDef(item)),
+    letters,          // shuffled array of single-character strings
+    answer: word,     // lowercase correct spelling
+    revealDef: italicise(getDef(item))
+  };
+}
+
 function makeQ_Match(items) {
   const selected = items.slice(0, 5);
   const defs = shuffle(selected.map(i => getDef(i)));
@@ -1213,7 +1246,7 @@ function generateQuestions(totalQ) {
   // split-blank sentenceForm (contains ' / ' AND sentence has two {BLANK} tokens) is automatically
   // promoted to fill2. This ensures split-blank items always get the two-input question type.
   const nonMatchQs = [];
-  const types = ['1A', '1B', '1C', 'fill'];
+  const types = ['1A', '1B', '1C', 'fill', 'anagram'];
   let typeIndex = 0;
   for (const item of allItems) {
     // Split-blank items (sentenceForm with ' / ' AND two {BLANK} tokens) ALWAYS get fill2,
@@ -1230,6 +1263,8 @@ function generateQuestions(totalQ) {
     if (t === '1A') nonMatchQs.push(makeQ_1A(item, fullPool));
     else if (t === '1B') nonMatchQs.push(makeQ_1B(item, fullPool));
     else if (t === '1C') nonMatchQs.push(makeQ_1C(item, fullPool));
+    else if (t === 'anagram' && item.pos !== 'phrase') nonMatchQs.push(makeQ_Anagram(item));
+    else if (t === 'anagram' && item.pos === 'phrase') nonMatchQs.push(makeQ_Fill(item, fullPool));
     else nonMatchQs.push(makeQ_Fill(item, fullPool));
   }
   shuffle(nonMatchQs);
