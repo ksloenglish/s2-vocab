@@ -1293,23 +1293,52 @@ function generateQuestions(totalQ) {
   // Add all fill2 items first
   fill2Items.forEach(item => nonMatchQs.push(makeQ_Fill2(item, fullPool)));
 
-  // For regular items, assign types using a balanced round-robin over a shuffled type sequence.
-  // Types available to ALL items (phrases fall back from anagram → fill):
-  const BASE_TYPES = ['1A', '1B', '1C', 'fill', 'anagram'];
+  // For regular items, assign types using a two-pool quota system.
+  // Anagram slots are assigned ONLY to word items (phrases cannot be anagrams).
+  // This prevents the phrase→fill fallback from reducing anagram frequency.
+  //
+  // Strategy:
+  //   1. Split regularItems into wordItems and phraseItems.
+  //   2. Calculate how many anagram slots to assign (floor(n/5), same quota as other types).
+  //   3. Assign anagram slots to wordItems only; assign the remaining types evenly across all items.
+  //   4. Shuffle the final assignment array so types are spread across the exercise.
+  const wordItems = regularItems.filter(item => item.pos !== 'phrase');
+  const phraseItems = regularItems.filter(item => item.pos === 'phrase');
   const n = regularItems.length;
-  // Build a type assignment array of length n with as even a distribution as possible.
-  // Each type gets floor(n/5) slots; remainder slots are distributed one-by-one.
-  const typeAssignments = [];
+  const BASE_TYPES = ['1A', '1B', '1C', 'fill', 'anagram'];
   const perType = Math.floor(n / BASE_TYPES.length);
   const typeRemainder = n - perType * BASE_TYPES.length;
-  BASE_TYPES.forEach((t, i) => {
-    const count = perType + (i < typeRemainder ? 1 : 0);
-    for (let j = 0; j < count; j++) typeAssignments.push(t);
-  });
-  shuffle(typeAssignments); // randomise the order so types are spread across the exercise
-  regularItems.forEach((item, idx) => {
-    let t = typeAssignments[idx] || '1B';
-    // Phrases cannot be anagrams — fall back to fill
+  // Build per-type counts (same quota logic as before)
+  const typeCounts = {};
+  BASE_TYPES.forEach((t, i) => { typeCounts[t] = perType + (i < typeRemainder ? 1 : 0); });
+  // Cap anagram count to available word items
+  const anagramCount = Math.min(typeCounts['anagram'], wordItems.length);
+  const anagramShortfall = typeCounts['anagram'] - anagramCount;
+  typeCounts['anagram'] = anagramCount;
+  typeCounts['fill'] += anagramShortfall; // redistribute shortfall to fill
+  // Build assignment arrays: anagram slots go to wordItems, all others go to all items
+  const anagramAssignments = Array(anagramCount).fill('anagram');
+  const nonAnagramTypes = ['1A', '1B', '1C', 'fill'];
+  const nonAnagramAssignments = [];
+  nonAnagramTypes.forEach(t => { for (let j = 0; j < typeCounts[t]; j++) nonAnagramAssignments.push(t); });
+  shuffle(anagramAssignments);
+  shuffle(nonAnagramAssignments);
+  // Assign: word items get either anagram or non-anagram; phrase items get non-anagram only
+  // Interleave by shuffling all items but routing anagram slots to word items first
+  const shuffledWords = shuffle([...wordItems]);
+  const shuffledPhrases = shuffle([...phraseItems]);
+  // Word items: first anagramCount get anagram, rest get non-anagram
+  const wordNonAnagramCount = shuffledWords.length - anagramCount;
+  // Non-anagram slots for words + all phrase slots = total non-anagram assignments needed
+  // (already built above with correct total count)
+  // Build a combined ordered list: pair each item with its type, then shuffle together
+  const pairedItems = [];
+  shuffledWords.slice(0, anagramCount).forEach(item => pairedItems.push({ item, type: 'anagram' }));
+  const nonAnagramItems = [...shuffledWords.slice(anagramCount), ...shuffledPhrases];
+  nonAnagramItems.forEach((item, idx) => pairedItems.push({ item, type: nonAnagramAssignments[idx] || '1B' }));
+  shuffle(pairedItems); // spread all types evenly across the exercise
+  pairedItems.forEach(({ item, type: t }) => {
+    // Safety fallback: phrases should never reach anagram (guaranteed by two-pool logic above)
     if (t === 'anagram' && item.pos === 'phrase') t = 'fill';
     if (t === '1A') nonMatchQs.push(makeQ_1A(item, fullPool));
     else if (t === '1B') nonMatchQs.push(makeQ_1B(item, fullPool));
