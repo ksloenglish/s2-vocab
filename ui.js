@@ -669,7 +669,13 @@ function endExercise() {
       }
       const posDisplay = item.pos === 'phrase' ? 'phr' : (item.pos || '');
       const posHTML = posDisplay ? `<span class="vi-pos">${posDisplay}</span>` : '';
-      div.innerHTML = `${labelHTML}<span class="vi-word">${italicise(item.item)}</span>${posHTML}<span class="vi-def">${italicise(getDef(item))}</span>`;
+      // CEFR level badge (words only — phrases never have cefrLevel)
+      let cefrHTML = '';
+      if (item.cefrLevel && item.pos !== 'phrase') {
+        const cefrKey = item.cefrLevel.toLowerCase().replace(/[^a-z0-9]/g, '');
+        cefrHTML = `<span class="vi-cefr cefr-${cefrKey}">${item.cefrLevel}</span>`;
+      }
+      div.innerHTML = `${labelHTML}<span class="vi-word">${italicise(item.item)}</span>${posHTML}${cefrHTML}<span class="vi-def">${italicise(getDef(item))}</span>`;
       container.appendChild(div);
     });
   }

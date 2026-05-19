@@ -150,6 +150,7 @@ const UNITS = {
       {
         item: "obsession",
         pos: "n",
+        cefrLevel: "C1",
         defEn: "sb/sth that you think about all the time",
         defZh: "念念不忘的人或事",
         sentence: "Her {BLANK} with social media meant she checked her phone every few minutes.",
@@ -190,6 +191,7 @@ const UNITS = {
       {
         item: "cruel",
         pos: "adj",
+        cefrLevel: "B1",
         defEn: "having a desire to cause pain and make sb suffer",
         defZh: "殘忍的",
         sentence: "It is {BLANK} to leave a dog alone in a hot car.",
@@ -207,6 +209,7 @@ const UNITS = {
       {
         item: "approach",
         pos: "v",
+        cefrLevel: "B2",
         defEn: "to come nearer to sb/sth",
         defZh: "靠近；接近",
         sentence: "We could just see the train {BLANK} in the distance.",
@@ -215,6 +218,7 @@ const UNITS = {
       {
         item: "aggressive",
         pos: "adj",
+        cefrLevel: "B2",
         defEn: "behaving in an angry and violent way",
         defZh: "富於攻擊性的",
         sentence: "If I criticise him, he gets {BLANK} and starts shouting.",
@@ -223,6 +227,7 @@ const UNITS = {
       {
         item: "wander",
         pos: "v",
+        cefrLevel: "B2",
         defEn: "to walk around slowly without any clear purpose",
         defZh: "閒逛；遊蕩",
         sentence: "We spent the morning {BLANK} around the old part of the city.",
@@ -239,6 +244,7 @@ const UNITS = {
       {
         item: "upset",
         pos: "v",
+        cefrLevel: "B1",
         defEn: "to change the usual or expected state of sth",
         defZh: "打亂；擾亂",
         sentence: "Any mechanical problems would {BLANK} our plans of driving across the desert.",
@@ -247,6 +253,7 @@ const UNITS = {
       {
         item: "short-sighted",
         pos: "adj",
+        cefrLevel: "C2",
         defEn: "not thinking enough about how an action will affect the future",
         defZh: "目光短淺的",
         sentence: "It's very {BLANK} of the government not to invest in technological research.",
@@ -395,6 +402,7 @@ const UNITS = {
       {
         item: "possess",
         pos: "v",
+        cefrLevel: "B2",
         defEn: "to have or own something",
         defZh: "擁有；具有",
         sentence: "She {BLANK} many trendy outfits that showcased her great sense of style.",
@@ -403,6 +411,7 @@ const UNITS = {
       {
         item: "reflect",
         pos: "v",
+        cefrLevel: "B1",
         defEn: "to show, express, or be a sign of something",
         defZh: "顯示；反映",
         sentence: "The statistics from last year {BLANK} a change in people's spending habits.",
@@ -411,6 +420,7 @@ const UNITS = {
       {
         item: "obstacle",
         pos: "n",
+        cefrLevel: "B2",
         defEn: "sth that makes it difficult for you to do sth",
         defZh: "障礙",
         sentence: "Overcoming {BLANK} allows us to discover our true potential.",
@@ -419,6 +429,7 @@ const UNITS = {
       {
         item: "invariably",
         pos: "adv",
+        cefrLevel: "C2",
         defEn: "always",
         defZh: "總是",
         sentence: "Life {BLANK} gives us unexpected challenges that test our determination.",
@@ -427,6 +438,7 @@ const UNITS = {
       {
         item: "emerge",
         pos: "v",
+        cefrLevel: "B2",
         defEn: "to start to appear or become known",
         defZh: "出現",
         sentence: "She's the most exciting K-pop singer to {BLANK} on the pop scene for a decade.",
@@ -435,6 +447,7 @@ const UNITS = {
       {
         item: "mature",
         pos: "adj",
+        cefrLevel: "C1",
         defEn: "completely grown and developed",
         defZh: "成熟的",
         sentence: "As we become {BLANK}, we gain a deeper understanding of ourselves and the world around us.",
@@ -443,6 +456,7 @@ const UNITS = {
       {
         item: "elderly",
         pos: "adj",
+        cefrLevel: "B2",
         defEn: "old",
         defZh: "年老的",
         sentence: "Please give up your seat to an {BLANK} or disabled person if they require it.",
@@ -484,6 +498,7 @@ const UNITS = {
       {
         item: "essential",
         pos: "adj",
+        cefrLevel: "B1",
         defEn: "necessary or needed",
         defZh: "必要的",
         sentence: "Water is {BLANK} to living things.",
@@ -492,6 +507,7 @@ const UNITS = {
       {
         item: "risky",
         pos: "adj",
+        cefrLevel: "B2",
         defEn: "involving the possibility of sth bad happening",
         defZh: "有風險的",
         sentence: "We shouldn't go there. It's too {BLANK}.",
@@ -500,6 +516,7 @@ const UNITS = {
       {
         item: "apply",
         pos: "v",
+        cefrLevel: "A2",
         defEn: "to make use of sth or use it for a practical purpose",
         defZh: "使用",
         sentence: "He wants a job in which he can {BLANK} his foreign languages.",
@@ -650,6 +667,7 @@ const UNITS = {
       {
         item: "suppress",
         pos: "v",
+        cefrLevel: "C1",
         defEn: "to prevent sth from being expressed",
         defZh: "抑壓",
         sentence: "He couldn't {BLANK} the excitement in his voice.",
@@ -658,6 +676,7 @@ const UNITS = {
       {
         item: "incident",
         pos: "n",
+        cefrLevel: "B2",
         defEn: "an event that is either unpleasant or unusual",
         defZh: "（不愉快或不尋常的）事件",
         sentence: "A youth was seriously injured in a shooting {BLANK} on Saturday night.",
@@ -666,6 +685,7 @@ const UNITS = {
       {
         item: "assume",
         pos: "v",
+        cefrLevel: "B2",
         defEn: "to accept sth to be true without proof",
         defZh: "假設",
         sentence: "He {BLANK} that we knew each other because we went to the same school, but that was not true.",
@@ -682,6 +702,7 @@ const UNITS = {
       {
         item: "deny",
         pos: "v",
+        cefrLevel: "B2",
         defEn: "to say that something is not true",
         defZh: "否認；否定",
         sentence: "John {BLANK} that he had broken the window, but I was sure he had done it.",
@@ -690,6 +711,7 @@ const UNITS = {
       {
         item: "complicated",
         pos: "adj",
+        cefrLevel: "B2",
         defEn: "involving a lot of different parts, in a way that is difficult to understand",
         defZh: "複雜的；麻煩的；費解的",
         sentence: "The relationship is a bit {BLANK}. He's my mother's cousin's daughter's child.",
@@ -698,6 +720,7 @@ const UNITS = {
       {
         item: "conflict",
         pos: "n",
+        cefrLevel: "B2",
         defEn: "an active disagreement between people",
         defZh: "衝突；分歧；爭論",
         sentence: "There was a lot of {BLANK} between him and his father.",
@@ -715,6 +738,7 @@ const UNITS = {
       {
         item: "encounter",
         pos: "v",
+        cefrLevel: "B2",
         defEn: "to experience sth, especially sth unpleasant",
         defZh: "遭遇；遇上",
         sentence: "When did you first {BLANK} these difficulties?",
@@ -723,6 +747,7 @@ const UNITS = {
       {
         item: "eventually",
         pos: "adv",
+        cefrLevel: "B1",
         defEn: "in the end, especially after a long time or a lot of effort",
         defZh: "終於",
         sentence: "It might take him ages but he will do it {BLANK}.",
@@ -731,6 +756,7 @@ const UNITS = {
       {
         item: "circumstance",
         pos: "n",
+        cefrLevel: "B2",
         defEn: "an event that makes a situation the way it is",
         defZh: "形勢",
         sentence: "I think she coped very well under the {BLANK}, which were very difficult.",
@@ -739,6 +765,7 @@ const UNITS = {
       {
         item: "resilience",
         pos: "n",
+        cefrLevel: "C2",
         defEn: "the ability to be happy or successful again after sth difficult has happened",
         defZh: "抗逆能力",
         sentence: "He showed great {BLANK} in fighting back from a losing position to win the game.",
@@ -747,6 +774,7 @@ const UNITS = {
       {
         item: "foster",
         pos: "v",
+        cefrLevel: "C1",
         defEn: "to encourage the development of ideas or feelings",
         defZh: "促進；培養",
         sentence: "I'm trying to {BLANK} an interest in classical music in my children.",

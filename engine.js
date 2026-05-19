@@ -1511,6 +1511,18 @@ function fcRender() {
   // Display 'phr' instead of 'phrase' for brevity
   const posLabel = p => p === 'phrase' ? 'phr' : (p || '');
   document.getElementById('fc-pos').textContent = posLabel(card.pos);
+  // CEFR level badge (words only — phrases never have cefrLevel)
+  const fcCefrEl = document.getElementById('fc-cefr');
+  if (card.cefrLevel && card.pos !== 'phrase') {
+    const cefrKey = card.cefrLevel.toLowerCase().replace(/[^a-z0-9]/g, '');
+    fcCefrEl.textContent = card.cefrLevel;
+    fcCefrEl.className = 'fc-cefr cefr-' + cefrKey;
+    fcCefrEl.style.display = '';
+  } else {
+    fcCefrEl.textContent = '';
+    fcCefrEl.className = 'fc-cefr';
+    fcCefrEl.style.display = 'none';
+  }
   document.getElementById('fc-item').innerHTML = fcItalicisePlaceholders(card.item || '');
 
   // Back face
