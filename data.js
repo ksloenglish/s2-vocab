@@ -20,7 +20,7 @@ const UNITS = {
         pos: "phrase",
         defEn: "to look the same as surrounding people or things",
         defZh: "融入",
-        sentence: "The octopus protects herself from predators—changing her shape and colour to {BLANK} with her surroundings.",
+        sentence: "The octopus protects herself from predators — changing her shape and colour to {BLANK} with her surroundings.",
         sentenceForm: "blend in"
       },
       {
@@ -101,7 +101,7 @@ const UNITS = {
         pos: "phrase",
         defEn: "to be familiar with sb/sth",
         defZh: "習慣於",
-        sentence: "We don't want them to {BLANK} being fed with human food—especially processed foods loaded with sugar or salt.",
+        sentence: "We don't want them to {BLANK} being fed with human food — especially processed foods loaded with sugar or salt, which are unhealthy for them.",
         sentenceForm: "get accustomed to"
       },
       {
@@ -144,7 +144,7 @@ const UNITS = {
         pos: "adj",
         defEn: "extremely interested",
         defZh: "極感興趣的",
-        sentence: "I was {BLANK} by the way the magician made the rabbit disappear.",
+        sentence: "I was {BLANK} to hear about his travels in Japan.",
         sentenceForm: "fascinated"
       },
       {
@@ -153,7 +153,7 @@ const UNITS = {
         cefrLevel: "C1",
         defEn: "sb/sth that you think about all the time",
         defZh: "念念不忘的人或事",
-        sentence: "Her {BLANK} with social media meant she checked her phone every few minutes.",
+        sentence: "The kids have an {BLANK} with computer games.",
         sentenceForm: "obsession"
       },
       {
@@ -161,7 +161,7 @@ const UNITS = {
         pos: "adj",
         defEn: "skilfully made or planned",
         defZh: "巧妙的",
-        sentence: "The engineer came up with an {BLANK} solution to fix the broken bridge.",
+        sentence: "Johnny is so {BLANK} - he can make the most remarkable artwork from the most ordinary materials.",
         sentenceForm: "ingenious"
       },
       {
@@ -169,7 +169,7 @@ const UNITS = {
         pos: "n",
         defEn: "everything that is around or near sb/sth",
         defZh: "環境",
-        sentence: "She felt calm and relaxed in the peaceful {BLANK} of the countryside.",
+        sentence: "Some butterflies blend in with their {BLANK} so that it's difficult to see them.",
         sentenceForm: "surroundings"
       },
       {
@@ -177,7 +177,7 @@ const UNITS = {
         pos: "adj",
         defEn: "illegal",
         defZh: "非法的",
-        sentence: "The police arrested the man for selling {BLANK} goods at the market.",
+        sentence: "They got in trouble for selling {BLANK} copies of games and movies online.",
         sentenceForm: "illicit"
       },
       {
@@ -185,8 +185,8 @@ const UNITS = {
         pos: "n",
         defEn: "sb who has done something wrong",
         defZh: "過失者",
-        sentence: "The teacher asked who had broken the window, but the {BLANK} refused to come forward.",
-        sentenceForm: "culprit"
+        sentence: "The police hope the public will help them to find all the {BLANK}.",
+        sentenceForm: "culprits"
       },
       {
         item: "cruel",
@@ -194,7 +194,7 @@ const UNITS = {
         cefrLevel: "B1",
         defEn: "having a desire to cause pain and make sb suffer",
         defZh: "殘忍的",
-        sentence: "It is {BLANK} to leave a dog alone in a hot car.",
+        sentence: "It's so {BLANK} to keep a dog chained up like that all the time.",
         sentenceForm: "cruel"
       },
       // TEXT 2
