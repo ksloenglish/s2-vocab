@@ -541,7 +541,7 @@ const UNITS = {
       {
         item: "during times of adversity",
         pos: "phrase",
-        defEn: "when someone faces challenges or difficulties",
+        defEn: "when sb faces challenges or difficulties",
         defZh: "在逆境中",
         sentence: "Participants were asked to rank responses according to how likely they would provide comfort {BLANK}.",
         sentenceForm: "during times of adversity"
@@ -559,7 +559,7 @@ const UNITS = {
         pos: "phrase",
         defEn: "to feel worried or unhappy because you have done sth wrong",
         defZh: "為……感到內疚",
-        sentence: "It sounded like I should {BLANK} being sad.",
+        sentence: "An acquaintance told me to cheer up and not look so dejected - it sounded like I should {BLANK} being sad.",
         sentenceForm: "feel guilty about"
       },
       {
@@ -573,25 +573,25 @@ const UNITS = {
       {
         item: "be in favour of",
         pos: "phrase",
-        defEn: "to support or agree with sth",
+        defEn: "to support or approve of sth",
         defZh: "贊同；支持",
-        sentence: "Are you {BLANK} the new policy?",
+        sentence: "On the other hand, participants were {BLANK} statements that did not deny negative emotions.",
         sentenceForm: "in favour of"
       },
       {
         item: "face up to",
         pos: "phrase",
-        defEn: "to accept and deal with sth difficult or unpleasant",
+        defEn: "to accept that a difficult situation exists",
         defZh: "接受；正視",
-        sentence: "You need to {BLANK} the fact that you are not going to pass without studying.",
+        sentence: "My counsellor acknowledged my feelings and encouraged me to {BLANK} my problems instead of avoiding them.",
         sentenceForm: "face up to"
       },
       {
         item: "educate sb about",
         pos: "phrase",
         defEn: "to teach sb about a particular subject",
-        defZh: "教導某人有關……",
-        sentence: "Schools should {BLANK} mental health.",
+        defZh: "教導（某人）有關於（某事）",
+        sentence: "The Counselling Department should {BLANK} ways to care for people experiencing negative emotions.",
         sentenceForm: "educate students about",
         sbSubstitute: "students"
       },
@@ -599,50 +599,50 @@ const UNITS = {
       {
         item: "keep things in perspective",
         pos: "phrase",
-        defEn: "to think about a situation in a balanced way without exaggerating",
-        defZh: "保持正確的看法；不誇大其詞",
-        sentence: "It's important to {BLANK} and not panic over small setbacks.",
+        defEn: "to think about a situation or problem in a reasonable way",
+        defZh: "正確看待問題",
+        sentence: "What manga and anime characters experience in the stories may help us {BLANK}.",
         sentenceForm: "keep things in perspective"
       },
       {
         item: "stay optimistic",
         pos: "phrase",
-        defEn: "to remain hopeful and positive about the future",
+        defEn: "to keep believing that good things will happen in the future",
         defZh: "保持樂觀",
-        sentence: "Even when things are tough, try to {BLANK}.",
+        sentence: "Manga and anime often teach us to {BLANK} as the characters tackle obstacles with determination.",
         sentenceForm: "stay optimistic"
       },
       {
         item: "take sth in sb's stride",
         pos: "phrase",
-        defEn: "to deal with a problem calmly without letting it affect you",
-        defZh: "從容應對",
-        sentence: "She {BLANK} and continued with her work.",
-        sentenceForm: "took the criticism in her stride",
-        sbSubstitute: "the criticism"
+        defEn: "to deal with a problem calmly and not to allow it to influence what you are doing",
+        defZh: "從容處理，對……處之泰然",
+        sentence: "If the characters can crack a smile after a failure or defeat and {BLANK}, why can't we keep our chin up?",
+        sentenceForm: "take it in their stride",
+        sbSubstitute: "their"
       },
       {
         item: "play a part in",
         pos: "phrase",
-        defEn: "to be involved in or contribute to sth",
-        defZh: "在……中扮演角色；對……有貢獻",
-        sentence: "Exercise can {BLANK} improving your mental health.",
+        defEn: "to help to achieve sth",
+        defZh: "（在……中）起作用",
+        sentence: "Manga and anime communities also {BLANK} building positivity among teenagers.",
         sentenceForm: "play a part in"
       },
       {
         item: "struggle with",
         pos: "phrase",
-        defEn: "to have difficulty dealing with sth",
-        defZh: "努力應付；與……搏鬥",
-        sentence: "Many teenagers {BLANK} the pressure of exams.",
+        defEn: "to fight against sb/sth in order to prevent a bad result",
+        defZh: "鬥爭，抗爭",
+        sentence: "Some teenagers, despite seeing friends at school every day, {BLANK} isolation and loneliness.",
         sentenceForm: "struggle with"
       },
       {
         item: "offer relief from",
         pos: "phrase",
-        defEn: "to provide sth that reduces pain, stress, or difficulty",
-        defZh: "提供……的緩解",
-        sentence: "Listening to music can {BLANK} stress.",
+        defEn: "to reduce (a negative feeling)",
+        defZh: "緩解（某負面情緒）",
+        sentence: "Manga and anime may {BLANK} everyday stress and loneliness.",
         sentenceForm: "offer relief from"
       },
       {
@@ -650,7 +650,7 @@ const UNITS = {
         pos: "phrase",
         defEn: "to be all around sb/sth",
         defZh: "被……包圍",
-        sentence: "{BLANK} like-minded people can really boost your confidence.",
+        sentence: "{BLANK} like-minded people can really boost your confidence, making you feel like you can take on the world.",
         sentenceForm: "Being surrounded by"
       },
       {
