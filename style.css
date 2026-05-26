@@ -341,9 +341,10 @@
   .vocab-list::-webkit-scrollbar-track { background: var(--card2); border-radius: 99px; }
   .vocab-list::-webkit-scrollbar-thumb { background: var(--border); border-radius: 99px; }
   .vocab-item { display: flex; gap: 10px; align-items: flex-start; padding: 10px 14px; background: var(--card2); border-radius: 10px; border: 1px solid var(--border); }
-  .vocab-item .vi-word { font-weight: 700; color: var(--text); min-width: 140px; font-size: 0.9rem; }
+  .vocab-item .vi-word { font-weight: 700; color: var(--text); flex: 0 0 auto; max-width: 38%; font-size: 0.9rem; word-break: break-word; }
+  .vocab-item .vi-def { color: var(--text-muted); font-size: 0.88rem; line-height: 1.4; flex: 1 1 0; min-width: 0; }
   .vocab-item .vi-pos { font-size: 0.7rem; font-weight: 700; font-style: italic; flex-shrink: 0; color: #67e8f9; background: rgba(6,182,212,0.12); border: 1px solid rgba(6,182,212,0.3); border-radius: 6px; padding: 1px 6px; align-self: center; letter-spacing: 0.02em; }
-  .vocab-item .vi-def { color: var(--text-muted); font-size: 0.88rem; line-height: 1.4; }
+  /* vi-def flex rule already set above */
   /* CEFR level badge — results screen */
   .vocab-item .vi-cefr { font-size: 0.65rem; font-weight: 800; flex-shrink: 0; border-radius: 5px; padding: 1px 5px; align-self: center; letter-spacing: 0.04em; color: #fff; }
   .vi-cefr.cefr-a1 { background: #16a34a; }
