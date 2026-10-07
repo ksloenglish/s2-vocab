@@ -808,6 +808,268 @@ const UNITS = {
     ]
   },
 
+  "2nd-4": {
+    label: "Unit 4",
+    term: 2,
+    phrases: [
+      // TEXT 1
+      {
+        item: "lose interest in",
+        pos: "phrase",
+        defEn: "to stop finding sth enjoyable",
+        defZh: "對...失去興趣",
+        sentence: "We thrive on new experiences, quickly {BLANK} familiar sights and well-tested travel packages.",
+        sentenceForm: "lose interest in"
+      },
+      {
+        item: "seek out",
+        pos: "phrase",
+        defEn: "to look for sb/sth",
+        defZh: "尋找",
+        sentence: "We constantly {BLANK} new holiday destinations, new ways to travel and new accommodation options.",
+        sentenceForm: "seek out"
+      },
+      {
+        item: "give rise to",
+        pos: "phrase",
+        defEn: "to cause sth",
+        defZh: "引起",
+        sentence: "The bold souls who venture into the unknown blaze the trail for the rest of us, and {BLANK} new travel trends.",
+        sentenceForm: "give rise to"
+      },
+      {
+        item: "appeal to",
+        pos: "phrase",
+        defEn: "to interest or attract sb",
+        defZh: "對...有吸引力",
+        sentence: "Dark tourism is a travel trend that might not {BLANK} your average package tourist.",
+        sentenceForm: "appeal to"
+      },
+      {
+        item: "be associated with",
+        pos: "phrase",
+        defEn: "to be connected with",
+        defZh: "與...相關的",
+        sentence: "So-called dark tourism involves travelling to places which {BLANK} death and tragedy, like scenes of famous crimes.",
+        sentenceForm: "are associated with"
+      },
+      {
+        item: "do more harm than good",
+        pos: "phrase",
+        defEn: "to be damaging and not helpful",
+        defZh: "弊大於利",
+        sentence: "Critics feel some voluntourists {BLANK}, and that they should let the experts take over.",
+        sentenceForm: "do more harm than good"
+      },
+      {
+        item: "rather than",
+        pos: "phrase",
+        isVerbLed: false,
+        defEn: "instead of",
+        defZh: "而不是",
+        sentence: "{BLANK} booking costly guided package tours, backpackers prefer to do things on the cheap.",
+        sentenceForm: "Rather than"
+      },
+      {
+        item: "make sacrifices",
+        pos: "phrase",
+        defEn: "to give up sth for sth more important",
+        defZh: "作出犧牲",
+        sentence: "Be aware though, that if you want to save money, you must be prepared to {BLANK} some {BLANK}.",
+        sentenceForm: "make / sacrifices"
+      },
+      // TEXT 2
+      {
+        item: "take the plunge",
+        pos: "phrase",
+        defEn: "to make a decision to do sth",
+        defZh: "決心行動",
+        sentence: "It was a two-for-one deal, so we {BLANK}!",
+        sentenceForm: "took the plunge"
+      },
+      {
+        item: "squeeze A into B",
+        pos: "phrase",
+        defEn: "to succeed in getting sb/sth into a small space",
+        defZh: "將 A 擠進 B",
+        sentence: "It's also my first trip as a backpacker and I wonder if I can {BLANK} everything {BLANK} my backpack.",
+        sentenceForm: "squeeze / into"
+      },
+      {
+        item: "prefer to",
+        pos: "phrase",
+        defEn: "to like one thing rather than another",
+        defZh: "更喜愛",
+        sentence: "Dad {BLANK} buy a travel package and have the travel agent take care of everything.",
+        sentenceForm: "prefers to"
+      },
+      {
+        item: "turn up",
+        pos: "phrase",
+        defEn: "to be found unexpectedly",
+        defZh: "突然出現",
+        sentence: "It's a short flight, so at least jet lag won't be a problem … I just hope our bags {BLANK} at the baggage claim!",
+        sentenceForm: "turn up"
+      },
+      {
+        item: "meet up with",
+        pos: "phrase",
+        defEn: "to meet sb in order to do sth together",
+        defZh: "與...會面",
+        sentence: "On Day 1, we {BLANK} our guide in Manila and board the tour bus.",
+        sentenceForm: "meet up with"
+      },
+      {
+        item: "take in",
+        pos: "phrase",
+        defEn: "to go to see or visit sth",
+        defZh: "去參觀",
+        sentence: "After that, we {BLANK} the Hanging Coffins of Sagada, a famous but creepy burial site.",
+        sentenceForm: "take in"
+      },
+      {
+        item: "be eager to",
+        pos: "phrase",
+        defEn: "to want very much to do or have sth",
+        defZh: "渴望（做某事）",
+        sentence: "I {BLANK} get to know a few locals—I hope they'll be friendly and hospitable!",
+        sentenceForm: "am eager to"
+      },
+      {
+        item: "be keen to",
+        pos: "phrase",
+        defEn: "to want very much to do or have sth",
+        defZh: "渴望（做某事）",
+        sentence: "I'm also {BLANK} discover how eco-friendly the guest houses are while being different from the hotels we usually stay in.",
+        sentenceForm: "keen to"
+      }
+    ],
+    words: [
+      // TEXT 1
+      {
+        item: "constantly",
+        pos: "adv",
+        cefrLevel: "B2",
+        defEn: "all the time or often",
+        defZh: "經常地",
+        sentence: "He's {BLANK} changing his mind. It's hard to tell what his decision is.",
+        sentenceForm: "constantly"
+      },
+      {
+        item: "current",
+        pos: "adj",
+        cefrLevel: "B1",
+        defEn: "of the present time",
+        defZh: "現時的",
+        sentence: "Have you read the {BLANK} issue of Young Post?",
+        sentenceForm: "current"
+      },
+      {
+        item: "familiar",
+        pos: "adj",
+        cefrLevel: "B1",
+        defEn: "easy to recognize because of being seen before",
+        defZh: "熟悉的",
+        sentence: "I couldn't see any {BLANK} faces in the party.",
+        sentenceForm: "familiar"
+      },
+      {
+        item: "involve",
+        pos: "v",
+        cefrLevel: "A2",
+        defEn: "to include sth as a part of an activity",
+        defZh: "包含",
+        sentence: "The operation {BLANK} putting a small tube into your heart so it is challenging.",
+        sentenceForm: "involves"
+      },
+      {
+        item: "controversial",
+        pos: "adj",
+        cefrLevel: "B2",
+        defEn: "causing disagreement or discussion",
+        defZh: "引起爭議的",
+        sentence: "The decision to build the shopping mall in the middle of the park has become a {BLANK} issue in our city.",
+        sentenceForm: "controversial"
+      },
+      {
+        item: "critic",
+        pos: "n",
+        cefrLevel: "B2",
+        defEn: "a person who expresses dislikes of sb/sth",
+        defZh: "批評者",
+        sentence: "Her {BLANK} say she is leading the company to disaster.",
+        sentenceForm: "critics"
+      },
+      {
+        item: "luxury",
+        pos: "adj",
+        defEn: "expensive and of very high quality",
+        defZh: "豪華的",
+        sentence: "We stayed in a {BLANK} hotel with stunning ocean views and world-class service.",
+        sentenceForm: "luxury"
+      },
+      // TEXT 2
+      {
+        item: "wonder",
+        pos: "v",
+        cefrLevel: "B1",
+        defEn: "to think curiously",
+        defZh: "想知道",
+        sentence: "Shouldn't you phone home? Your parents will be {BLANK} where you are.",
+        sentenceForm: "wondering"
+      },
+      {
+        item: "budget",
+        pos: "adj",
+        defEn: "very cheap",
+        defZh: "低廉的",
+        sentence: "We decided to stay in a {BLANK} hotel to save money for sightseeing.",
+        sentenceForm: "budget"
+      },
+      {
+        item: "wobbly",
+        pos: "adj",
+        defEn: "not certain or confident",
+        defZh: "不肯定的",
+        sentence: "Last week I felt sure I was doing the right thing but I've started to feel a bit {BLANK} about it.",
+        sentenceForm: "wobbly"
+      },
+      {
+        item: "trek",
+        pos: "v",
+        defEn: "to make a long journey on foot",
+        defZh: "長途跋涉",
+        sentence: "We spent the day {BLANK} through forests and over mountains.",
+        sentenceForm: "trekking"
+      },
+      {
+        item: "creepy",
+        pos: "adj",
+        defEn: "strange and making you feel frightened",
+        defZh: "令人毛骨悚然的",
+        sentence: "The old, abandoned house at the end of the street has a {BLANK} vibe.",
+        sentenceForm: "creepy"
+      },
+      {
+        item: "via",
+        pos: "prep",
+        cefrLevel: "B2",
+        defEn: "through a place",
+        defZh: "經由",
+        sentence: "I received the invitation {BLANK} email, which included all the details about the upcoming event.",
+        sentenceForm: "via"
+      },
+      {
+        item: "hospitable",
+        pos: "adj",
+        defEn: "friendly and welcoming to guests and visitors",
+        defZh: "好客的",
+        sentence: "The villagers were very {BLANK} towards anyone who passed through.",
+        sentenceForm: "hospitable"
+      }
+    ]
+  },
+
   "2nd-5": {
     label: "Unit 5",
     term: 2,
@@ -1605,5 +1867,5 @@ const UNITS = {
 // Unit 6 remains in UNITS as an archive, but is deliberately unavailable to students.
 const TERM_UNITS = {
   1: ["2nd-1", "2nd-2", "2nd-3"],
-  2: ["2nd-5", "2nd-8"]
+  2: ["2nd-4", "2nd-5", "2nd-8"]
 };
