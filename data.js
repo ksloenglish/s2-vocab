@@ -314,8 +314,8 @@ const UNITS = {
         pos: "phrase",
         defEn: "to go into sb's personal space",
         defZh: "侵犯私隱",
-        sentence: "People were claiming that the telephone would {BLANK} and would make us lazy and antisocial.",
-        sentenceForm: "invade our privacy"
+        sentence: "People were claiming that the telephone would {BLANK} our {BLANK} and would make us lazy and antisocial.",
+        sentenceForm: "invade / privacy"
       },
       {
         item: "miss out on sth",
@@ -372,17 +372,16 @@ const UNITS = {
         pos: "phrase",
         defEn: "to be in charge of sth",
         defZh: "可以控制",
-        sentence: "We have very little {BLANK} who has access to that information, or what they do with it.",
-        sentenceForm: "control over"
+        sentence: "We {BLANK} very little {BLANK} who has access to that information, or what they do with it.",
+        sentenceForm: "have / control over"
       },
       {
         item: "assist sb in v-ing",
         pos: "phrase",
         defEn: "to help sb do sth",
         defZh: "協助某人做某事",
-        sentence: "Targeted ads can be helpful since they {BLANK} making decisions.",
-        sentenceForm: "assist us in",
-        sbSubstitute: "us"
+        sentence: "Targeted ads can be helpful since they {BLANK} us {BLANK} making purchasing decisions.",
+        sentenceForm: "assist / in"
       },
       {
         item: "make decisions",
@@ -397,7 +396,7 @@ const UNITS = {
         pos: "phrase",
         defEn: "to mix up A and B",
         defZh: "把 A 誤認為 B",
-        sentence: "We've seen innocent people being {BLANK} by others {BLANK} villains and becoming targets of doxing.",
+        sentence: "We've seen innocent people being {BLANK} {BLANK} villains and becoming targets of doxing.",
         sentenceForm: "mistaken / for"
       },
       {
@@ -405,8 +404,8 @@ const UNITS = {
         pos: "phrase",
         defEn: "not to go into sb's personal matters",
         defZh: "尊重私隱",
-        sentence: "We should also {BLANK} other people's privacy, such as not posting their photos without their knowledge.",
-        sentenceForm: "respect"
+        sentence: "We should also {BLANK} other people's {BLANK}, such as not posting their photos without their knowledge.",
+        sentenceForm: "respect / privacy"
       }
     ],
     words: [
@@ -674,8 +673,8 @@ const UNITS = {
         pos: "phrase",
         defEn: "to make a plan to follow regularly",
         defZh: "養成習慣",
-        sentence: "Try to do proper exercise once you {BLANK} a fitness {BLANK}.",
-        sentenceForm: "develop / routine"
+        sentence: "Try to do proper exercise once you've {BLANK} fitness {BLANK}.",
+        sentenceForm: "developed a / routine"
       }
     ],
     words: [

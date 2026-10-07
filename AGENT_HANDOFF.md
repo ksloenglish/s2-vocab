@@ -73,6 +73,7 @@ Part-of-speech labels use italic parentheticals without a full stop: `(n)`, `(v)
 - Each item needs accurate `item`, `pos`, `defEn`, `defZh`, `sentence` and `sentenceForm` data.
 - Use British spelling and accurate, Oxford-style definitions; `sth`, `sb`, `sb's` and `be` are expected placeholders.
 - `sentenceForm` records the form appearing in the sentence. A genuinely split phrase uses ` / ` and the sentence must contain two `{BLANK}` tokens.
+- Preserve the textbook sentence. When source context separates two parts of a target phrase, use a source-faithful `fill2` mapping (e.g. `have / control over` around “very little”); never rewrite, shorten, add to, or change the tense of the sentence merely to force a single blank or base-form answer.
 - `cefrLevel` is optional and is for confirmed **word** matches only; do not infer a level or add it to phrases.
 - `isVerbLed: false` is an optional **phrase-only** field for fixed expressions, noun phrases, connectors and participial phrases that must never be conjugated as 1B distractors. Use it only when the phrase is genuinely not verb-led; existing automatic guards still cover article-, preposition-, modal- and `be`-led phrases.
 - Register a new unit in both `UNITS` and `TERM_UNITS`.
