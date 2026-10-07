@@ -74,11 +74,13 @@ Part-of-speech labels use italic parentheticals without a full stop: `(n)`, `(v)
 - Use British spelling and accurate, Oxford-style definitions; `sth`, `sb`, `sb's` and `be` are expected placeholders.
 - `sentenceForm` records the form appearing in the sentence. A genuinely split phrase uses ` / ` and the sentence must contain two `{BLANK}` tokens.
 - `cefrLevel` is optional and is for confirmed **word** matches only; do not infer a level or add it to phrases.
+- `isVerbLed: false` is an optional **phrase-only** field for fixed expressions, noun phrases, connectors and participial phrases that must never be conjugated as 1B distractors. Use it only when the phrase is genuinely not verb-led; existing automatic guards still cover article-, preposition-, modal- and `be`-led phrases.
 - Register a new unit in both `UNITS` and `TERM_UNITS`.
 
 ### Important safeguards
 
 - Preserve the part-of-speech guard in distractor generation: nouns, adjectives, adverbs, article-led phrases, preposition-led phrases, `be`-led phrases and modal-led forms must not be inappropriately conjugated. This prevents errors such as `woulded rather`.
+- Preserve the explicit `isVerbLed: false` safeguard. It prevents fixed phrases such as `no matter` and `special offer` from being malformed as tense-matched 1B distractors.
 - Preserve `italicise()` behaviour for `sth`, `sb`, `sb's` and `be`, including after `/`.
 - Preserve the mobile tap guard (`-webkit-tap-highlight-color: transparent`) and hover-media-query rules for option buttons.
 - Chinese must remain the default definition language on the title screen.

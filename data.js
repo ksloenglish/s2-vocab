@@ -1,7 +1,277 @@
 // ============================================================
-// VOCABULARY DATA – UNITS 5, 6, 8
+// VOCABULARY DATA – UNITS 1, 5, 6 (archived), 8
 // ============================================================
 const UNITS = {
+  "2nd-1": {
+    label: "Unit 1",
+    term: 1,
+    phrases: [
+      // TEXT 1
+      {
+        item: "no matter",
+        pos: "phrase",
+        isVerbLed: false,
+        defEn: "regardless of",
+        defZh: "不管",
+        sentence: "{BLANK} what type of online shop you visit, they're tracking your every click.",
+        sentenceForm: "No matter"
+      },
+      {
+        item: "be combined with sth",
+        pos: "phrase",
+        defEn: "to be mixed with sth else",
+        defZh: "加上",
+        sentence: "This data might be {BLANK} information collected from other sources to create what's known as big data.",
+        sentenceForm: "combined with"
+      },
+      {
+        item: "formulate strategies to do sth",
+        pos: "phrase",
+        defEn: "to make plans to do sth",
+        defZh: "制定策略",
+        sentence: "Big data helps companies {BLANK} attract the most customers and drive sales.",
+        sentenceForm: "formulate strategies to"
+      },
+      {
+        item: "based on sth",
+        pos: "phrase",
+        isVerbLed: false,
+        defEn: "using sth as a reason",
+        defZh: "以...為基礎",
+        sentence: "An online pharmacy might recommend dietary supplements {BLANK} searches for specific health issues.",
+        sentenceForm: "based on"
+      },
+      {
+        item: "have access to sth",
+        pos: "phrase",
+        defEn: "can use or get sth",
+        defZh: "取得",
+        sentence: "{BLANK} this knowledge allows businesses to be more responsive to their customers' needs.",
+        sentenceForm: "Having access to"
+      },
+      {
+        item: "give up in frustration",
+        pos: "phrase",
+        defEn: "to quit because of feeling annoyed",
+        defZh: "沮喪地放棄",
+        sentence: "I {BLANK} and posted my experience on social media.",
+        sentenceForm: "gave up in frustration"
+      },
+      {
+        item: "be greeted with",
+        pos: "phrase",
+        defEn: "to receive sth as a response",
+        defZh: "獲得",
+        sentence: "I was even {BLANK} a coupon code for free shipping!",
+        sentenceForm: "greeted with"
+      },
+      {
+        item: "in my experience",
+        pos: "phrase",
+        defEn: "from what I have seen or done",
+        defZh: "在我的經驗中",
+        sentence: "{BLANK}, big data has made shopping more personalised.",
+        sentenceForm: "In my experience"
+      },
+      // TEXT 2
+      {
+        item: "be made from sth",
+        pos: "phrase",
+        defEn: "to be created using sth",
+        defZh: "由...製成",
+        sentence: "Everything we sell comes from local sources and many items are {BLANK} recycled materials.",
+        sentenceForm: "made from"
+      },
+      {
+        item: "a variety of sth",
+        pos: "phrase",
+        defEn: "many different kinds of sth",
+        defZh: "各種各樣",
+        sentence: "Bargain hunters will find the greatest deals on an amazing {BLANK} unique items.",
+        sentenceForm: "variety of"
+      },
+      {
+        item: "special offer",
+        pos: "phrase",
+        isVerbLed: false,
+        defEn: "a limited-time deal or discount",
+        defZh: "特別優惠",
+        sentence: "As a {BLANK} for visitors, you'll get a free reusable shopping bag if you spend $200 or more at the market!",
+        sentenceForm: "special offer"
+      },
+      {
+        item: "try your hand at sth",
+        pos: "phrase",
+        defEn: "to give sth new a try",
+        defZh: "嘗試一下",
+        sentence: "If you want to {BLANK} making your own accessories, you'll love our workshops that cover all the basics you need to know.",
+        sentenceForm: "try your hand at"
+      },
+      {
+        item: "enquire about sth",
+        pos: "phrase",
+        defEn: "to ask for information about sth",
+        defZh: "查詢關於",
+        sentence: "For the latest information or to {BLANK} taking part, visit our website handcraft.hk or call us on 5552 7164.",
+        sentenceForm: "enquire about"
+      }
+    ],
+    words: [
+      // TEXT 1
+      {
+        item: "embrace",
+        pos: "v",
+        cefrLevel: "B2",
+        defEn: "to accept sth enthusiastically",
+        defZh: "樂意接納",
+        sentence: "We are always eager to {BLANK} the latest technology.",
+        sentenceForm: "embrace"
+      },
+      {
+        item: "analyse",
+        pos: "v",
+        cefrLevel: "B1",
+        defEn: "to examine sth in order to discover what it is or contains",
+        defZh: "分析",
+        sentence: "A packet of white powder was found and police scientists are {BLANK} it.",
+        sentenceForm: "analysing"
+      },
+      {
+        item: "irrelevant",
+        pos: "adj",
+        cefrLevel: "C1",
+        defEn: "not related to what is being discussed",
+        defZh: "不相關的",
+        sentence: "Many people consider politics {BLANK} to their lives.",
+        sentenceForm: "irrelevant"
+      },
+      {
+        item: "feedback",
+        pos: "n",
+        cefrLevel: "B2",
+        defEn: "statements of opinion about sth that can tell you if it is successful or liked",
+        defZh: "回饋意見",
+        sentence: "Have you had any {BLANK} from customers about the new soap?",
+        sentenceForm: "feedback"
+      },
+      {
+        item: "prominent",
+        pos: "adj",
+        cefrLevel: "C1",
+        defEn: "can easily be seen or noticed",
+        defZh: "顯眼的",
+        sentence: "New books are displayed in a {BLANK} position on tables at the front of the store.",
+        sentenceForm: "prominent"
+      },
+      {
+        item: "efficient",
+        pos: "adj",
+        cefrLevel: "B2",
+        defEn: "working quickly and effectively in an organised way",
+        defZh: "效率高的",
+        sentence: "The city's transport system is one of the most {BLANK} in Asia.",
+        sentenceForm: "efficient"
+      },
+      {
+        item: "impression",
+        pos: "n",
+        cefrLevel: "B1",
+        defEn: "an idea or opinion of what something or someone is like",
+        defZh: "印象",
+        sentence: "When I first met him, I had the {BLANK} that he was a shy sort of person.",
+        sentenceForm: "impression"
+      },
+      // TEXT 2
+      {
+        item: "feature",
+        pos: "v",
+        cefrLevel: "B1",
+        defEn: "to include sb or sth as an important part",
+        defZh: "以...為特色",
+        sentence: "It's an Australian company whose logo {BLANK} a red kangaroo.",
+        sentenceForm: "features"
+      },
+      {
+        item: "sustainable",
+        pos: "adj",
+        cefrLevel: "B2",
+        defEn: "able to continue over a period of time",
+        defZh: "可持續的",
+        sentence: "A large international meeting was held with the aim of promoting {BLANK} development in all countries.",
+        sentenceForm: "sustainable"
+      },
+      {
+        item: "economy",
+        pos: "n",
+        cefrLevel: "B1",
+        defEn: "the relationship between trade and the supply of money",
+        defZh: "經濟",
+        sentence: "Any decrease in tourism could have a serious effect on the local {BLANK}.",
+        sentenceForm: "economy"
+      },
+      {
+        item: "bargain",
+        pos: "n",
+        cefrLevel: "B2",
+        defEn: "sth on sale at a lower price than its true value",
+        defZh: "減價貨品",
+        sentence: "This coat was half-price — a real {BLANK}.",
+        sentenceForm: "bargain"
+      },
+      {
+        item: "unique",
+        pos: "adj",
+        cefrLevel: "B2",
+        defEn: "being the only existing one of its type",
+        defZh: "獨一無二的",
+        sentence: "I'd recognise your handwriting anywhere — it's {BLANK}.",
+        sentenceForm: "unique"
+      },
+      {
+        item: "vendor",
+        pos: "n",
+        defEn: "sb who is selling sth",
+        defZh: "攤主",
+        sentence: "For the past few months she's been working as a street {BLANK}, selling fruit and vegetables.",
+        sentenceForm: "vendor"
+      },
+      {
+        item: "haggle",
+        pos: "v",
+        defEn: "to argue with sb in order to get a lower price",
+        defZh: "討價還價",
+        sentence: "It's traditional that you {BLANK} over the price of things in the market.",
+        sentenceForm: "haggle"
+      },
+      {
+        item: "stunning",
+        pos: "adj",
+        cefrLevel: "B2",
+        defEn: "extremely beautiful or attractive",
+        defZh: "極漂亮的",
+        sentence: "When she walked into the room wearing her new dress, everyone thought she looked {BLANK}.",
+        sentenceForm: "stunning"
+      },
+      {
+        item: "vintage",
+        pos: "adj",
+        defEn: "showing the best of a particular type of thing",
+        defZh: "經典的",
+        sentence: "My mom gave me a {BLANK} comic book from the 1980s.",
+        sentenceForm: "vintage"
+      },
+      {
+        item: "latest",
+        pos: "adj",
+        cefrLevel: "B1",
+        defEn: "newest or most recent or modern",
+        defZh: "最新的",
+        sentence: "I just got the {BLANK} video game that was released yesterday.",
+        sentenceForm: "latest"
+      }
+    ]
+  },
+
   "2nd-5": {
     label: "Unit 5",
     term: 2,
@@ -286,6 +556,7 @@ const UNITS = {
       {
         item: "as well as",
         pos: "phrase",
+        isVerbLed: false,
         defEn: "in addition to",
         defZh: "除……之外還有",
         sentence: "Companies are now pitching products at those who are middle-aged or older {BLANK} people in their twenties.",
@@ -310,6 +581,7 @@ const UNITS = {
       {
         item: "all manner of",
         pos: "phrase",
+        isVerbLed: false,
         defEn: "a lot of different types of",
         defZh: "各種各樣的",
         sentence: "The elderly can showcase {BLANK} products in an attractive and memorable fashion.",
@@ -326,6 +598,7 @@ const UNITS = {
       {
         item: "it gladdens sb to see",
         pos: "phrase",
+        isVerbLed: false,
         defEn: "to be happy to see",
         defZh: "（某人）很高興看到",
         sentence: "{BLANK} that we're finally moving away from the idea that older people are seen as unattractive.",
@@ -795,6 +1068,6 @@ const UNITS = {
 // Term/unit availability config
 // Unit 6 remains in UNITS as an archive, but is deliberately unavailable to students.
 const TERM_UNITS = {
-  1: [], // Units 1–3 will be enabled when their vocabulary data is added.
+  1: ["2nd-1"], // Units 2–3 will be enabled when their vocabulary data is added.
   2: ["2nd-5", "2nd-8"]
 };

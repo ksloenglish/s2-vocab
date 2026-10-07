@@ -858,9 +858,13 @@ function makeQ_1B(item, fullPool) {
   const sentenceStart = isSentenceStart(item.sentence);
   let opts = [rawAnswer, ...distractors];
   opts = [...new Set(opts)];
-  // Build a lookup: item text (lowercase) -> pos, for POS-guarded conjugation
+  // Build lookups for POS-guarded and explicitly non-verb phrase conjugation.
   const poolPosMap = {};
-  fullPool.forEach(p => { poolPosMap[p.item.toLowerCase()] = p.pos; });
+  const poolVerbLedMap = {};
+  fullPool.forEach(p => {
+    poolPosMap[p.item.toLowerCase()] = p.pos;
+    poolVerbLedMap[p.item.toLowerCase()] = p.isVerbLed;
+  });
   // Only verbs (pos 'v') and verb-led phrases (pos 'phrase') should be conjugated.
   // Noun phrases starting with an article (a, an, the) must NOT be conjugated
   // — e.g. "a majority of" would otherwise become "aed majority of".
@@ -881,6 +885,9 @@ function makeQ_1B(item, fullPool) {
     }
     if (p === 'phrase') {
       const firstWord = itemText.trim().toLowerCase().split(/\s+/)[0];
+      // Data can explicitly mark fixed, noun, connector, or participial phrases as
+      // non-verb-led. This prevents malformed distractors such as "specialled offer".
+      if (poolVerbLedMap[itemText.toLowerCase()] === false) return false;
       // Skip noun phrases starting with articles (e.g. 'a majority of' → 'aed majority of')
       if (ARTICLES.has(firstWord)) return false;
       // Skip 'be'-led phrases when used as distractors — conjugating 'be surrounded by' to past
