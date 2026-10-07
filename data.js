@@ -272,6 +272,272 @@ const UNITS = {
     ]
   },
 
+  "2nd-2": {
+    label: "Unit 2",
+    term: 1,
+    phrases: [
+      // TEXT 1
+      {
+        item: "break out in a cold sweat",
+        pos: "phrase",
+        defEn: "to sweat because of fear or stress",
+        defZh: "冒出冷汗",
+        sentence: "The thought of having lost my phone had me {BLANK}!",
+        sentenceForm: "breaking out in a cold sweat"
+      },
+      {
+        item: "be convinced",
+        pos: "phrase",
+        defEn: "to strongly believe something",
+        defZh: "確信的",
+        sentence: "They {BLANK} it was harmful, so they sabotaged the towers and refused to apologise.",
+        sentenceForm: "were convinced"
+      },
+      {
+        item: "refuse to apologise",
+        pos: "phrase",
+        defEn: "not to say sorry when expected",
+        defZh: "拒絕道歉",
+        sentence: "They were convinced it was harmful, so they sabotaged the towers and {BLANK}.",
+        sentenceForm: "refused to apologise"
+      },
+      {
+        item: "express support for sb/sth",
+        pos: "phrase",
+        defEn: "to show agreement or approval",
+        defZh: "對某人／事表示支持",
+        sentence: "I read the comment thread on the article—so many people were {BLANK} the vandals!",
+        sentenceForm: "expressing support for"
+      },
+      {
+        item: "invade privacy",
+        pos: "phrase",
+        defEn: "to go into sb's personal space",
+        defZh: "侵犯私隱",
+        sentence: "People were claiming that the telephone would {BLANK} and would make us lazy and antisocial.",
+        sentenceForm: "invade our privacy"
+      },
+      {
+        item: "miss out on sth",
+        pos: "phrase",
+        defEn: "to fail to use an opportunity",
+        defZh: "錯失做某事的機會",
+        sentence: "My problem with digital exchanges is that you {BLANK} non-verbal things like gestures and facial expressions.",
+        sentenceForm: "miss out on"
+      },
+      {
+        item: "turn out to be sth",
+        pos: "phrase",
+        defEn: "to be known finally",
+        defZh: "原來是",
+        sentence: "I thought I was chatting with a cute girl, but it {BLANK} a troll who was trying to scam me while we were chatting.",
+        sentenceForm: "turned out to be"
+      },
+      {
+        item: "in an emergency",
+        pos: "phrase",
+        defEn: "during an urgent situation",
+        defZh: "在緊急情況下",
+        sentence: "But let's not forget that mobile phones save lives—you don't want to be without your phone {BLANK}!",
+        sentenceForm: "in an emergency"
+      },
+      // TEXT 2
+      {
+        item: "be bombarded with sth",
+        pos: "phrase",
+        defEn: "to get a lot of something at once",
+        defZh: "充斥著",
+        sentence: "Minutes later, Derek's social media was {BLANK} ads for luxury cruises and guided tours.",
+        sentenceForm: "being bombarded with"
+      },
+      {
+        item: "eavesdrop on sb",
+        pos: "phrase",
+        defEn: "to secretly listen to sb's conversation",
+        defZh: "偷聽某人說話",
+        sentence: "Shum's smart speaker was {BLANK}, keeping track of their exchange while playing their favourite tunes.",
+        sentenceForm: "eavesdropping on them",
+        sbSubstitute: "them"
+      },
+      {
+        item: "keep track of sth",
+        pos: "phrase",
+        defEn: "to make sure you know what is happening",
+        defZh: "確保瞭解",
+        sentence: "Shum's smart speaker was eavesdropping on them, {BLANK} their exchange while playing their favourite tunes.",
+        sentenceForm: "keeping track of"
+      },
+      {
+        item: "have control over sth",
+        pos: "phrase",
+        defEn: "to be in charge of sth",
+        defZh: "可以控制",
+        sentence: "We have very little {BLANK} who has access to that information, or what they do with it.",
+        sentenceForm: "control over"
+      },
+      {
+        item: "assist sb in v-ing",
+        pos: "phrase",
+        defEn: "to help sb do sth",
+        defZh: "協助某人做某事",
+        sentence: "Targeted ads can be helpful since they {BLANK} making decisions.",
+        sentenceForm: "assist us in",
+        sbSubstitute: "us"
+      },
+      {
+        item: "make decisions",
+        pos: "phrase",
+        defEn: "to choose what to do",
+        defZh: "作出決定",
+        sentence: "Targeted ads can be helpful since they assist us in {BLANK}.",
+        sentenceForm: "making decisions"
+      },
+      {
+        item: "mistake A for B",
+        pos: "phrase",
+        defEn: "to mix up A and B",
+        defZh: "把 A 誤認為 B",
+        sentence: "We've seen innocent people being {BLANK} villains and becoming targets of doxing.",
+        sentenceForm: "mistaken for"
+      },
+      {
+        item: "respect privacy",
+        pos: "phrase",
+        defEn: "not to go into sb's personal matters",
+        defZh: "尊重私隱",
+        sentence: "We should also {BLANK} other people's privacy, such as not posting their photos without their knowledge.",
+        sentenceForm: "respect"
+      }
+    ],
+    words: [
+      // TEXT 1
+      {
+        item: "panic",
+        pos: "v",
+        defEn: "to suddenly feel so worried or frightened",
+        defZh: "驚慌",
+        sentence: "I {BLANK} when I saw smoke coming out of the engine.",
+        sentenceForm: "panicked"
+      },
+      {
+        item: "relieved",
+        pos: "adj",
+        cefrLevel: "B2",
+        defEn: "happy that sth bad has not happened",
+        defZh: "放心的",
+        sentence: "He was {BLANK} to see Jeannie reach the other side of the river safely.",
+        sentenceForm: "relieved"
+      },
+      {
+        item: "persuade",
+        pos: "v",
+        cefrLevel: "B1",
+        defEn: "to make sb do or believe something",
+        defZh: "說服",
+        sentence: "If she doesn't want to go, nothing you can say will {BLANK} her.",
+        sentenceForm: "persuade"
+      },
+      {
+        item: "ruin",
+        pos: "v",
+        cefrLevel: "B2",
+        defEn: "to destroy sth completely",
+        defZh: "糟蹋",
+        sentence: "Her injury {BLANK} her chances of winning the race last month.",
+        sentenceForm: "ruined"
+      },
+      {
+        item: "criticism",
+        pos: "n",
+        cefrLevel: "B2",
+        defEn: "the act of saying that sth/sb is bad",
+        defZh: "批評",
+        sentence: "I have a few {BLANK} to make about your speech.",
+        sentenceForm: "criticisms"
+      },
+      {
+        item: "antisocial",
+        pos: "adj",
+        defEn: "not wanting to spend time with others",
+        defZh: "厭惡社交的",
+        sentence: "I hope they won't think I'm {BLANK} if I don't join them at the party.",
+        sentenceForm: "antisocial"
+      },
+      {
+        item: "misinterpret",
+        pos: "v",
+        cefrLevel: "C2",
+        defEn: "to understand sth/sb wrongly",
+        defZh: "曲解",
+        sentence: "Bob {BLANK} the ending of the movie, seeing it as sad when Alice found it encouraging.",
+        sentenceForm: "misinterpreted"
+      },
+      // TEXT 2
+      {
+        item: "permission",
+        pos: "n",
+        cefrLevel: "A2",
+        defEn: "the act of allowing sb to do something",
+        defZh: "允許",
+        sentence: "You will need {BLANK} from your parents to go on the trip.",
+        sentenceForm: "permission"
+      },
+      {
+        item: "consequence",
+        pos: "n",
+        cefrLevel: "B1",
+        defEn: "a result of an action or situation",
+        defZh: "後果",
+        sentence: "Well, if you insist on eating so much, you'll have to take the {BLANK}!",
+        sentenceForm: "consequences"
+      },
+      {
+        item: "severe",
+        pos: "adj",
+        cefrLevel: "B2",
+        defEn: "very serious",
+        defZh: "非常嚴重的",
+        sentence: "In parts of Africa there is a {BLANK} food and water shortage.",
+        sentenceForm: "severe"
+      },
+      {
+        item: "threaten",
+        pos: "v",
+        cefrLevel: "B2",
+        defEn: "to tell sb that you will harm them or cause problems",
+        defZh: "威脅",
+        sentence: "The robber {BLANK} the shopkeeper with a gun in yesterday's robbery.",
+        sentenceForm: "threatened"
+      },
+      {
+        item: "harass",
+        pos: "v",
+        defEn: "to continue to annoy sb",
+        defZh: "騷擾",
+        sentence: "Despite repeatedly asking him to stop, John continued to {BLANK} Jane with unwanted phone calls and text messages.",
+        sentenceForm: "harass"
+      },
+      {
+        item: "innocent",
+        pos: "adj",
+        cefrLevel: "B1",
+        defEn: "not having done sth wrong",
+        defZh: "無辜的",
+        sentence: "He firmly believes that she is {BLANK} of the crime.",
+        sentenceForm: "innocent"
+      },
+      {
+        item: "aware",
+        pos: "adj",
+        cefrLevel: "B1",
+        defEn: "having knowledge of a particular thing",
+        defZh: "意識到的",
+        sentence: "I suddenly became {BLANK} of him looking at me.",
+        sentenceForm: "aware"
+      }
+    ]
+  },
+
   "2nd-5": {
     label: "Unit 5",
     term: 2,
@@ -1068,6 +1334,6 @@ const UNITS = {
 // Term/unit availability config
 // Unit 6 remains in UNITS as an archive, but is deliberately unavailable to students.
 const TERM_UNITS = {
-  1: ["2nd-1"], // Units 2–3 will be enabled when their vocabulary data is added.
+  1: ["2nd-1", "2nd-2"], // Unit 3 will be enabled when its vocabulary data is added.
   2: ["2nd-5", "2nd-8"]
 };
