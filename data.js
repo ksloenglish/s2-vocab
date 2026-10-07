@@ -793,7 +793,8 @@ const UNITS = {
 };
 
 // Term/unit availability config
+// Unit 6 remains in UNITS as an archive, but is deliberately unavailable to students.
 const TERM_UNITS = {
-  1: [],
-  2: ["2nd-5", "2nd-6", "2nd-8"]
+  1: [], // Units 1–3 will be enabled when their vocabulary data is added.
+  2: ["2nd-5", "2nd-8"]
 };
