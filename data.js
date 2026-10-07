@@ -674,8 +674,8 @@ const UNITS = {
         pos: "phrase",
         defEn: "to make a plan to follow regularly",
         defZh: "養成習慣",
-        sentence: "Try to do proper exercise once you've {BLANK} fitness {BLANK}.",
-        sentenceForm: "developed a / routine"
+        sentence: "Try to do proper exercise once you {BLANK} a fitness {BLANK}.",
+        sentenceForm: "develop / routine"
       }
     ],
     words: [
