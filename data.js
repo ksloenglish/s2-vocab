@@ -389,16 +389,16 @@ const UNITS = {
         pos: "phrase",
         defEn: "to choose what to do",
         defZh: "作出決定",
-        sentence: "Targeted ads can be helpful since they assist us in {BLANK}.",
-        sentenceForm: "making decisions"
+        sentence: "Targeted ads can be helpful since they assist us in {BLANK} purchasing {BLANK}.",
+        sentenceForm: "making / decisions"
       },
       {
         item: "mistake A for B",
         pos: "phrase",
         defEn: "to mix up A and B",
         defZh: "把 A 誤認為 B",
-        sentence: "We've seen innocent people being {BLANK} villains and becoming targets of doxing.",
-        sentenceForm: "mistaken for"
+        sentence: "We've seen innocent people being {BLANK} by others {BLANK} villains and becoming targets of doxing.",
+        sentenceForm: "mistaken / for"
       },
       {
         item: "respect privacy",
