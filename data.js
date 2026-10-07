@@ -1,5 +1,5 @@
 // ============================================================
-// VOCABULARY DATA – UNITS 1, 5, 6 (archived), 8
+// VOCABULARY DATA – UNITS 1–3, 5, 6 (archived), 8
 // ============================================================
 const UNITS = {
   "2nd-1": {
@@ -534,6 +534,277 @@ const UNITS = {
         defZh: "意識到的",
         sentence: "I suddenly became {BLANK} of him looking at me.",
         sentenceForm: "aware"
+      }
+    ]
+  },
+
+  "2nd-3": {
+    label: "Unit 3",
+    term: 1,
+    phrases: [
+      // TEXT 1
+      {
+        item: "become overwhelmed",
+        pos: "phrase",
+        defEn: "to feel so much stress that it becomes hard to handle",
+        defZh: "變得不知所措",
+        sentence: "Under pressure to perform well academically, we can easily {BLANK}.",
+        sentenceForm: "become overwhelmed"
+      },
+      {
+        item: "struggle with sth",
+        pos: "phrase",
+        defEn: "to fight against sb/sth to prevent a bad result",
+        defZh: "與...抗爭",
+        sentence: "More young people than ever before have reported {BLANK} anxiety, depression and other mental disorders.",
+        sentenceForm: "struggling with"
+      },
+      {
+        item: "lighten sb's mood",
+        pos: "phrase",
+        defEn: "to make sb feel happier",
+        defZh: "使...心情好轉",
+        sentence: "Many people think junk foods like potato chips, candies and sodas can {BLANK}.",
+        sentenceForm: "lighten our mood",
+        sbSubstitute: "our"
+      },
+      {
+        item: "not to mention sth",
+        pos: "phrase",
+        isVerbLed: false,
+        defEn: "used to add extra information",
+        defZh: "更不必說",
+        sentence: "They are packed full of sugar, salt, saturated fats and carbohydrates, {BLANK} all the artificial flavours.",
+        sentenceForm: "not to mention"
+      },
+      {
+        item: "be regarded as sth",
+        pos: "phrase",
+        defEn: "to be considered in a specific way",
+        defZh: "被視為",
+        sentence: "Some of them {BLANK} superfoods today—you probably have heard of the growing superfood trend.",
+        sentenceForm: "are regarded as"
+      },
+      {
+        item: "cope with sth",
+        pos: "phrase",
+        defEn: "to deal successfully with a difficult situation",
+        defZh: "應付",
+        sentence: "Not only can they boost our physical health, but they can also help us {BLANK} our mental health issues.",
+        sentenceForm: "cope with"
+      },
+      {
+        item: "no wonder",
+        pos: "phrase",
+        isVerbLed: false,
+        defEn: "it is not surprising",
+        defZh: "並不令人驚訝",
+        sentence: "{BLANK} superfoods are becoming more and more popular and many young people have already turned to them.",
+        sentenceForm: "No wonder"
+      },
+      {
+        item: "stay focused",
+        pos: "phrase",
+        defEn: "to pay attention",
+        defZh: "保持專注",
+        sentence: "High in vitamin E, healthy fats, protein, dietary fiber and minerals, they help you {BLANK} and beat anxiety.",
+        sentenceForm: "stay focused"
+      },
+      // TEXT 2
+      {
+        item: "thanks to sb/sth",
+        pos: "phrase",
+        isVerbLed: false,
+        defEn: "because of sb/sth",
+        defZh: "由於",
+        sentence: "{BLANK} technology, the following smart and fun training options may help you get more active.",
+        sentenceForm: "Thanks to"
+      },
+      {
+        item: "instead of sb/sth",
+        pos: "phrase",
+        isVerbLed: false,
+        defEn: "in place of sb/sth",
+        defZh: "作為...的替代",
+        sentence: "If you've missed out on a few steps, you may want to use the stairs {BLANK} the lift.",
+        sentenceForm: "instead of"
+      },
+      {
+        item: "be short on sth",
+        pos: "phrase",
+        defEn: "to not have enough of sth",
+        defZh: "缺乏",
+        sentence: "If you're {BLANK} sleep, you'll remind yourself not to stay up so late.",
+        sentenceForm: "short on"
+      },
+      {
+        item: "work out",
+        pos: "phrase",
+        defEn: "to exercise to improve the strength of your body",
+        defZh: "鍛鍊身體",
+        sentence: "The trend of joining online workout classes has been popular because you can {BLANK} anywhere and anytime.",
+        sentenceForm: "work out"
+      },
+      {
+        item: "sign up for sth",
+        pos: "phrase",
+        defEn: "to agree to be part of an activity",
+        defZh: "報名參加",
+        sentence: "If you {BLANK} a fitness platform, you get access to exercise videos, in which an instructor demonstrates the workout.",
+        sentenceForm: "sign up for"
+      },
+      {
+        item: "break sweat",
+        pos: "phrase",
+        defEn: "to sweat because of exercise",
+        defZh: "流汗",
+        sentence: "Wearing VR headsets or motion sensors, you'll {BLANK} through playing sports games or dancing games.",
+        sentenceForm: "break sweat"
+      },
+      {
+        item: "get addicted to sth",
+        pos: "phrase",
+        defEn: "to be unable to stop doing sth",
+        defZh: "對...上癮",
+        sentence: "Mind yourself though, while working out can be fun, don't {BLANK} too {BLANK} playing games.",
+        sentenceForm: "get / addicted to"
+      },
+      {
+        item: "develop a routine",
+        pos: "phrase",
+        defEn: "to make a plan to follow regularly",
+        defZh: "養成習慣",
+        sentence: "Try to do proper exercise once you've {BLANK} fitness {BLANK}.",
+        sentenceForm: "developed a / routine"
+      }
+    ],
+    words: [
+      // TEXT 1
+      {
+        item: "concern",
+        pos: "n",
+        cefrLevel: "B2",
+        defEn: "a feeling of worry",
+        defZh: "憂慮",
+        sentence: "There's a lot of public {BLANK} about dangerous toxins recently found in food.",
+        sentenceForm: "concern"
+      },
+      {
+        item: "beneficial",
+        pos: "adj",
+        cefrLevel: "B2",
+        defEn: "helpful, useful, or good",
+        defZh: "有益的",
+        sentence: "A stay in the countryside will be {BLANK} to his health.",
+        sentenceForm: "beneficial"
+      },
+      {
+        item: "boost",
+        pos: "v",
+        cefrLevel: "B2",
+        defEn: "to improve or increase something",
+        defZh: "提高；增強",
+        sentence: "The theatre successfully {BLANK} its audiences by cutting ticket prices last year.",
+        sentenceForm: "boosted"
+      },
+      {
+        item: "alternative",
+        pos: "n",
+        cefrLevel: "A2",
+        defEn: "sth that you can choose to do or have",
+        defZh: "可供選擇的事物",
+        sentence: "I'm afraid I have no {BLANK} but to ask you to leave.",
+        sentenceForm: "alternative"
+      },
+      {
+        item: "vital",
+        pos: "adj",
+        cefrLevel: "B2",
+        defEn: "extremely important",
+        defZh: "必不可少的",
+        sentence: "The kidney plays a {BLANK} role in the removal of waste products from the blood.",
+        sentenceForm: "vital"
+      },
+      {
+        item: "avoid",
+        pos: "v",
+        cefrLevel: "A2",
+        defEn: "to stay away from sb/sth",
+        defZh: "避開",
+        sentence: "I try to {BLANK} supermarkets on Saturdays—they're always so busy.",
+        sentenceForm: "avoid"
+      },
+      {
+        item: "wary",
+        pos: "adj",
+        cefrLevel: "C2",
+        defEn: "careful when dealing with sb/sth",
+        defZh: "謹慎的",
+        sentence: "I'm a little {BLANK} about giving people my address when I don't know them very well.",
+        sentenceForm: "wary"
+      },
+      // TEXT 2
+      {
+        item: "trend",
+        pos: "n",
+        cefrLevel: "B1",
+        defEn: "a direction in which a situation is changing",
+        defZh: "趨勢",
+        sentence: "Whatever the latest fashion {BLANK}, you can be sure Nicki will be wearing it.",
+        sentenceForm: "trend"
+      },
+      {
+        item: "motivate",
+        pos: "v",
+        cefrLevel: "B2",
+        defEn: "to make sb want to do something well",
+        defZh: "激發",
+        sentence: "Teaching is all about {BLANK} people to learn.",
+        sentenceForm: "motivating"
+      },
+      {
+        item: "remind",
+        pos: "v",
+        cefrLevel: "B1",
+        defEn: "to help sb remember sth",
+        defZh: "提醒",
+        sentence: "Please {BLANK} me to post this letter.",
+        sentenceForm: "remind"
+      },
+      {
+        item: "self-disciplined",
+        pos: "adj",
+        defEn: "able to make yourself do things you should do even when you do not want to",
+        defZh: "自律的",
+        sentence: "I was not {BLANK} enough to lose weight by myself so I got a personal trainer.",
+        sentenceForm: "self-disciplined"
+      },
+      {
+        item: "demonstrate",
+        pos: "v",
+        cefrLevel: "B2",
+        defEn: "to show sth and explain how it works",
+        defZh: "示範",
+        sentence: "Research has {BLANK} that babies can recognize their mother's voice very soon after birth.",
+        sentenceForm: "demonstrated"
+      },
+      {
+        item: "guidance",
+        pos: "n",
+        cefrLevel: "C1",
+        defEn: "help or advice that is given to sb",
+        defZh: "指導",
+        sentence: "I've always looked to my father for {BLANK} in these matters.",
+        sentenceForm: "guidance"
+      },
+      {
+        item: "proper",
+        pos: "adj",
+        cefrLevel: "B1",
+        defEn: "real, satisfactory, suitable, or correct",
+        defZh: "適當的",
+        sentence: "I would have done the job myself but I didn't have the {BLANK} equipment.",
+        sentenceForm: "proper"
       }
     ]
   },
@@ -1334,6 +1605,6 @@ const UNITS = {
 // Term/unit availability config
 // Unit 6 remains in UNITS as an archive, but is deliberately unavailable to students.
 const TERM_UNITS = {
-  1: ["2nd-1", "2nd-2"], // Unit 3 will be enabled when its vocabulary data is added.
+  1: ["2nd-1", "2nd-2", "2nd-3"],
   2: ["2nd-5", "2nd-8"]
 };
